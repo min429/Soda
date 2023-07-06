@@ -16,9 +16,15 @@
 
 package org.tensorflow.lite.examples.audio.fragments
 
+
 import android.media.MediaRecorder
-import android.os.Bundle
+
 import android.util.Log
+import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +33,9 @@ import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.Switch
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import org.tensorflow.lite.examples.audio.AudioClassificationHelper
@@ -205,7 +214,7 @@ class AudioFragment : Fragment() {
                     // Overlap 설정 변경
                     audioHelper.stopAudioClassification()
                     audioHelper.overlap = 0.25f * position
-                    audioHelper.startAudioClassification()
+                    audioHelper.startAudioClassification(requireContext())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -341,7 +350,7 @@ class AudioFragment : Fragment() {
         }
 
         if (::audioHelper.isInitialized ) {
-            audioHelper.startAudioClassification()
+            audioHelper.startAudioClassification(requireContext())
         }
 
         Log.e("온리슘실행", "녹음 실행중")
@@ -359,4 +368,5 @@ class AudioFragment : Fragment() {
         _fragmentBinding = null
         super.onDestroyView()
     }
+
 }

@@ -24,8 +24,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
+import kotlin.properties.Delegates
 
 
 
@@ -39,14 +41,22 @@ class AudioClassificationHelper(
   var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
   var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
   var numThreads: Int = 2 //쓰레드 개수
+
 ) {
     private lateinit var classifier: AudioClassifier
     private lateinit var tensorAudio: TensorAudio
     private lateinit var recorder: AudioRecord
     private lateinit var executor: ScheduledThreadPoolExecutor
+    private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
+    private var bytesRead by Delegates.notNull<Int>()
 
     private val classifyRunnable = Runnable {
         classifyAudio()
+    }
+
+    // 새로운 스레드에서 소리 크기 확인 및 진동 울리기
+    private val soundCheckRunnable = Runnable {
+        SoundCheckHelper.soundCheck(tensorAudio, bytesRead, context)
     }
 
     init {
@@ -89,6 +99,7 @@ class AudioClassificationHelper(
             //분류 시작
             startAudioClassification()
 
+
         } catch (e: IllegalStateException) {
             listener.onError(
                 "Audio Classifier failed to initialize. See error logs for details"
@@ -98,14 +109,17 @@ class AudioClassificationHelper(
         }
     }
 
+
     fun startAudioClassification() {
         // 음성 녹음 중이면 중복 시작 방지
+
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
             return
         }
         // 녹음 시작
         recorder.startRecording()
         executor = ScheduledThreadPoolExecutor(1)
+        soundCheckExecutor = ScheduledThreadPoolExecutor(1)
 
         // Each model will expect a specific audio recording length. This formula calculates that
         // length using the input buffer size and tensor format sample rate.
@@ -120,11 +134,19 @@ class AudioClassificationHelper(
             classifyRunnable,
             0,
             interval,
-            TimeUnit.MILLISECONDS) //일정한 간격으로 분류 실행
+            TimeUnit.MILLISECONDS)
+
+        // 소리 크기 확인 및 진동 실행 로직
+        soundCheckExecutor.scheduleAtFixedRate(
+            soundCheckRunnable,
+            0,
+            interval,
+            TimeUnit.MILLISECONDS
+        )
     }
 
     private fun classifyAudio() {
-        tensorAudio.load(recorder)  //분류할 오디오 녹음 시전
+        bytesRead = tensorAudio.load(recorder)
         var inferenceTime = SystemClock.uptimeMillis()
         val output = classifier.classify(tensorAudio) //분류 실행
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime  //분류하는데 걸리는 시간 계산
@@ -145,4 +167,5 @@ class AudioClassificationHelper(
         const val YAMNET_MODEL = "yamnet.tflite"  // 사용하는 모델, default 값은 YAMNET 설정
         const val SPEECH_COMMAND_MODEL = "speech.tflite"
     }
+
 }
