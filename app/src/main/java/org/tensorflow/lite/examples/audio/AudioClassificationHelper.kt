@@ -24,7 +24,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
 import kotlin.properties.Delegates
@@ -89,7 +88,7 @@ class AudioClassificationHelper(
             classifier = AudioClassifier.createFromFileAndOptions(context, currentModel, options)
             tensorAudio = classifier.createInputTensorAudio()
             recorder = classifier.createAudioRecord()
-            startAudioClassification(context)
+            startAudioClassification()
         } catch (e: IllegalStateException) {
             listener.onError(
                 "Audio Classifier failed to initialize. See error logs for details"
@@ -99,7 +98,7 @@ class AudioClassificationHelper(
         }
     }
 
-    fun startAudioClassification(context: Context) {
+    fun startAudioClassification() {
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
             return
         }

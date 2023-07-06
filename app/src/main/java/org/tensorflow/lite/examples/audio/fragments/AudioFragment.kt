@@ -121,7 +121,7 @@ class AudioFragment : Fragment() {
                 ) {
                     audioHelper.stopAudioClassification()
                     audioHelper.overlap = 0.25f * position
-                    audioHelper.startAudioClassification(requireContext())
+                    audioHelper.startAudioClassification()
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -238,7 +238,7 @@ class AudioFragment : Fragment() {
         }
 
         if (::audioHelper.isInitialized ) {
-            audioHelper.startAudioClassification(requireContext())
+            audioHelper.startAudioClassification()
         }
     }
 
