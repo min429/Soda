@@ -25,9 +25,12 @@ import org.tensorflow.lite.examples.audio.databinding.ItemProbabilityBinding
 import org.tensorflow.lite.support.label.Category
 
 internal class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolder>() {
+    // 분류 결과를 저장하기 위한 List<Category> 변수
     var categoryList: List<Category> = emptyList()
 
+    // ViewHolder 생성 함수
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // ViewHolder에 사용할 레이아웃 파일을 inflate하여 ViewHolder 객체를 생성
         val binding =
             ItemProbabilityBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -35,9 +38,14 @@ internal class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.
                 false)
         return ViewHolder(binding)
     }
-
+    // ViewHolder를 특정 position에 바인딩하는 함수
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // categoryList에서 특정 position의 카테고리 정보를 가져옴
         val category = categoryList[position]
+
+        // 카테고리 정보가 Speech일 경우, 화면에 "말하기소리 같습니다." 메시지를 표시
+        // 카테고리 정보가 Child speech, kid speaking일 경우, 화면에 "어린이 말하기, 어린이 말하기소리 같습니다." 메시지를 표시
+        // ... (여러 분류 결과에 대해 각각 메시지를 할당함)
         if(category.label.equals("Speech")){
             holder.bind("말하기소리 같습니다.", category.score, category.index)
         }
@@ -446,15 +454,20 @@ internal class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.
 
     }
 
+    // ViewHolder의 개수를 반환하는 함수
     override fun getItemCount(): Int {
         return categoryList.size
     }
 
+    // ViewHolder 클래스
     class ViewHolder(private val binding: ItemProbabilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        // ProgressBar의 색상 값을 저장하기 위한 배열 변수
         private var primaryProgressColorList: IntArray
         private var backgroundProgressColorList: IntArray
 
+
+        // ViewHolder 생성 시 ProgressBar의 색상 값을 미리 초기화 함
         init {
             primaryProgressColorList =
                 binding.root.resources.getIntArray((R.array.colors_progress_primary))
@@ -462,10 +475,15 @@ internal class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.
                 binding.root.resources.getIntArray((R.array.colors_progress_background))
         }
 
+
+        // ViewHolder에 데이터를 바인딩하는 함수
         fun bind(label: String, score: Float, index: Int) {
             with(binding) {
+                // 레이아웃 파일에서 labelTextView라는 View를 가져와서 메시지 값을 설정함
                 labelTextView.text = label
 
+                // 레이아웃 파일에서 progressBar라는 ProgressBar View를 가져와서
+                // ProgressBar의 색상을 index 값에 따라 설정함
                 progressBar.progressBackgroundTintList =
                     ColorStateList.valueOf(
                         backgroundProgressColorList[index % backgroundProgressColorList.size])
@@ -474,6 +492,7 @@ internal class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.
                     ColorStateList.valueOf(
                         primaryProgressColorList[index % primaryProgressColorList.size])
 
+                // 확률 값을 ProgressBar의 진행 상태로 표시함
                 val newValue = (score * 100).toInt()
                 progressBar.progress = newValue
             }
