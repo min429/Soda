@@ -30,12 +30,12 @@ import org.tensorflow.lite.task.core.BaseOptions
 class AudioClassificationHelper(
   val context: Context,
   val listener: AudioClassificationListener,
-  var currentModel: String = YAMNET_MODEL,
-  var classificationThreshold: Float = DISPLAY_THRESHOLD,
-  var overlap: Float = DEFAULT_OVERLAP_VALUE,
-  var numOfResults: Int = DEFAULT_NUM_OF_RESULTS,
-  var currentDelegate: Int = 0,
-  var numThreads: Int = 2
+  var currentModel: String = YAMNET_MODEL, //현재 모델
+  var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
+  var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
+  var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
+  var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
+  var numThreads: Int = 2 //쓰레드 개수
 ) {
     private lateinit var classifier: AudioClassifier
     private lateinit var tensorAudio: TensorAudio
@@ -62,6 +62,7 @@ class AudioClassificationHelper(
         when (currentDelegate) {
             DELEGATE_CPU -> {
                 // Default
+                //모델은 CPU에서 실행
             }
             DELEGATE_NNAPI -> {
                 baseOptionsBuilder.useNnapi()
@@ -70,8 +71,8 @@ class AudioClassificationHelper(
 
         // Configures a set of parameters for the classifier and what results will be returned.
         val options = AudioClassifier.AudioClassifierOptions.builder()
-            .setScoreThreshold(classificationThreshold)
-            .setMaxResults(numOfResults)
+            .setScoreThreshold(classificationThreshold)//분류할 임계값 설정
+            .setMaxResults(numOfResults) //분류 결과의 최대 개수
             .setBaseOptions(baseOptionsBuilder.build())
             .build()
 
@@ -79,8 +80,12 @@ class AudioClassificationHelper(
             // Create the classifier and required supporting objects
             classifier = AudioClassifier.createFromFileAndOptions(context, currentModel, options)
             tensorAudio = classifier.createInputTensorAudio()
+
+            //필요한 객체를 생성하는 분류기 생성
             recorder = classifier.createAudioRecord()
+            //분류 시작
             startAudioClassification()
+
         } catch (e: IllegalStateException) {
             listener.onError(
                 "Audio Classifier failed to initialize. See error logs for details"
@@ -91,10 +96,11 @@ class AudioClassificationHelper(
     }
 
     fun startAudioClassification() {
+        // 음성 녹음 중이면 중복 시작 방지
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
             return
         }
-
+        // 녹음 시작
         recorder.startRecording()
         executor = ScheduledThreadPoolExecutor(1)
 
@@ -103,37 +109,37 @@ class AudioClassificationHelper(
         // For example, YAMNET expects 0.975 second length recordings.
         // This needs to be in milliseconds to avoid the required Long value dropping decimals.
         val lengthInMilliSeconds = ((classifier.requiredInputBufferSize * 1.0f) /
-                classifier.requiredTensorAudioFormat.sampleRate) * 1000
+                classifier.requiredTensorAudioFormat.sampleRate) * 1000  //오디오가 얼마나 길어야 하는지 계산
 
-        val interval = (lengthInMilliSeconds * (1 - overlap)).toLong()
+        val interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩값으로 반복 간격 계산
 
         executor.scheduleAtFixedRate(
             classifyRunnable,
             0,
             interval,
-            TimeUnit.MILLISECONDS)
+            TimeUnit.MILLISECONDS) //일정한 간격으로 분류 실행
     }
 
     private fun classifyAudio() {
-        tensorAudio.load(recorder)
+        tensorAudio.load(recorder)  //분류할 오디오 녹음 시전
         var inferenceTime = SystemClock.uptimeMillis()
-        val output = classifier.classify(tensorAudio)
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-        listener.onResult(output[0].categories, inferenceTime)
+        val output = classifier.classify(tensorAudio) //분류 실행
+        inferenceTime = SystemClock.uptimeMillis() - inferenceTime  //분류하는데 걸리는 시간 계산
+        listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
     }
 
     fun stopAudioClassification() {
-        recorder.stop()
-        executor.shutdownNow()
+        recorder.stop()//오디오 녹음 중지
+        executor.shutdownNow()//분류 작업 중지
     }
 
     companion object {
-        const val DELEGATE_CPU = 0
-        const val DELEGATE_NNAPI = 1
-        const val DISPLAY_THRESHOLD = 0.3f
-        const val DEFAULT_NUM_OF_RESULTS = 2
-        const val DEFAULT_OVERLAP_VALUE = 0.5f
-        const val YAMNET_MODEL = "yamnet.tflite"
+        const val DELEGATE_CPU = 0 //메인 쓰레드에서 작동
+        const val DELEGATE_NNAPI = 1  //NN API 딜리게이트 사용
+        const val DISPLAY_THRESHOLD = 0.3f //결과 출력에 영향을 미치는 임계선 값
+        const val DEFAULT_NUM_OF_RESULTS = 2 //분류 결과의 최대 개수, default 2개 설정
+        const val DEFAULT_OVERLAP_VALUE = 0.5f  //반복 실행 간격, default 값은 0.5 설정
+        const val YAMNET_MODEL = "yamnet.tflite"  // 사용하는 모델, default 값은 YAMNET 설정
         const val SPEECH_COMMAND_MODEL = "speech.tflite"
     }
 }
