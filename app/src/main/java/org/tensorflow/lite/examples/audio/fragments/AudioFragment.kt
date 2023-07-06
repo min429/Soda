@@ -51,6 +51,9 @@ class AudioFragment : Fragment() {
     private val fragmentAudioBinding get() = _fragmentBinding!!
     private val adapter by lazy { ProbabilitiesAdapter() }
 
+    // 스위치 & 버튼용
+    private var isSwitchOn = true
+    private var isRecording = false
 
 
     private lateinit var audioHelper: AudioClassificationHelper// AudioClassificationHelper 객체 선언
@@ -99,15 +102,20 @@ class AudioFragment : Fragment() {
             audioClassificationListener
         )
 
-        val switch = fragmentAudioBinding.switchButton
 
+        // 스위치 + 녹음 버튼------------------------------------------------------------------------
+        val switch = fragmentAudioBinding.switchButton
+        val recordButton = view.findViewById<Button>(R.id.record_button)
+        val sttButton=view.findViewById<Button>(R.id.stt_button)
+
+        //스위치 클릭
         switch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // Switch가 On인 경우
                 Log.d("AudioFragment", "Switch is ON")
+                isSwitchOn = true
                 onResume() //-> 녹음 재개
-
-                //isSwitchOn = true
+                recordButton.text = "녹음 시작" // 녹음 중지 시 버튼 텍스트 변경
 
             } else {
                 // Switch가 Off인 경우
@@ -115,13 +123,46 @@ class AudioFragment : Fragment() {
                 // ProbabilitiesAdapter에서 categoryList 객체를 빈 리스트로 초기화 함
                 adapter.categoryList = emptyList()
                 adapter.notifyDataSetChanged()
-
+                isSwitchOn = false
                 onPause()// -> 녹음중단
 
-                //isSwitchOn = false
+
+
                 //audioHelper.stopAudioClassification()
             }
         }
+
+        // 녹음 버튼 클릭
+        recordButton.setOnClickListener {
+            Log.e("스위치 여부", "${isSwitchOn}")
+            if (!isSwitchOn) { // 녹음 스위치 off 상태에서만 작동
+                if (isRecording) {
+                    stopRecording()
+                    isRecording = false
+                    recordButton.text = "녹음 시작" // 녹음 중지 시 버튼 텍스트 변경
+                } else {
+                    startRecording()
+                    isRecording = true
+                    recordButton.text = "녹음 중지" // 녹음 시작 시 버튼 텍스트 변경
+                }
+            }
+            else{
+                Toast.makeText(recordButton.context, "수동녹음을 하려면 자동녹음 스위치를 off로 해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+        // stt button
+        sttButton.setOnClickListener {
+
+
+
+        }
+
+
+        // stt 텍스트표기될 위치
+        val stt_text = fragmentAudioBinding.sttText
+        stt_text.setText("stt표기될 부분")
+        //----------------------------------------------------------------------------------
 
 
         // Allow the user to select between multiple supported audio models.
@@ -277,6 +318,15 @@ class AudioFragment : Fragment() {
             false
         )
     }
+
+    private fun startRecording() {
+        audioHelper.startAudioClassification()
+    }
+
+    private fun stopRecording() {
+        audioHelper.stopAudioClassification()
+    }
+
 
 
 
