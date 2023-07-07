@@ -20,16 +20,13 @@ import android.content.Context
 import android.media.AudioRecord
 import android.os.SystemClock
 import android.util.Log
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
-
-
 
 
 class AudioClassificationHelper(
@@ -50,6 +47,7 @@ class AudioClassificationHelper(
     private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
     private var bytesRead by Delegates.notNull<Int>()
 
+
     private val classifyRunnable = Runnable {
         classifyAudio()
     }
@@ -67,6 +65,7 @@ class AudioClassificationHelper(
         // Set general detection options, e.g. number of used threads
         val baseOptionsBuilder = BaseOptions.builder()
             .setNumThreads(numThreads)
+
 
         // Use the specified hardware for running the model. Default to CPU.
         // Possible to also use a GPU delegate, but this requires that the classifier be created
@@ -111,8 +110,9 @@ class AudioClassificationHelper(
 
 
     fun startAudioClassification() {
-        // 음성 녹음 중이면 중복 시작 방지
+        Log.e("자동녹음",  "자동녹음 실행중")
 
+        // 음성 녹음 중이면 중복 시작 방지
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
             return
         }
@@ -131,7 +131,7 @@ class AudioClassificationHelper(
         val interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩값으로 반복 간격 계산
 
         executor.scheduleAtFixedRate(
-            classifyRunnable,
+            classifyRunnable,   //-> classifyAudio() 호출
             0,
             interval,
             TimeUnit.MILLISECONDS)
@@ -151,6 +151,7 @@ class AudioClassificationHelper(
         val output = classifier.classify(tensorAudio) //분류 실행
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime  //분류하는데 걸리는 시간 계산
         listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
+
     }
 
     fun stopAudioClassification() {
@@ -167,5 +168,7 @@ class AudioClassificationHelper(
         const val YAMNET_MODEL = "yamnet.tflite"  // 사용하는 모델, default 값은 YAMNET 설정
         const val SPEECH_COMMAND_MODEL = "speech.tflite"
     }
+
+
 
 }

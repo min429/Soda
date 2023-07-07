@@ -21,6 +21,7 @@ import android.media.MediaRecorder
 
 import android.util.Log
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -43,8 +44,7 @@ import org.tensorflow.lite.examples.audio.R
 import org.tensorflow.lite.examples.audio.databinding.FragmentAudioBinding
 import org.tensorflow.lite.examples.audio.ui.ProbabilitiesAdapter
 import org.tensorflow.lite.support.label.Category
-
-
+import java.io.File
 
 
 // AudioClassificationListener 인터페이스
@@ -328,13 +328,71 @@ class AudioFragment : Fragment() {
         )
     }
 
+
+    private var recorder: MediaRecorder? = null
+    private var outputFile: File? = null
+
     private fun startRecording() {
-        audioHelper.startAudioClassification()
+        //기본 분류 작동
+        //audioHelper.startAudioClassification()
+
+//        //별개 녹음 작동
+//        try {
+//            // 녹음 파일 생성
+//            val fileName = "${System.currentTimeMillis()}.3gp"
+//            val filePath = "${requireActivity().externalCacheDir?.absolutePath}/$fileName"
+//            outputFile = File(filePath)
+//            MediaRecorder().apply {
+//                setAudioSource(MediaRecorder.AudioSource.MIC) // 마이크 사용
+//                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+//                setOutputFile(outputFile?.absolutePath)
+//                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+//                prepare()
+//                start() // 녹음 시작
+//            }
+//            isRecording = true
+//            Log.d("AudioFragment", "녹음 시작")
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+
+
+
     }
 
     private fun stopRecording() {
-        audioHelper.stopAudioClassification()
+        //기본분류 작동
+        //audioHelper.stopAudioClassification()
+//        //별개 녹음 작동
+//        try {
+//            if (isRecording && outputFile != null) {
+//                recorder?.apply {
+//                    stop() // 녹음 중지
+//                    release() // 녹음 리소스 해제
+//                }
+//                addRecordingToMediaLibrary() // 녹음된 파일을 미디어 라이브러리에 추가
+//                isRecording = false
+//                Log.d("AudioFragment", "녹음 중지")
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+
+
+
     }
+
+//    // 미디어 라이브러리에 녹음된 파일을 추가
+//    private fun addRecordingToMediaLibrary() {
+//        // 녹음된 파일을 미디어 라이브러리에 추가
+//        MediaScannerConnection.scanFile(
+//            requireContext(),
+//            arrayOf(outputFile?.absolutePath),
+//            arrayOf("audio/*"),
+//            null
+//        )
+//    }
+
 
 
 

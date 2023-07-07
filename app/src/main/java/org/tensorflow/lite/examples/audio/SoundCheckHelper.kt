@@ -31,7 +31,7 @@ object SoundCheckHelper {
         // RMS를 데시벨로 변환하기
         // 0에 로그를 취하는 것을 방지하기 위해 1e-7 추가하기
         val soundDecibel = 30 * log10(rms * 5000 + 1e-7)
-        Log.d(TAG, "soundDecibel: $soundDecibel")
+        //Log.d(TAG, "soundDecibel: $soundDecibel")
 
         // 소리 크기가 100데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
         if (soundDecibel >= 100) {
