@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        activityMainBinding.buttonBack.setOnClickListener{
+            onBackPressed() // 뒤로가기 기능을 수행하는 메서드 호출
+        }
+
         activityMainBinding.navigationView.background.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // Switch가 On인 경우
