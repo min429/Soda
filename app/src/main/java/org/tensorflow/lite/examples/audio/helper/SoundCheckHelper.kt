@@ -1,4 +1,4 @@
-package org.tensorflow.lite.examples.audio
+package org.tensorflow.lite.examples.audio.helper
 
 import android.content.Context
 import android.os.Build
@@ -14,6 +14,7 @@ private const val TAG = "SoundCheckHelper"
 private lateinit var buffer: TensorBuffer
 
 object SoundCheckHelper {
+    var soundDecibel: Int = 0
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
@@ -30,7 +31,7 @@ object SoundCheckHelper {
 
         // RMS를 데시벨로 변환하기
         // 0에 로그를 취하는 것을 방지하기 위해 1e-7 추가하기
-        val soundDecibel = 30 * log10(rms * 5000 + 1e-7)
+        soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
         Log.d(TAG, "soundDecibel: $soundDecibel")
 
         // 소리 크기가 100데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
@@ -50,7 +51,12 @@ object SoundCheckHelper {
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        1000,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             } else {
                 vibrator.vibrate(1000)
             }

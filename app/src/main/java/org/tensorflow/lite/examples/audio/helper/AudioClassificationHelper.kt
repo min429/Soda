@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *             http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.tensorflow.lite.examples.audio
+package org.tensorflow.lite.examples.audio.helper
 
 import android.content.Context
 import android.media.AudioRecord
@@ -24,7 +24,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
 import kotlin.properties.Delegates
@@ -33,14 +32,14 @@ import kotlin.properties.Delegates
 
 
 class AudioClassificationHelper(
-  val context: Context,
-  val listener: AudioClassificationListener,
-  var currentModel: String = YAMNET_MODEL, //현재 모델
-  var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
-  var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
-  var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
-  var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
-  var numThreads: Int = 2 //쓰레드 개수
+    val context: Context,
+    val listener: AudioClassificationListener,
+    var currentModel: String = YAMNET_MODEL, //현재 모델
+    var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
+    var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
+    var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
+    var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
+    var numThreads: Int = 2 //쓰레드 개수
 
 ) {
     private lateinit var classifier: AudioClassifier
@@ -84,7 +83,7 @@ class AudioClassificationHelper(
 
         // Configures a set of parameters for the classifier and what results will be returned.
         val options = AudioClassifier.AudioClassifierOptions.builder()
-            .setScoreThreshold(classificationThreshold)//분류할 임계값 설정
+            .setScoreThreshold(classificationThreshold) //분류할 임계값 설정
             .setMaxResults(numOfResults) //분류 결과의 최대 개수
             .setBaseOptions(baseOptionsBuilder.build())
             .build()
@@ -128,7 +127,7 @@ class AudioClassificationHelper(
         val lengthInMilliSeconds = ((classifier.requiredInputBufferSize * 1.0f) /
                 classifier.requiredTensorAudioFormat.sampleRate) * 1000  //오디오가 얼마나 길어야 하는지 계산
 
-        val interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩값으로 반복 간격 계산
+        interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩값으로 반복 간격 계산
 
         executor.scheduleAtFixedRate(
             classifyRunnable,
@@ -149,13 +148,14 @@ class AudioClassificationHelper(
         bytesRead = tensorAudio.load(recorder)
         var inferenceTime = SystemClock.uptimeMillis()
         val output = classifier.classify(tensorAudio) //분류 실행
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime  //분류하는데 걸리는 시간 계산
+        inferenceTime = SystemClock.uptimeMillis() - inferenceTime //분류하는데 걸리는 시간 계산
         listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
     }
 
     fun stopAudioClassification() {
-        recorder.stop()//오디오 녹음 중지
-        executor.shutdownNow()//분류 작업 중지
+        recorder.stop() //오디오 녹음 중지
+        executor.shutdownNow() //분류 작업 중지
+        soundCheckExecutor.shutdownNow() //데시벨 확인 중지
     }
 
     companion object {
@@ -164,8 +164,9 @@ class AudioClassificationHelper(
         const val DISPLAY_THRESHOLD = 0.3f //결과 출력에 영향을 미치는 임계선 값
         const val DEFAULT_NUM_OF_RESULTS = 2 //분류 결과의 최대 개수, default 2개 설정
         const val DEFAULT_OVERLAP_VALUE = 0.5f  //반복 실행 간격, default 값은 0.5 설정
-        const val YAMNET_MODEL = "yamnet.tflite"  // 사용하는 모델, default 값은 YAMNET 설정
+        const val YAMNET_MODEL = "yamnet.tflite" // 사용하는 모델, default 값은 YAMNET 설정
         const val SPEECH_COMMAND_MODEL = "speech.tflite"
+        var interval by Delegates.notNull<Long>()
     }
 
 }
