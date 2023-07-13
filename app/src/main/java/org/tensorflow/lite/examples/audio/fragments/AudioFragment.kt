@@ -334,64 +334,69 @@ class AudioFragment : Fragment() {
 
     private fun startRecording() {
         //기본 분류 작동
-        //audioHelper.startAudioClassification()
+        audioHelper.startAudioClassification()
 
-//        //별개 녹음 작동
-//        try {
-//            // 녹음 파일 생성
-//            val fileName = "${System.currentTimeMillis()}.3gp"
-//            val filePath = "${requireActivity().externalCacheDir?.absolutePath}/$fileName"
-//            outputFile = File(filePath)
-//            MediaRecorder().apply {
-//                setAudioSource(MediaRecorder.AudioSource.MIC) // 마이크 사용
-//                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-//                setOutputFile(outputFile?.absolutePath)
-//                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-//                prepare()
-//                start() // 녹음 시작
-//            }
-//            isRecording = true
-//            Log.d("AudioFragment", "녹음 시작")
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
+        //별개 녹음 작동
+        try {
+            // 녹음 파일 생성
+            val fileName = "${System.currentTimeMillis()}.3gp"
+            // 녹음 파일의 이름을 생성합니다. 현재 시간을 기준으로 파일명을 지정하고 확장자는 ".3gp"를 사용합니다.
 
+            val filePath = "${requireActivity().externalCacheDir?.absolutePath}/$fileName"
+            // 녹음 파일이 저장될 경로를 생성합니다. 외부 캐시 디렉토리에 파일을 저장하기 위함입니다.
 
-
+            outputFile = File(filePath)
+            // 생성된 파일 경로를 이용해 File 객체를 생성합니다.
+            MediaRecorder().apply { //MediaRecorder 객체를 생성하고, 녹음을 시작합니다
+                setAudioSource(MediaRecorder.AudioSource.MIC) // 마이크 사용
+                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setOutputFile(outputFile?.absolutePath)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                prepare()
+                start() // 녹음 시작
+            }
+            isRecording = true
+            Log.d("AudioFragment", "녹음 시작")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("AudioFragment", "녹음 시작 실패")
+        }
     }
 
     private fun stopRecording() {
         //기본분류 작동
-        //audioHelper.stopAudioClassification()
-//        //별개 녹음 작동
-//        try {
-//            if (isRecording && outputFile != null) {
-//                recorder?.apply {
-//                    stop() // 녹음 중지
-//                    release() // 녹음 리소스 해제
-//                }
-//                addRecordingToMediaLibrary() // 녹음된 파일을 미디어 라이브러리에 추가
-//                isRecording = false
-//                Log.d("AudioFragment", "녹음 중지")
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
+        audioHelper.stopAudioClassification()
+
+        //별개 녹음 작동
+        try {
+            if (isRecording && outputFile != null) {
+                recorder?.apply {
+                    stop() // 녹음 중지
+                    release() // 녹음 리소스 해제
+                }
+                addRecordingToMediaLibrary() // 녹음된 파일을 미디어 라이브러리에 추가
+                isRecording = false
+                Log.d("AudioFragment", "녹음 중지")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("AudioFragment", "녹음 중지실패")
+        }
 
 
 
     }
 
-//    // 미디어 라이브러리에 녹음된 파일을 추가
-//    private fun addRecordingToMediaLibrary() {
-//        // 녹음된 파일을 미디어 라이브러리에 추가
-//        MediaScannerConnection.scanFile(
-//            requireContext(),
-//            arrayOf(outputFile?.absolutePath),
-//            arrayOf("audio/*"),
-//            null
-//        )
-//    }
+    // 미디어 라이브러리에 녹음된 파일을 추가
+    private fun addRecordingToMediaLibrary() {
+        // 녹음된 파일을 미디어 라이브러리에 추가
+        MediaScannerConnection.scanFile(
+            requireContext(),
+            arrayOf(outputFile?.absolutePath),
+            arrayOf("audio/*"),
+            null
+        )
+    }
 
 
 
