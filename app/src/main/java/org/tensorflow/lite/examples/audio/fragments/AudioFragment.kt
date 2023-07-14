@@ -151,7 +151,7 @@ class AudioFragment : Fragment() {
                 adapter.categoryList = emptyList()
                 adapter.notifyDataSetChanged()
                 isSwitchOn = false
-                stopRecording()// -> 녹음중단
+                audioHelper.stopAudioClassification() //-> 녹음 중단
             }
         }
 
@@ -391,13 +391,13 @@ class AudioFragment : Fragment() {
         Log.d("AudioFragment", "녹음 실행중")
     }
 
-//    override fun onPause() {
-//        super.onPause()
-//        if (::audioHelper.isInitialized ) {
-//            audioHelper.stopAudioClassification()
-//        }
-//        Log.e("AudioFragment", "녹음 중단중")
-//    }
+    override fun onPause() {
+        super.onPause()
+        if (::audioHelper.isInitialized ) {
+            audioHelper.stopAudioClassification()
+        }
+        Log.e("AudioFragment", "녹음 중단중")
+    }
 
     override fun onDestroyView() {
         _fragmentBinding = null
