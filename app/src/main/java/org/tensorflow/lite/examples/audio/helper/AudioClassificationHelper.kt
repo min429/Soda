@@ -28,6 +28,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
+private const val TAG = "AudioClassificationHelper"
 
 class AudioClassificationHelper(
     val context: Context,
@@ -110,7 +111,7 @@ class AudioClassificationHelper(
 
 
     fun startAudioClassification() {
-        Log.d("자동녹음",  "자동녹음 실행중")
+        Log.d(TAG,  "자동녹음 실행중")
 
         // 음성 녹음 중이면 중복 시작 방지
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
@@ -158,6 +159,7 @@ class AudioClassificationHelper(
         recorder.stop() //오디오 녹음 중지
         executor.shutdownNow() //분류 작업 중지
         soundCheckExecutor.shutdownNow() //데시벨 확인 중지
+        Log.d(TAG, "자동녹음 중지")
     }
 
     companion object {
@@ -169,7 +171,5 @@ class AudioClassificationHelper(
         const val YAMNET_MODEL = "yamnet.tflite" //사용하는 모델, default 값은 YAMNET 설정
         var interval by Delegates.notNull<Long>()
     }
-
-
 
 }

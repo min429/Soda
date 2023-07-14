@@ -80,9 +80,6 @@ class AudioFragment : Fragment() {
     private var duplication_check = false // 음성인식 시작 중복 처리 플래그 변수
     val recognizedText = mutableListOf<String>() // 수정: recognizedText 변수를 리스트로 선언하고 초기화
     //private var recognizedText: String = "" // 음성 인식 결과를 저장하는 변수
-    //
-
-    private lateinit var audioHelper: AudioClassificationHelper// AudioClassificationHelper 객체 선언
 
     // AudioClassificationListener 객체 생성 및 오버라이딩 메서드 구현
     private val audioClassificationListener = object : AudioClassificationListener {
@@ -151,8 +148,7 @@ class AudioFragment : Fragment() {
                 adapter.categoryList = emptyList()
                 adapter.notifyDataSetChanged()
                 isSwitchOn = false
-                audioHelper.stopAudioClassification()
-//                stopRecording()// -> 녹음중단
+                stopRecording() // -> 녹음중단
             }
         }
 
@@ -179,7 +175,7 @@ class AudioFragment : Fragment() {
 
                 } else { // 음성 인식 중이면 음성인식 종료
                     isListening = false
-                    speechRecognizer.cancel()
+                    speechRecognizer.stopListening()
                     recordButton.text = "녹음 시작" // stt녹음 중지 시 버튼 텍스트 변경
                     val text = recognizedText.joinToString(separator = " ")
                     stttext.setText(text)
@@ -224,7 +220,6 @@ class AudioFragment : Fragment() {
                 else{
                     Toast.makeText(requireContext(), "음성 인식 중간 이어서~", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
                 }
-
             }
 
             override fun onBeginningOfSpeech() {}
@@ -263,7 +258,6 @@ class AudioFragment : Fragment() {
                     speechRecognizer.startListening(intent)
 
                 }
-
             }
 
             override fun onPartialResults(partialResults: Bundle?) {}
@@ -381,24 +375,22 @@ class AudioFragment : Fragment() {
 //    }
 //-------------------------------------------------------------------------------------
 
-    override fun onResume() {
-        super.onResume()
-        // Make sure that all permissions are still present, since the
-        // user could have removed them while the app was in paused state.
-        if (!PermissionsFragment.hasPermissions(requireContext())) {
-            Navigation.findNavController(requireActivity(), R.id.fragment_container)
-                .navigate(AudioFragmentDirections.actionAudioToPermissions())
-        }
-        audioHelper?.startAudioClassification()
-        Log.d("AudioFragment", "녹음 실행중")
-    }
-
+//    override fun onResume() {
+//        super.onResume()
+//        // Make sure that all permissions are still present, since the
+//        // user could have removed them while the app was in paused state.
+//        if (!PermissionsFragment.hasPermissions(requireContext())) {
+//            Navigation.findNavController(requireActivity(), R.id.fragment_container)
+//                .navigate(AudioFragmentDirections.actionAudioToPermissions())
+//        }
+//        audioHelper?.startAudioClassification()
+//        Log.d("AudioFragment", "녹음 실행중")
+//    }
+//
 //    override fun onPause() {
 //        super.onPause()
-//        if (::audioHelper.isInitialized ) {
-//            audioHelper.stopAudioClassification()
-//        }
-//        Log.e("AudioFragment", "녹음 중단중")
+//        audioHelper?.stopAudioClassification()
+//        Log.d("AudioFragment", "녹음 중단중")
 //    }
 
     override fun onDestroyView() {
@@ -418,6 +410,5 @@ class AudioFragment : Fragment() {
             audioHelper?.stopAudioClassification()
         }
     }
-
 
 }

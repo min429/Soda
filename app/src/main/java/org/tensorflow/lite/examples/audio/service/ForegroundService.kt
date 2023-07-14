@@ -40,7 +40,6 @@ class ForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand: start")
         if(label != null){
             val notification = createNotification()
             startForeground(notificationId, notification)
