@@ -41,7 +41,7 @@
         android:background="@drawable/circle_button"
         android:elevation="20dp"
         android:stateListAnimator="@null"
-        android:text="녹음"
+        android:text="녹음 시작"
         android:textSize="24sp"
         app:layout_anchor="@+id/bottom_sheet_layout"
         app:layout_anchorGravity="top|center" />
@@ -68,11 +68,13 @@
         <EditText
             android:id="@+id/stt_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_alignBaseline="@+id/stt_button"
             android:layout_alignBottom="@+id/stt_button"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="-7dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="-113dp"
+            android:layout_marginBottom="-13dp"
             android:layout_toStartOf="@+id/stt_button"
             android:text="Recognition text"
             android:textSize="18sp" />
@@ -86,7 +88,7 @@
             android:layout_marginRight="25dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-
+            android:alpha="0"
             android:text="STT 변환" />
 
     </RelativeLayout>
