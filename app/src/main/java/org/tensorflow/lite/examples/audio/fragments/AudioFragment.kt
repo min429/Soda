@@ -77,7 +77,9 @@ class AudioFragment : Fragment() {
 
     //stt 용
     private lateinit var speechRecognizer: SpeechRecognizer
-    var isListening = false
+    private var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
+    val recognizedText = mutableListOf<String>() // 수정: recognizedText 변수를 리스트로 선언하고 초기화
+    //private var recognizedText: String = "" // 음성 인식 결과를 저장하는 변수
     //
 
     private lateinit var audioHelper: AudioClassificationHelper// AudioClassificationHelper 객체 선언
@@ -204,26 +206,73 @@ class AudioFragment : Fragment() {
             }
 
             override fun onResults(results: Bundle?) {
+
+                Log.d("STTonResults", " stt 처리 쏴주기")
                 // 인식된 결과 처리
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (matches != null && matches.isNotEmpty()) {
-                    val recognizedText = matches[0]
+                    recognizedText.add(matches[0])
+                    //recognizedText = matches[0] // 그냥 텍스트 넘기기
+                    //val recognizedText = matches[0]
                     // resultTextView.text = recognizedText // 수정: resultTextView가 정의되어 있지 않으므로 해당 코드 주석 처리
-                    stttext.setText(recognizedText)// 수정: stttext를 사용하여 인식된 텍스트를 표시
+                    //stttext.setText(recognizedText)// 수정: stttext를 사용하여 인식된 텍스트를 표시
                 }
+                if(isListening) {
+                    Log.d("STTonResults", " stt 처리 쏴주기 다시재시작")
+                    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
+//                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 기한 5초
+//                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 기한 5분
+
+                    speechRecognizer.startListening(intent)
+
+                }
+
             }
 
-            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onPartialResults(partialResults: Bundle?) {
+                Log.d("순간결과 출력", " 이함수가 호출은 되는겨??")
+                val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (matches != null && matches.isNotEmpty()) {
+                    val text = matches[0]
+//                    stttext.setText(text)
+                    Log.d("순간결과 출력", text)
+                }
+
+
+            }
 
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
 
         // stt 버튼 클릭
         sttButton.setOnClickListener {
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
-            speechRecognizer.startListening(intent)
+            if (!isListening) { // 음성 인식 중이 아닌 경우에만 음성인식 시작
+                isListening = true
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
+//                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 기한 5초
+//                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 기한 5분
+
+                speechRecognizer.startListening(intent)
+                sttButton.text = "stt 녹음중지" // stt녹음 시작 시 버튼 텍스트 변경
+
+                Log.d("isListening", isListening.toString())
+                Log.d("stt", "stt 음성인식 시작")
+
+            } else { // 음성 인식 중이면 음성인식 종료
+                isListening = false
+                speechRecognizer.cancel()
+                sttButton.text = "stt 녹음시작" // stt녹음 중지 시 버튼 텍스트 변경
+                val text = recognizedText.joinToString(separator = " ")
+                stttext.setText(text)
+                recognizedText.clear() // 다음 인식을 위해 비우기
+
+                Log.d("isListening", isListening.toString())
+                Log.d("stt", "stt 음성인식 중단")
+            }
         }
 
 
@@ -487,9 +536,5 @@ class AudioFragment : Fragment() {
         super.onDestroyView()
         speechRecognizer.destroy()
     }
-
-
-
-
 
 }
