@@ -30,21 +30,6 @@
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_probability" />
 
-    <Button
-        android:id="@+id/record_button"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:background="@drawable/circle_button"
-        android:elevation="20dp"
-        android:stateListAnimator="@null"
-        android:text="녹음"
-        android:textSize="24sp"
-        app:layout_anchor="@+id/bottom_sheet_layout"
-        app:layout_anchorGravity="top|center" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -61,7 +46,6 @@
             android:textOn="record ON"
             android:textOff="record OFF"
             android:checked="true"
-
             />
 
         <EditText
@@ -87,9 +71,19 @@
             android:layout_marginTop="10dp"
             android:text="STT 변환" />
 
+        <Button
+            android:id="@+id/record_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="65dp"
+            android:background="@drawable/circle_button"
+            android:elevation="20dp"
+            android:stateListAnimator="@null"
+            android:text="녹음"
+            android:textSize="24sp"
+            android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
-    <include
-        android:id="@+id/bottom_sheet_layout"
-        layout="@layout/controls_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

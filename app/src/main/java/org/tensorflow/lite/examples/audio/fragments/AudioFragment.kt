@@ -61,8 +61,6 @@ class AudioFragment : Fragment() {
                 if(!results.isEmpty())
                     ForegroundService.label = TextMatchingHelper.textMatch(results[0])
                 adapter.notifyDataSetChanged()
-                fragmentAudioBinding.bottomSheetLayout.inferenceTimeVal.text =
-                    String.format("%d ms", inferenceTime)
             }
         }
         // 오류 발생 시 호출되며 Toast 메시지 출력 후 어댑터를 초기화하여 화면에 표시되는 확률값을 모두 0으로 만듭니다.
@@ -149,161 +147,11 @@ class AudioFragment : Fragment() {
 
         }
 
-
         // stt 텍스트표기될 위치
         val stt_text = fragmentAudioBinding.sttText
         stt_text.setText("stt표기될 부분")
         //----------------------------------------------------------------------------------
 
-
-        // Allow the user to select between multiple supported audio models.
-        // The original location and documentation for these models is listed in
-        // the `download_model.gradle` file within this sample. You can also create your own
-        // audio model by following the documentation here:
-        // https://www.tensorflow.org/lite/models/modify/model_maker/speech_recognition
-
-        // 라디오 그룹 클릭 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.modelSelector.setOnCheckedChangeListener(
-            object : RadioGroup.OnCheckedChangeListener {
-            override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-                // 모델 선택에 따라 AudioClassificationHelper의 멤버 변수 설정 변경
-                when (checkedId) {
-                    R.id.yamnet -> {
-                        audioHelper?.stopAudioClassification()
-                        audioHelper?.currentModel = AudioClassificationHelper.YAMNET_MODEL
-                        audioHelper?.initClassifier()
-                    }
-                    R.id.speech_command -> {
-                        audioHelper?.stopAudioClassification()
-                        audioHelper?.currentModel = AudioClassificationHelper.SPEECH_COMMAND_MODEL
-                        audioHelper?.initClassifier()
-                    }
-                }
-            }
-        })
-
-        // Allow the user to change the amount of overlap used in classification. More overlap
-        // can lead to more accurate resolves in classification.
-        // 스피너 선택 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.spinnerOverlap.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                  view: View?,
-                  position: Int,
-                  id: Long
-                ) {
-                    // Overlap 설정 변경
-                    audioHelper?.stopAudioClassification()
-                    audioHelper?.overlap = 0.25f * position
-                    audioHelper?.startAudioClassification()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    // no op
-                }
-            }
-
-        // Allow the user to change the max number of results returned by the audio classifier.
-        // Currently allows between 1 and 5 results, but can be edited here.
-        // 결과 및 확률값 수정 버튼 클릭 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.resultsMinus.setOnClickListener {
-            if (audioHelper?.numOfResults!! > 1) {
-                audioHelper?.numOfResults = audioHelper?.numOfResults!! - 1
-                audioHelper?.stopAudioClassification()
-                audioHelper?.initClassifier()
-                fragmentAudioBinding.bottomSheetLayout.resultsValue.text =
-                    audioHelper?.numOfResults.toString()
-            }
-        }
-
-        fragmentAudioBinding.bottomSheetLayout.resultsPlus.setOnClickListener {
-            if (audioHelper?.numOfResults!! < 5) {
-                audioHelper?.numOfResults = audioHelper?.numOfResults!! + 1
-                audioHelper?.stopAudioClassification()
-                audioHelper?.initClassifier()
-                fragmentAudioBinding.bottomSheetLayout.resultsValue.text =
-                    audioHelper?.numOfResults.toString()
-            }
-        }
-
-        // Allow the user to change the confidence threshold required for the classifier to return
-        // a result. Increments in steps of 10%.
-
-        // Confidence threshold 수정 버튼 클릭 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.thresholdMinus.setOnClickListener {
-            if (audioHelper?.classificationThreshold!! >= 0.2) {
-                audioHelper?.stopAudioClassification()
-                audioHelper?.classificationThreshold = audioHelper?.classificationThreshold!! - 0.1f
-                audioHelper?.initClassifier()
-                fragmentAudioBinding.bottomSheetLayout.thresholdValue.text =
-                    String.format("%.2f", audioHelper?.classificationThreshold)
-            }
-        }
-
-
-        // Thread 개수 수정 버튼 클릭 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.thresholdPlus.setOnClickListener {
-            if (audioHelper?.classificationThreshold!! <= 0.8) {
-                audioHelper?.stopAudioClassification()
-                audioHelper?.classificationThreshold = audioHelper?.classificationThreshold!! + 0.1f
-                audioHelper?.initClassifier()
-                fragmentAudioBinding.bottomSheetLayout.thresholdValue.text =
-                    String.format("%.2f", audioHelper?.classificationThreshold)
-            }
-        }
-
-        // Allow the user to change the number of threads used for classification
-        fragmentAudioBinding.bottomSheetLayout.threadsMinus.setOnClickListener {
-            if (audioHelper?.numThreads!! > 1) {
-                audioHelper?.stopAudioClassification()
-                audioHelper?.numThreads = audioHelper?.numThreads!! - 1
-                fragmentAudioBinding.bottomSheetLayout.threadsValue.text = audioHelper?.numThreads.toString()
-                audioHelper?.initClassifier()
-            }
-        }
-
-        fragmentAudioBinding.bottomSheetLayout.threadsPlus.setOnClickListener {
-            if (audioHelper?.numThreads!! < 4) {
-                audioHelper?.stopAudioClassification()
-                audioHelper?.numThreads = audioHelper?.numThreads!! + 1
-                fragmentAudioBinding.bottomSheetLayout.threadsValue.text = audioHelper?.numThreads.toString()
-                audioHelper?.initClassifier()
-            }
-        }
-
-        // When clicked, change the underlying hardware used for inference. Current options are CPU
-        // and NNAPI. GPU is another available option, but when using this option you will need
-        // to initialize the classifier on the thread that does the classifying. This requires a
-        // different app structure than is used in this sample.
-
-        // Delegate 선택 리스너 설정
-        fragmentAudioBinding.bottomSheetLayout.spinnerDelegate.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                  parent: AdapterView<*>?,
-                  view: View?,
-                  position: Int,
-                  id: Long
-                ) {
-                    audioHelper?.stopAudioClassification()
-                    audioHelper?.currentDelegate = position
-                    audioHelper?.initClassifier()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    /* no op */
-                }
-            }
-
-        fragmentAudioBinding.bottomSheetLayout.spinnerOverlap.setSelection(
-            2,
-            false
-        )
-        fragmentAudioBinding.bottomSheetLayout.spinnerDelegate.setSelection(
-            0,
-            false
-        )
     }
 
     override fun onResume() {

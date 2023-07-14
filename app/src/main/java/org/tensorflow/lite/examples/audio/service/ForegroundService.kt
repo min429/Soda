@@ -11,10 +11,13 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.tensorflow.lite.examples.audio.MainActivity
 import org.tensorflow.lite.examples.audio.R
 import org.tensorflow.lite.examples.audio.helper.AudioClassificationHelper
+
+private const val TAG = "ForegroundService"
 
 class ForegroundService : Service() {
     private val channelId = "ForegroundServiceChannel"
@@ -94,6 +97,8 @@ class ForegroundService : Service() {
             .setContentIntent(pendingIntent) // 알림을 탭해도 아무 작업도 수행하지 않음
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
+
+        Log.d(TAG, "label: $label")
 
         return notification
     }
