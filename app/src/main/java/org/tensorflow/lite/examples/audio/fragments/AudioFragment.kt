@@ -17,26 +17,21 @@
 package org.tensorflow.lite.examples.audio.fragments
 
 
+import android.content.Intent
 import android.media.MediaRecorder
-
-import android.util.Log
-import android.content.Context
 import android.media.MediaScannerConnection
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.Environment
+import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.RadioGroup
-import android.widget.Switch
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import org.tensorflow.lite.examples.audio.AudioClassificationHelper
@@ -44,7 +39,24 @@ import org.tensorflow.lite.examples.audio.R
 import org.tensorflow.lite.examples.audio.databinding.FragmentAudioBinding
 import org.tensorflow.lite.examples.audio.ui.ProbabilitiesAdapter
 import org.tensorflow.lite.support.label.Category
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.Locale
+
+//stt
+
+import android.Manifest
+import android.content.pm.PackageManager
+import android.speech.RecognitionListener
+import android.speech.SpeechRecognizer
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 
 
 // AudioClassificationListener 인터페이스
@@ -52,7 +64,6 @@ interface AudioClassificationListener {
     fun onError(error: String)  // 오류 발생 시 호출
     fun onResult(results: List<Category>, inferenceTime: Long)  // 결과가 도착하면 호출
 }
-
 
 class AudioFragment : Fragment() {
     // 뷰 바인딩을 위한 변수와 어댑터 초기화
@@ -64,6 +75,10 @@ class AudioFragment : Fragment() {
     private var isSwitchOn = true
     private var isRecording = false
 
+    //stt 용
+    private lateinit var speechRecognizer: SpeechRecognizer
+    var isListening = false
+    //
 
     private lateinit var audioHelper: AudioClassificationHelper// AudioClassificationHelper 객체 선언
     // AudioClassificationListener 객체 생성 및 오버라이딩 메서드 구현
@@ -75,7 +90,6 @@ class AudioFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 fragmentAudioBinding.bottomSheetLayout.inferenceTimeVal.text =
                     String.format("%d ms", inferenceTime)
-
             }
         }
         // 오류 발생 시 호출되며 Toast 메시지 출력 후 어댑터를 초기화하여 화면에 표시되는 확률값을 모두 0으로 만듭니다.
@@ -89,12 +103,12 @@ class AudioFragment : Fragment() {
     }
 
 
-    //private var isSwitchOn = false
+
 
     override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // 뷰 바인딩 초기화
         _fragmentBinding = FragmentAudioBinding.inflate(inflater, container, false)
@@ -112,10 +126,11 @@ class AudioFragment : Fragment() {
         )
 
 
-        // 스위치 + 녹음 버튼------------------------------------------------------------------------
+        // 스위치 + STT 녹음 버튼------------------------------------------------------------------------
         val switch = fragmentAudioBinding.switchButton
         val recordButton = view.findViewById<Button>(R.id.record_button)
         val sttButton=view.findViewById<Button>(R.id.stt_button)
+        val stttext = fragmentAudioBinding.sttText
 
         //스위치 클릭
         switch.setOnCheckedChangeListener { _, isChecked ->
@@ -134,8 +149,6 @@ class AudioFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 isSwitchOn = false
                 onPause()// -> 녹음중단
-
-
 
                 //audioHelper.stopAudioClassification()
             }
@@ -160,17 +173,63 @@ class AudioFragment : Fragment() {
             }
 
         }
-        // stt button
+
+
+//        // 권한 확인
+//        val permission = Manifest.permission.RECORD_AUDIO
+//        if (ActivityCompat.checkSelfPermission(requireActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), 0)
+//        }
+
+
+        // SpeechRecognizer 초기화
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext()) // 수정: applicationContext 대신 requireContext() 사용
+        speechRecognizer.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                // 음성 인식 준비 완료
+                Toast.makeText(requireContext(), "음성 인식 시작", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+            }
+
+            override fun onBeginningOfSpeech() {}
+
+            override fun onRmsChanged(rmsdB: Float) {}
+
+            override fun onBufferReceived(buffer: ByteArray?) {}
+
+            override fun onEndOfSpeech() {}
+
+            override fun onError(error: Int) {
+                // 음성 인식 오류 처리
+                Toast.makeText(requireContext(), "음성 인식 오류 발생", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+            }
+
+            override fun onResults(results: Bundle?) {
+                // 인식된 결과 처리
+                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (matches != null && matches.isNotEmpty()) {
+                    val recognizedText = matches[0]
+                    // resultTextView.text = recognizedText // 수정: resultTextView가 정의되어 있지 않으므로 해당 코드 주석 처리
+                    stttext.setText(recognizedText)// 수정: stttext를 사용하여 인식된 텍스트를 표시
+                }
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {}
+
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+        })
+
+        // stt 버튼 클릭
         sttButton.setOnClickListener {
-
-
-
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
+            speechRecognizer.startListening(intent)
         }
 
 
         // stt 텍스트표기될 위치
-        val stt_text = fragmentAudioBinding.sttText
-        stt_text.setText("stt표기될 부분")
+
+        stttext.setText("stt표기될 부분")
         //----------------------------------------------------------------------------------
 
 
@@ -183,22 +242,22 @@ class AudioFragment : Fragment() {
         // 라디오 그룹 클릭 리스너 설정
         fragmentAudioBinding.bottomSheetLayout.modelSelector.setOnCheckedChangeListener(
             object : RadioGroup.OnCheckedChangeListener {
-            override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-                // 모델 선택에 따라 AudioClassificationHelper의 멤버 변수 설정 변경
-                when (checkedId) {
-                    R.id.yamnet -> {
-                        audioHelper.stopAudioClassification()
-                        audioHelper.currentModel = AudioClassificationHelper.YAMNET_MODEL
-                        audioHelper.initClassifier()
-                    }
-                    R.id.speech_command -> {
-                        audioHelper.stopAudioClassification()
-                        audioHelper.currentModel = AudioClassificationHelper.SPEECH_COMMAND_MODEL
-                        audioHelper.initClassifier()
+                override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+                    // 모델 선택에 따라 AudioClassificationHelper의 멤버 변수 설정 변경
+                    when (checkedId) {
+                        R.id.yamnet -> {
+                            audioHelper.stopAudioClassification()
+                            audioHelper.currentModel = AudioClassificationHelper.YAMNET_MODEL
+                            audioHelper.initClassifier()
+                        }
+                        R.id.speech_command -> {
+                            audioHelper.stopAudioClassification()
+                            audioHelper.currentModel = AudioClassificationHelper.SPEECH_COMMAND_MODEL
+                            audioHelper.initClassifier()
+                        }
                     }
                 }
-            }
-        })
+            })
 
         // Allow the user to change the amount of overlap used in classification. More overlap
         // can lead to more accurate resolves in classification.
@@ -207,9 +266,9 @@ class AudioFragment : Fragment() {
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
-                  view: View?,
-                  position: Int,
-                  id: Long
+                    view: View?,
+                    position: Int,
+                    id: Long
                 ) {
                     // Overlap 설정 변경
                     audioHelper.stopAudioClassification()
@@ -303,10 +362,10 @@ class AudioFragment : Fragment() {
         fragmentAudioBinding.bottomSheetLayout.spinnerDelegate.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                  parent: AdapterView<*>?,
-                  view: View?,
-                  position: Int,
-                  id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
                 ) {
                     audioHelper.stopAudioClassification()
                     audioHelper.currentDelegate = position
@@ -399,10 +458,6 @@ class AudioFragment : Fragment() {
     }
 
 
-
-
-
-
     override fun onResume() {
         super.onResume()
         // Make sure that all permissions are still present, since the
@@ -430,6 +485,11 @@ class AudioFragment : Fragment() {
     override fun onDestroyView() {
         _fragmentBinding = null
         super.onDestroyView()
+        speechRecognizer.destroy()
     }
+
+
+
+
 
 }
