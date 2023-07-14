@@ -110,7 +110,7 @@ class AudioClassificationHelper(
 
 
     fun startAudioClassification() {
-        Log.e("자동녹음",  "자동녹음 실행중")
+        Log.d("자동녹음",  "자동녹음 실행중")
 
         // 음성 녹음 중이면 중복 시작 방지
         if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {

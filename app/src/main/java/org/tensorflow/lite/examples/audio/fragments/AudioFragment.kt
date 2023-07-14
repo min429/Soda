@@ -72,9 +72,9 @@ class AudioFragment : Fragment() {
 
     // 스위치 & 버튼용
     private var isSwitchOn = true
-    //private var isRecording = false //- 녹음 버튼 통합으로 코드 통일
+    // private var isRecording = false //- 녹음 버튼 통합으로 코드 통일
 
-    //stt 용
+    // stt 용
     private lateinit var speechRecognizer: SpeechRecognizer
     private var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
     private var duplication_check = false // 음성인식 시작 중복 처리 플래그 변수
@@ -123,8 +123,8 @@ class AudioFragment : Fragment() {
 
         // AudioClassificationHelper 객체 생성 및 초기화
         audioHelper = AudioClassificationHelper(
-                requireContext(),
-        audioClassificationListener
+            requireContext(),
+            audioClassificationListener
         )
 
 
@@ -151,9 +151,11 @@ class AudioFragment : Fragment() {
                 adapter.categoryList = emptyList()
                 adapter.notifyDataSetChanged()
                 isSwitchOn = false
-                audioHelper.stopAudioClassification() //-> 녹음 중단
+                audioHelper.stopAudioClassification()
+//                stopRecording()// -> 녹음중단
             }
         }
+
 
         // 녹음 버튼 클릭------------------------------------------------------------------------
         recordButton.setOnClickListener {
@@ -189,7 +191,7 @@ class AudioFragment : Fragment() {
                     duplication_check=false
                 }
 
-                  // 녹음 버튼 통합으로 임시 주석 처리
+                // 녹음 버튼 통합으로 임시 주석 처리
 //                if (isRecording) {
 //                    stopRecording()
 //                    isRecording = false
@@ -391,13 +393,13 @@ class AudioFragment : Fragment() {
         Log.d("AudioFragment", "녹음 실행중")
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (::audioHelper.isInitialized ) {
-            audioHelper.stopAudioClassification()
-        }
-        Log.e("AudioFragment", "녹음 중단중")
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        if (::audioHelper.isInitialized ) {
+//            audioHelper.stopAudioClassification()
+//        }
+//        Log.e("AudioFragment", "녹음 중단중")
+//    }
 
     override fun onDestroyView() {
         _fragmentBinding = null

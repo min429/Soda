@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,9 +31,13 @@
         android:supportsRtl="true"
         android:taskAffinity=""
         android:theme="@style/AppTheme">
+
+        <service android:name=".service.ForegroundService"/>
+
         <activity
             android:name="org.tensorflow.lite.examples.audio.MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
