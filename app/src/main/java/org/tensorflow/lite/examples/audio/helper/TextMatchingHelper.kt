@@ -9,346 +9,531 @@ object TextMatchingHelper {
         // 카테고리 정보가 Speech일 경우, 화면에 "말하기소리 같습니다." 메시지를 표시
         // 카테고리 정보가 Child speech, kid speaking일 경우, 화면에 "어린이 말하기, 어린이 말하기소리 같습니다." 메시지를 표시
         // ... (여러 분류 결과에 대해 각각 메시지를 할당함)
-        if(category.label.equals("Speech")){label = "말하기소리 같습니다."}
-        else if(category.label.equals("Child speech, kid speaking")){label = "어린이 말하기, 어린이 말하기소리 같습니다."}
-        else if(category.label.equals("Conversation")){label = "대화소리 같습니다."}
-        else if(category.label.equals("Narration, monologue")){label = "내레이션, 독백소리 같습니다."}
-        else if(category.label.equals("Babbling")){label = "옹알이소리 같습니다."}
-        else if(category.label.equals("Speech synthesizer")){label = "음성 합성기소리 같습니다."}
-        else if(category.label.equals("Shout")){label = "Shout소리 같습니다."}
-        else if(category.label.equals("Bellow")){label = "Bellow소리 같습니다."}
-        else if(category.label.equals("Whoop")){label = "Whoop소리 같습니다."}
-        else if(category.label.equals("Yell")){label = "Yell소리 같습니다."}
-        else if(category.label.equals("Children shouting")){label = "소리 지르는 어린이소리 같습니다."}
-        else if(category.label.equals("Screaming")){label = "비명소리 같습니다."}
-        else if(category.label.equals("Whispering")){label = "속삭이는 소리소리 같습니다."}
-        else if(category.label.equals("Laughter")){label = "웃음소리소리 같습니다."}
-        else if(category.label.equals("Baby laughter")){label = "아기 웃음소리 같습니다."}
-        else if(category.label.equals("Giggle")){label = "낄낄거리기소리 같습니다."}
-        else if(category.label.equals("Snicker")){label = "스니커소리 같습니다."}
-        else if(category.label.equals("Belly laugh")){label = "배꼽 웃음소리 같습니다."}
-        else if(category.label.equals("Chuckle, chortle")){label = "낄낄, 낄낄소리 같습니다."}
-        else if(category.label.equals("Crying, sobbing")){label = "울음, 흐느낌소리 같습니다."}
-        else if(category.label.equals("Baby cry, infant cry")){label = "아기 울음, 유아 울음소리 같습니다."}
-        else if(category.label.equals("Whimper")){label = "Whimper소리 같습니다."}
-        else if(category.label.equals("Wail, moan")){label = "울음, 신음소리 같습니다."}
-        else if(category.label.equals("Sigh")){label = "한숨소리 같습니다."}
-        else if(category.label.equals("Singing")){label = "노래소리 같습니다."}
-        else if(category.label.equals("Choir")){label = "합창단소리 같습니다."}
-        else if(category.label.equals("Yodeling")){label = "요들송소리 같습니다."}
-        else if(category.label.equals("Chant")){label = "Chant소리 같습니다."}
-        else if(category.label.equals("Mantra")){label = "만트라소리 같습니다."}
-        else if(category.label.equals("Child singing")){label = "어린이 노래소리 같습니다."}
-        else if(category.label.equals("Synthetic singing")){label = "합성 노래소리 같습니다."}
-        else if(category.label.equals("Rapping")){label = "랩소리 같습니다."}
-        else if(category.label.equals("Humming")){label = "허밍소리 같습니다."}
-        else if(category.label.equals("Groan")){label = "Groan소리 같습니다."}
-        else if(category.label.equals("Grunt")){label = "Grunt소리 같습니다."}
-        else if(category.label.equals("Whistling")){label = "휘파람소리 같습니다."}
-        else if(category.label.equals("Breathing")){label = "호흡소리 같습니다."}
-        else if(category.label.equals("Wheeze")){label = "Wheeze소리 같습니다."}
-        else if(category.label.equals("Snoring")){label = "코골이소리 같습니다."}
-        else if(category.label.equals("Gasp")){label = "Gasp소리 같습니다."}
-        else if(category.label.equals("Pant")){label = "헐떡거림소리 같습니다."}
-        else if(category.label.equals("Snort")){label = "Snort소리 같습니다."}
-        else if(category.label.equals("Cough")){label = "Cough소리 같습니다."}
-        else if(category.label.equals("Throat clearing")){label = "인후통소리 같습니다."}
-        else if(category.label.equals("Sneeze")){label = "재채기소리 같습니다."}
-        else if(category.label.equals("Sniff")){label = "Sniff소리 같습니다."}
-        else if(category.label.equals("Run")){label = "Run소리 같습니다."}
-        else if(category.label.equals("Shuffle")){label = "셔플소리 같습니다."}
-        else if(category.label.equals("Walk, footsteps")){label = "걷기, 발걸음소리 같습니다."}
-        else if(category.label.equals("Chewing, mastication")){label = "씹기, 저작소리 같습니다."}
-        else if(category.label.equals("Biting")){label = "물기소리 같습니다."}
-        else if(category.label.equals("Gargling")){label = "양치질소리 같습니다."}
-        else if(category.label.equals("Stomach rumble")){label = "복부 럼블소리 같습니다."}
-        else if(category.label.equals("Burping, eructation")){label = "트림, 사정소리 같습니다."}
-        else if(category.label.equals("Hiccup")){label = "딸꾹질소리 같습니다."}
-        else if(category.label.equals("Fart")){label = "방귀소리 같습니다."}
-        else if(category.label.equals("Hands")){label = "손소리 같습니다."}
-        else if(category.label.equals("Finger snapping")){label = "손가락 스냅소리 같습니다."}
-        else if(category.label.equals("Clapping")){label = "박수 소리소리 같습니다."}
-        else if(category.label.equals("Heart sounds, heartbeat")){label = "심장 소리, 심장 박동소리 같습니다."}
-        else if(category.label.equals("Heart murmur")){label = "심장 잡음소리 같습니다."}
-        else if(category.label.equals("Cheering")){label = "응원소리 같습니다."}
-        else if(category.label.equals("Applause")){label = "박수소리 같습니다."}
-        else if(category.label.equals("Chatter")){label = "수다소리 같습니다."}
-        else if(category.label.equals("Crowd")){label = "군중소리 같습니다."}
-        else if(category.label.equals("Hubbub, speech noise, speech babble")){label = "윙윙거리는 소리, 말소리, 옹알이 소리소리 같습니다."}
-        else if(category.label.equals("Children playing")){label = "노는 아이들소리 같습니다."}
-        else if(category.label.equals("Animal")){label = "동물소리 같습니다."}
-        else if(category.label.equals("Domestic animals, pets")){label = "가축, 애완동물소리 같습니다."}
-        else if(category.label.equals("Dog")){label = "개소리 같습니다."}
-        else if(category.label.equals("Bark")){label = "Bark소리 같습니다."}
-        else if(category.label.equals("Yip")){label = "Yip소리 같습니다."}
-        else if(category.label.equals("Howl")){label = "Howl소리 같습니다."}
-        else if(category.label.equals("Bow-wow")){label = "Bow-wow소리 같습니다."}
-        else if(category.label.equals("Growling")){label = "Growling소리 같습니다."}
-        else if(category.label.equals("Whimper (dog)")){label = "윙윙(개)소리 같습니다."}
-        else if(category.label.equals("Cat")){label = "고양이소리 같습니다."}
-        else if(category.label.equals("Purr")){label = "Purr소리 같습니다."}
-        else if(category.label.equals("Meow")){label = "Meow소리 같습니다."}
-        else if(category.label.equals("Hiss")){label = "Hiss소리 같습니다."}
-        else if(category.label.equals("Caterwaul")){label = "Caterwaul소리 같습니다."}
-        else if(category.label.equals("Livestock, farm animals, working animals")){label = "가축, 농장 동물, 일하는 동물소리 같습니다."}
-        else if(category.label.equals("Horse")){label = "말소리 같습니다."}
-        else if(category.label.equals("Clip-clop")){label = "클립-클롭소리 같습니다."}
-        else if(category.label.equals("Neigh, whinny")){label = "이웃, 우는 소리소리 같습니다."}
-        else if(category.label.equals("Cattle, bovinae")){label = "소, 소소리 같습니다."}
-        else if(category.label.equals("Moo")){label = "Moo소리 같습니다."}
-        else if(category.label.equals("Cowbell")){label = "Cowbell소리 같습니다."}
-        else if(category.label.equals("Pig")){label = "Pig소리 같습니다."}
-        else if(category.label.equals("Oink")){label = "Oink소리 같습니다."}
-        else if(category.label.equals("Goat")){label = "Goat소리 같습니다."}
-        else if(category.label.equals("Bleat")){label = "Bleat소리 같습니다."}
-        else if(category.label.equals("Sheep")){label = "Sheep소리 같습니다."}
-        else if(category.label.equals("Fowl")){label = "Fowl소리 같습니다."}
-        else if(category.label.equals("Chicken, rooster")){label = "닭, 수탉소리 같습니다."}
-        else if(category.label.equals("Cluck")){label = "Cluck소리 같습니다."}
-        else if(category.label.equals("Crowing, cock-a-doodle-doo")){label = "울음소리, 두두두두소리 같습니다."}
-        else if(category.label.equals("Turkey")){label = "칠면조소리 같습니다."}
-        else if(category.label.equals("Gobble")){label = "Gobble소리 같습니다."}
-        else if(category.label.equals("Duck")){label = "Duck소리 같습니다."}
-        else if(category.label.equals("Quack")){label = "Quack소리 같습니다."}
-        else if(category.label.equals("Goose")){label = "Goose소리 같습니다."}
-        else if(category.label.equals("Honk")){label = "Honk소리 같습니다."}
-        else if(category.label.equals("Wild animals")){label = "야생 동물소리 같습니다."}
-        else if(category.label.equals("Roaring cats (lions, tigers)")){label = "포효하는 고양이(사자, 호랑이)소리 같습니다."}
-        else if(category.label.equals("Roar")){label = "Roar소리 같습니다."}
-        else if(category.label.equals("Bird")){label = "Bird소리 같습니다."}
-        else if(category.label.equals("Bird vocalization, bird call, bird song")){label = "새 발성, 새 울음소리, 새 노래소리 같습니다."}
-        else if(category.label.equals("Chirp, tweet")){label = "지저귀는 소리, 지저귀는 소리소리 같습니다."}
-        else if(category.label.equals("Squawk")){label = "스쿼크소리 같습니다."}
-        else if(category.label.equals("Pigeon, dove")){label = "비둘기, 비둘기소리 같습니다."}
-        else if(category.label.equals("Coo")){label = "Coo소리 같습니다."}
-        else if(category.label.equals("Crow")){label = "까마귀소리 같습니다."}
-        else if(category.label.equals("Caw")){label = "Caw소리 같습니다."}
-        else if(category.label.equals("Owl")){label = "Owl소리 같습니다."}
-        else if(category.label.equals("Hoot")){label = "Hoot소리 같습니다."}
-        else if(category.label.equals("Bird flight, flapping wings")){label = "새의 비행, 날갯짓소리 같습니다."}
-        else if(category.label.equals("Canidae, dogs, wolves")){label = "개과 동물, 개, 늑대소리 같습니다."}
-        else if(category.label.equals("Rodents, rats, mice")){label = "설치류, 쥐, 생쥐소리 같습니다."}
-        else if(category.label.equals("Mouse")){label = "마우스소리 같습니다."}
-        else if(category.label.equals("Patter")){label = "Patter소리 같습니다."}
-        else if(category.label.equals("Insect")){label = "곤충소리 같습니다."}
-        else if(category.label.equals("Cricket")){label = "크리켓소리 같습니다."}
-        else if(category.label.equals("Mosquito")){label = "모기소리 같습니다."}
-        else if(category.label.equals("Fly, housefly")){label = "파리, 집파리소리 같습니다."}
-        else if(category.label.equals("Buzz")){label = "Buzz소리 같습니다."}
-        else if(category.label.equals("Bee, wasp, etc.")){label = "벌, 말벌 등소리 같습니다."}
-        else if(category.label.equals("Frog")){label = "개구리소리 같습니다."}
-        else if(category.label.equals("Croak")){label = "Croak소리 같습니다."}
-        else if(category.label.equals("Snake")){label = "뱀소리 같습니다."}
-        else if(category.label.equals("Rattle")){label = "딸랑이소리 같습니다."}
-        else if(category.label.equals("Whale vocalization")){label = "고래 발성소리 같습니다."}
-        else if(category.label.equals("Music")){label = "음악소리 같습니다."}
-        else if(category.label.equals("Musical instrument")){label = "악기소리 같습니다."}
-        else if(category.label.equals("Plucked string instrument")){label = "현악기소리 같습니다."}
-        else if(category.label.equals("Guitar")){label = "기타소리 같습니다."}
-        else if(category.label.equals("Electric guitar")){label = "일렉트릭 기타소리 같습니다."}
-        else if(category.label.equals("Bass guitar")){label = "베이스 기타소리 같습니다."}
-        else if(category.label.equals("Acoustic guitar")){label = "어쿠스틱 기타소리 같습니다."}
-        else if(category.label.equals("Steel guitar, slide guitar")){label = "스틸 기타, 슬라이드 기타소리 같습니다."}
-        else if(category.label.equals("Tapping (guitar technique)")){label = "탭핑(기타 테크닉)소리 같습니다."}
-        else if(category.label.equals("Strum")){label = "스트럼소리 같습니다."}
-        else if(category.label.equals("Banjo")){label = "밴조소리 같습니다."}
-        else if(category.label.equals("Sitar")){label = "Sitar소리 같습니다."}
-        else if(category.label.equals("Mandolin")){label = "만돌린소리 같습니다."}
-        else if(category.label.equals("Zither")){label = "Zither소리 같습니다."}
-        else if(category.label.equals("Ukulele")){label = "우쿨렐레소리 같습니다."}
-        else if(category.label.equals("Keyboard (musical)")){label = "키보드(뮤지컬)소리 같습니다."}
-        else if(category.label.equals("Piano")){label = "피아노소리 같습니다."}
-        else if(category.label.equals("Electric piano")){label = "일렉트릭 피아노소리 같습니다."}
-        else if(category.label.equals("Organ")){label = "오르간소리 같습니다."}
-        else if(category.label.equals("Electronic organ")){label = "전자 오르간소리 같습니다."}
-        else if(category.label.equals("Hammond organ")){label = "해먼드 오르간소리 같습니다."}
-        else if(category.label.equals("Synthesizer")){label = "신디사이저소리 같습니다."}
-        else if(category.label.equals("Sampler")){label = "샘플러소리 같습니다."}
-        else if(category.label.equals("Harpsichord")){label = "하프시코드소리 같습니다."}
-        else if(category.label.equals("Percussion")){label = "퍼커션소리 같습니다."}
-        else if(category.label.equals("Drum kit")){label = "드럼 키트소리 같습니다."}
-        else if(category.label.equals("Drum machine")){label = "드럼 머신소리 같습니다."}
-        else if(category.label.equals("Drum")){label = "드럼소리 같습니다."}
-        else if(category.label.equals("Snare drum")){label = "스네어 드럼소리 같습니다."}
-        else if(category.label.equals("Rimshot")){label = "림샷소리 같습니다."}
-        else if(category.label.equals("Drum roll")){label = "드럼 롤소리 같습니다."}
-        else if(category.label.equals("Bass drum")){label = "베이스 드럼소리 같습니다."}
-        else if(category.label.equals("Timpani")){label = "팀파니소리 같습니다."}
-        else if(category.label.equals("Tabla")){label = "Tabla소리 같습니다."}
-        else if(category.label.equals("Cymbal")){label = "심벌즈소리 같습니다."}
-        else if(category.label.equals("Hi-hat")){label = "하이햇소리 같습니다."}
-        else if(category.label.equals("Wood block")){label = "우드 블록소리 같습니다."}
-        else if(category.label.equals("Tambourine")){label = "탬버린소리 같습니다."}
-        else if(category.label.equals("Rattle (instrument)")){label = "딸랑이(악기)소리 같습니다."}
-        else if(category.label.equals("Maraca")){label = "마라카소리 같습니다."}
-        else if(category.label.equals("Gong")){label = "징소리 같습니다."}
-        else if(category.label.equals("Tubular bells")){label = "관형 종소리 같습니다."}
-        else if(category.label.equals("Mallet percussion")){label = "말렛 타악기소리 같습니다."}
-        else if(category.label.equals("Marimba, xylophone")){label = "마림바, 실로폰소리 같습니다."}
-        else if(category.label.equals("Glockenspiel")){label = "글로켄슈필소리 같습니다."}
-        else if(category.label.equals("Vibraphone")){label = "비브라폰소리 같습니다."}
-        else if(category.label.equals("Steelpan")){label = "스틸팬소리 같습니다."}
-        else if(category.label.equals("Orchestra")){label = "오케스트라소리 같습니다."}
-        else if(category.label.equals("Brass instrument")){label = "금관악기소리 같습니다."}
-        else if(category.label.equals("French horn")){label = "프렌치 호른소리 같습니다."}
-        else if(category.label.equals("Trumpet")){label = "트럼펫소리 같습니다."}
-        else if(category.label.equals("Trombone")){label = "트롬본소리 같습니다."}
-        else if(category.label.equals("Bowed string instrument")){label = "활 현악기소리 같습니다."}
-        else if(category.label.equals("String section")){label = "현악기 섹션소리 같습니다."}
-        else if(category.label.equals("Violin, fiddle")){label = "바이올린, 바이올린소리 같습니다."}
-        else if(category.label.equals("Pizzicato")){label = "피치카토소리 같습니다."}
-        else if(category.label.equals("Cello")){label = "첼로소리 같습니다."}
-        else if(category.label.equals("Double bass")){label = "더블베이스소리 같습니다."}
-        else if(category.label.equals("Wind instrument, woodwind instrument")){label = "관악기, 목관악기소리 같습니다."}
-        else if(category.label.equals("Flute")){label = "플루트소리 같습니다."}
-        else if(category.label.equals("Saxophone")){label = "색소폰소리 같습니다."}
-        else if(category.label.equals("Clarinet")){label = "클라리넷소리 같습니다."}
-        else if(category.label.equals("Harp")){label = "하프소리 같습니다."}
-        else if(category.label.equals("Bell")){label = "Bell소리 같습니다."}
-        else if(category.label.equals("Church bell")){label = "교회 종소리 같습니다."}
-        else if(category.label.equals("Jingle bell")){label = "징글벨소리 같습니다."}
-        else if(category.label.equals("Bicycle bell")){label = "자전거 벨소리 같습니다."}
-        else if(category.label.equals("Tuning fork")){label = "소리굽쇠소리 같습니다."}
-        else if(category.label.equals("Chime")){label = "차임소리 같습니다."}
-        else if(category.label.equals("Wind chime")){label = "바람 종소리소리 같습니다."}
-        else if(category.label.equals("Change ringing (campanology)")){label = "벨소리 변경(캄파놀로)소리 같습니다."}
-        else if(category.label.equals("Harmonica")){label = "하모니카소리 같습니다."}
-        else if(category.label.equals("Accordion")){label = "아코디언소리 같습니다."}
-        else if(category.label.equals("Bagpipes")){label = "백파이프소리 같습니다."}
-        else if(category.label.equals("Didgeridoo")){label = "디저리두소리 같습니다."}
-        else if(category.label.equals("Shofar")){label = "Shofar소리 같습니다."}
-        else if(category.label.equals("Theremin")){label = "테레민소리 같습니다."}
-        else if(category.label.equals("Singing bowl")){label = "노래하는 그릇소리 같습니다."}
-        else if(category.label.equals("Scratching (performance technique)")){label = "스크래칭(연주 기법)소리 같습니다."}
-        else if(category.label.equals("Pop music")){label = "팝 음악소리 같습니다."}
-        else if(category.label.equals("Hip hop music")){label = "힙합 음악소리 같습니다."}
-        else if(category.label.equals("Beatboxing")){label = "비트박스소리 같습니다."}
-        else if(category.label.equals("Rock music")){label = "록 음악소리 같습니다."}
-        else if(category.label.equals("Heavy metal")){label = "헤비메탈소리 같습니다."}
-        else if(category.label.equals("Punk rock")){label = "펑크 록소리 같습니다."}
-        else if(category.label.equals("Grunge")){label = "그런지소리 같습니다."}
-        else if(category.label.equals("Progressive rock")){label = "프로그레시브 록소리 같습니다."}
-        else if(category.label.equals("Rock and roll")){label = "로큰롤소리 같습니다."}
-        else if(category.label.equals("Psychedelic rock")){label = "사이키델릭 록소리 같습니다."}
-        else if(category.label.equals("Rhythm and blues")){label = "리듬 앤 블루스소리 같습니다."}
-        else if(category.label.equals("Soul music")){label = "소울 음악소리 같습니다."}
-        else if(category.label.equals("Reggae")){label = "레게소리 같습니다."}
-        else if(category.label.equals("Country")){label = "컨트리소리 같습니다."}
-        else if(category.label.equals("Swing music")){label = "스윙 음악소리 같습니다."}
-        else if(category.label.equals("Bluegrass")){label = "블루그래스소리 같습니다."}
-        else if(category.label.equals("Funk")){label = "Funk소리 같습니다."}
-        else if(category.label.equals("Folk music")){label = "포크 음악소리 같습니다."}
-        else if(category.label.equals("Middle Eastern music")){label = "중동 음악소리 같습니다."}
-        else if(category.label.equals("Jazz")){label = "재즈소리 같습니다."}
-        else if(category.label.equals("Disco")){label = "디스코소리 같습니다."}
-        else if(category.label.equals("Classical music")){label = "클래식 음악소리 같습니다."}
-        else if(category.label.equals("Opera")){label = "오페라소리 같습니다."}
-        else if(category.label.equals("Electronic music")){label = "일렉트로닉 음악소리 같습니다."}
-        else if(category.label.equals("House music")){label = "하우스 음악소리 같습니다."}
-        else if(category.label.equals("Techno")){label = "테크노소리 같습니다."}
-        else if(category.label.equals("Dubstep")){label = "덥스텝소리 같습니다."}
-        else if(category.label.equals("Drum and bass")){label = "드럼 및 베이스소리 같습니다."}
-        else if(category.label.equals("Electronica")){label = "일렉트로니카소리 같습니다."}
-        else if(category.label.equals("Electronic dance music")){label = "일렉트로닉 댄스 음악소리 같습니다."}
-        else if(category.label.equals("Ambient music")){label = "앰비언트 음악소리 같습니다."}
-        else if(category.label.equals("Trance music")){label = "트랜스 음악소리 같습니다."}
-        else if(category.label.equals("Music of Latin America")){label = "라틴 아메리카 음악소리 같습니다."}
-        else if(category.label.equals("Salsa music")){label = "살사 음악소리 같습니다."}
-        else if(category.label.equals("Flamenco")){label = "플라멩코소리 같습니다."}
-        else if(category.label.equals("Blues")){label = "블루스소리 같습니다."}
-        else if(category.label.equals("Music for children")){label = "어린이를 위한 음악소리 같습니다."}
-        else if(category.label.equals("New-age music")){label = "뉴에이지 음악소리 같습니다."}
-        else if(category.label.equals("Vocal music")){label = "성악 음악소리 같습니다."}
-        else if(category.label.equals("A capella")){label = "아카펠라소리 같습니다."}
-        else if(category.label.equals("Music of Africa")){label = "아프리카 음악소리 같습니다."}
-        else if(category.label.equals("Afrobeat")){label = "아프로비트소리 같습니다."}
-        else if(category.label.equals("Christian music")){label = "기독교 음악소리 같습니다."}
-        else if(category.label.equals("Gospel music")){label = "가스펠 음악소리 같습니다."}
-        else if(category.label.equals("Music of Asia")){label = "아시아 음악소리 같습니다."}
-        else if(category.label.equals("Carnatic music")){label = "카르나틱 음악소리 같습니다."}
-        else if(category.label.equals("Music of Bollywood")){label = "볼리우드 음악소리 같습니다."}
-        else if(category.label.equals("Ska")){label = "Ska소리 같습니다."}
-        else if(category.label.equals("Traditional music")){label = "전통 음악소리 같습니다."}
-        else if(category.label.equals("Independent music")){label = "독립 음악소리 같습니다."}
-        else if(category.label.equals("Song")){label = "노래소리 같습니다."}
-        else if(category.label.equals("Background music")){label = "배경 음악소리 같습니다."}
-        else if(category.label.equals("Theme music")){label = "테마 음악소리 같습니다."}
-        else if(category.label.equals("Jingle (music)")){label = "징글(음악)소리 같습니다."}
-        else if(category.label.equals("Soundtrack music")){label = "사운드트랙 음악소리 같습니다."}
-        else if(category.label.equals("Lullaby")){label = "자장가소리 같습니다."}
-        else if(category.label.equals("Video game music")){label = "비디오 게임 음악소리 같습니다."}
-        else if(category.label.equals("Christmas music")){label = "크리스마스 음악소리 같습니다."}
-        else if(category.label.equals("Dance music")){label = "댄스 음악소리 같습니다."}
-        else if(category.label.equals("Wedding music")){label = "웨딩 음악소리 같습니다."}
-        else if(category.label.equals("Happy music")){label = "행복한 음악소리 같습니다."}
-        else if(category.label.equals("Sad music")){label = "슬픈 음악소리 같습니다."}
-        else if(category.label.equals("Tender music")){label = "부드러운 음악소리 같습니다."}
-        else if(category.label.equals("Exciting music")){label = "신나는 음악소리 같습니다."}
-        else if(category.label.equals("Angry music")){label = "화난 음악소리 같습니다."}
-        else if(category.label.equals("Scary music")){label = "무서운 음악소리 같습니다."}
-        else if(category.label.equals("Wind")){label = "바람소리 같습니다."}
-        else if(category.label.equals("Rustling leaves")){label = "바스락거리는 나뭇잎소리 같습니다."}
-        else if(category.label.equals("Wind noise (microphone)")){label = "바람 소리(마이크)소리 같습니다."}
-        else if(category.label.equals("Thunderstorm")){label = "천둥소리 같습니다."}
-        else if(category.label.equals("Thunder")){label = "천둥소리 같습니다."}
-        else if(category.label.equals("Water")){label = "물소리 같습니다."}
-        else if(category.label.equals("Rain")){label = "Rain소리 같습니다."}
-        else if(category.label.equals("Raindrop")){label = "빗방울소리 같습니다."}
-        else if(category.label.equals("Rain on surface")){label = "표면에 내리는 비소리 같습니다."}
-        else if(category.label.equals("Stream")){label = "Stream소리 같습니다."}
-        else if(category.label.equals("Waterfall")){label = "폭포소리 같습니다."}
-        else if(category.label.equals("Ocean")){label = "바다소리 같습니다."}
-        else if(category.label.equals("Waves, surf")){label = "파도, 서핑소리 같습니다."}
-        else if(category.label.equals("Steam")){label = "증기소리 같습니다."}
-        else if(category.label.equals("Gurgling")){label = "졸졸소리 같습니다."}
-        else if(category.label.equals("Fire")){label = "불소리 같습니다."}
-        else if(category.label.equals("Crackle")){label = "Crackle소리 같습니다."}
-        else if(category.label.equals("Vehicle")){label = "차량소리 같습니다."}
-        else if(category.label.equals("Boat, Water vehicle")){label = "보트, 수상 차량소리 같습니다."}
-        else if(category.label.equals("Sailboat, sailing ship")){label = "요트, 범선소리 같습니다."}
-        else if(category.label.equals("Rowboat, canoe, kayak")){label = "노 젓는 배, 카누, 카약소리 같습니다."}
-        else if(category.label.equals("Motorboat, speedboat")){label = "모터보트, 스피드 보트소리 같습니다."}
-        else if(category.label.equals("Ship")){label = "선박소리 같습니다."}
-        else if(category.label.equals("Motor vehicle (road)")){label = "자동차(도로)소리 같습니다."}
-        else if(category.label.equals("Car")){label = "자동차소리 같습니다."}
-        else if(category.label.equals("Vehicle horn, car horn, honking")){label = "차량 경적, 자동차 경적, 경적 소리소리 같습니다."}
-        else if(category.label.equals("Toot")){label = "Toot소리 같습니다."}
-        else if(category.label.equals("Car alarm")){label = "자동차 알람소리 같습니다."}
-        else if(category.label.equals("Power windows, electric windows")){label = "파워 윈도우, 전동 윈도우소리 같습니다."}
-        else if(category.label.equals("Skidding")){label = "미끄러짐소리 같습니다."}
-        else if(category.label.equals("Tire squeal")){label = "타이어 삐걱거리는 소리소리 같습니다."}
-        else if(category.label.equals("Car passing by")){label = "지나가는 자동차소리 같습니다."}
-        else if(category.label.equals("Race car, auto racing")){label = "경주용 자동차, 자동차 경주소리 같습니다."}
-        else if(category.label.equals("Truck")){label = "트럭소리 같습니다."}
-        else if(category.label.equals("Air brake")){label = "에어 브레이크소리 같습니다."}
-        else if(category.label.equals("Air horn, truck horn")){label = "에어 혼, 트럭 경적소리 같습니다."}
-        else if(category.label.equals("Reversing beeps")){label = "후진 경고음소리 같습니다."}
-        else if(category.label.equals("Ice cream truck, ice cream van")){label = "아이스크림 트럭, 아이스크림 밴소리 같습니다."}
-        else if(category.label.equals("Bus")){label = "버스소리 같습니다."}
-        else if(category.label.equals("Emergency vehicle")){label = "긴급 차량소리 같습니다."}
-        else if(category.label.equals("Police car (siren)")){label = "경찰차(사이렌)소리 같습니다."}
-        else if(category.label.equals("Ambulance (siren)")){label = "구급차(사이렌)소리 같습니다."}
-        else if(category.label.equals("Fire engine, fire truck (siren)")){label = "소방차, 소방차(사이렌)소리 같습니다."}
-        else if(category.label.equals("Motorcycle")){label = "오토바이소리 같습니다."}
-        else if(category.label.equals("Traffic noise, roadway noise")){label = "교통 소음, 도로 소음소리 같습니다."}
-        else if(category.label.equals("Rail transport")){label = "철도 운송소리 같습니다."}
-        else if(category.label.equals("Train")){label = "기차소리 같습니다."}
-        else if(category.label.equals("Train whistle")){label = "기차 휘파람소리 같습니다."}
-        else if(category.label.equals("Train horn")){label = "기차 경적소리 같습니다."}
-        else if(category.label.equals("Railroad car, train wagon")){label = "철도 차량, 기차 마차소리 같습니다."}
-        else if(category.label.equals("Train wheels squealing")){label = "기차 바퀴 삐걱거리는 소리소리 같습니다."}
-        else if(category.label.equals("Subway, metro, underground")){label = "지하철, 지하철, 지하소리 같습니다."}
-        else if(category.label.equals("Aircraft")){label = "항공기소리 같습니다."}
-        else if(category.label.equals("Aircraft engine")){label = "항공기 엔진소리 같습니다."}
-        else if(category.label.equals("Jet engine")){label = "제트 엔진소리 같습니다."}
-        else if(category.label.equals("Propeller, airscrew")){label = "프로펠러, 에어 스크류소리 같습니다."}
-        else if(category.label.equals("Helicopter")){label = "헬리콥터소리 같습니다."}
-        else if(category.label.equals("Fixed-wing aircraft, airplane")){label = "고정익 항공기, 비행기소리 같습니다."}
-        else if(category.label.equals("Bicycle")){label = "자전거소리 같습니다."}
-        else if(category.label.equals("Skateboard")){label = "스케이트보드소리 같습니다."}
-        else if(category.label.equals("Engine")){label = "엔진소리 같습니다."}
-        else if(category.label.equals("Light engine (high frequency)")){label = "라이트 엔진(고주파)소리 같습니다."}
-        else {label = "무슨 소리인지 모르겠습니다."}
+        label = when(category.label) {
+            "Speech" -> "말하기소리 같습니다."
+            "Child speech, kid speaking" -> "어린이 말하기, 어린이 말하기소리 같습니다."
+            "Conversation" -> "대화소리 같습니다."
+            "Narration, monologue" -> "내레이션, 독백소리 같습니다."
+            "Babbling" -> "옹알이소리 같습니다."
+            "Speech synthesizer" -> "음성 합성기소리 같습니다."
+            "Shout" -> "Shout소리 같습니다."
+            "Bellow" -> "Bellow소리 같습니다."
+            "Whoop" -> "Whoop소리 같습니다."
+            "Yell" -> "Yell소리 같습니다."
+            "Children shouting" -> "소리 지르는 어린이소리 같습니다."
+            "Screaming" -> "비명소리 같습니다."
+            "Whispering" -> "속삭이는 소리소리 같습니다."
+            "Laughter" -> "웃음소리소리 같습니다."
+            "Baby laughter" -> "아기 웃음소리 같습니다."
+            "Giggle" -> "낄낄거리기소리 같습니다."
+            "Snicker" -> "스니커소리 같습니다."
+            "Belly laugh" -> "배꼽 웃음소리 같습니다."
+            "Chuckle, chortle" -> "낄낄, 낄낄소리 같습니다."
+            "Crying, sobbing" -> "울음, 흐느낌소리 같습니다."
+            "Baby cry, infant cry" -> "아기 울음, 유아 울음소리 같습니다."
+            "Whimper" -> "Whimper소리 같습니다."
+            "Wail, moan" -> "울음, 신음소리 같습니다."
+            "Sigh" -> "한숨소리 같습니다."
+            "Singing" -> "노래소리 같습니다."
+            "Choir" -> "합창단소리 같습니다."
+            "Yodeling" -> "요들송소리 같습니다."
+            "Chant" -> "Chant소리 같습니다."
+            "Mantra" -> "만트라소리 같습니다."
+            "Child singing" -> "어린이 노래소리 같습니다."
+            "Synthetic singing" -> "합성 노래소리 같습니다."
+            "Rapping" -> "랩소리 같습니다."
+            "Humming" -> "허밍소리 같습니다."
+            "Groan" -> "Groan소리 같습니다."
+            "Grunt" -> "Grunt소리 같습니다."
+            "Whistling" -> "휘파람소리 같습니다."
+            "Breathing" -> "호흡소리 같습니다."
+            "Wheeze" -> "Wheeze소리 같습니다."
+            "Snoring" -> "코골이소리 같습니다."
+            "Gasp" -> "Gasp소리 같습니다."
+            "Pant" -> "헐떡거림소리 같습니다."
+            "Snort" -> "Snort소리 같습니다."
+            "Cough" -> "Cough소리 같습니다."
+            "Throat clearing" -> "인후통소리 같습니다."
+            "Sneeze" -> "재채기소리 같습니다."
+            "Sniff" -> "Sniff소리 같습니다."
+            "Run" -> "Run소리 같습니다."
+            "Shuffle" -> "셔플소리 같습니다."
+            "Walk, footsteps" -> "걷기, 발걸음소리 같습니다."
+            "Chewing, mastication" -> "씹기, 저작소리 같습니다."
+            "Biting" -> "물기소리 같습니다."
+            "Gargling" -> "양치질소리 같습니다."
+            "Stomach rumble" -> "복부 럼블소리 같습니다."
+            "Burping, eructation" -> "트림, 사정소리 같습니다."
+            "Hiccup" -> "딸꾹질소리 같습니다."
+            "Fart" -> "방귀소리 같습니다."
+            "Hands" -> "손소리 같습니다."
+            "Finger snapping" -> "손가락 스냅소리 같습니다."
+            "Clapping" -> "박수 소리소리 같습니다."
+            "Heart sounds, heartbeat" -> "심장 소리, 심장 박동소리 같습니다."
+            "Heart murmur" -> "심장 잡음소리 같습니다."
+            "Cheering" -> "응원소리 같습니다."
+            "Applause" -> "박수소리 같습니다."
+            "Chatter" -> "수다소리 같습니다."
+            "Crowd" -> "군중소리 같습니다."
+            "Hubbub, speech noise, speech babble" -> "윙윙거리는 소리, 말소리, 옹알이 소리소리 같습니다."
+            "Children playing" -> "노는 아이들소리 같습니다."
+            "Animal" -> "동물소리 같습니다."
+            "Domestic animals, pets" -> "가축, 애완동물소리 같습니다."
+            "Dog" -> "개소리 같습니다."
+            "Bark" -> "Bark소리 같습니다."
+            "Yip" -> "Yip소리 같습니다."
+            "Howl" -> "Howl소리 같습니다."
+            "Bow-wow" -> "Bow-wow소리 같습니다."
+            "Growling" -> "Growling소리 같습니다."
+            "Whimper (dog)" -> "윙윙(개)소리 같습니다."
+            "Cat" -> "고양이소리 같습니다."
+            "Purr" -> "Purr소리 같습니다."
+            "Meow" -> "Meow소리 같습니다."
+            "Hiss" -> "Hiss소리 같습니다."
+            "Caterwaul" -> "Caterwaul소리 같습니다."
+            "Livestock, farm animals, working animals" -> "가축, 농장 동물, 일하는 동물소리 같습니다."
+            "Horse" -> "말소리 같습니다."
+            "Clip-clop" -> "클립-클롭소리 같습니다."
+            "Neigh, whinny" -> "이웃, 우는 소리소리 같습니다."
+            "Cattle, bovinae" -> "소, 소소리 같습니다."
+            "Moo" -> "Moo소리 같습니다."
+            "Cowbell" -> "Cowbell소리 같습니다."
+            "Pig" -> "Pig소리 같습니다."
+            "Oink" -> "Oink소리 같습니다."
+            "Goat" -> "Goat소리 같습니다."
+            "Bleat" -> "Bleat소리 같습니다."
+            "Sheep" -> "Sheep소리 같습니다."
+            "Fowl" -> "Fowl소리 같습니다."
+            "Chicken, rooster" -> "닭, 수탉소리 같습니다."
+            "Cluck" -> "Cluck소리 같습니다."
+            "Crowing, cock-a-doodle-doo" -> "울음소리, 두두두두소리 같습니다."
+            "Turkey" -> "칠면조소리 같습니다."
+            "Gobble" -> "Gobble소리 같습니다."
+            "Duck" -> "Duck소리 같습니다."
+            "Quack" -> "Quack소리 같습니다."
+            "Goose" -> "Goose소리 같습니다."
+            "Honk" -> "Honk소리 같습니다."
+            "Wild animals" -> "야생 동물소리 같습니다."
+            "Roaring cats (lions, tigers)" -> "포효하는 고양이(사자, 호랑이)소리 같습니다."
+            "Roar" -> "Roar소리 같습니다."
+            "Bird" -> "Bird소리 같습니다."
+            "Bird vocalization, bird call, bird song" -> "새 발성, 새 울음소리, 새 노래소리 같습니다."
+            "Chirp, tweet" -> "지저귀는 소리, 지저귀는 소리소리 같습니다."
+            "Squawk" -> "스쿼크소리 같습니다."
+            "Pigeon, dove" -> "비둘기, 비둘기소리 같습니다."
+            "Coo" -> "Coo소리 같습니다."
+            "Crow" -> "까마귀소리 같습니다."
+            "Caw" -> "Caw소리 같습니다."
+            "Owl" -> "Owl소리 같습니다."
+            "Hoot" -> "Hoot소리 같습니다."
+            "Bird flight, flapping wings" -> "새의 비행, 날갯짓소리 같습니다."
+            "Canidae, dogs, wolves" -> "개과 동물, 개, 늑대소리 같습니다."
+            "Rodents, rats, mice" -> "설치류, 쥐, 생쥐소리 같습니다."
+            "Mouse" -> "마우스소리 같습니다."
+            "Patter" -> "Patter소리 같습니다."
+            "Insect" -> "곤충소리 같습니다."
+            "Cricket" -> "크리켓소리 같습니다."
+            "Mosquito" -> "모기소리 같습니다."
+            "Fly, housefly" -> "파리, 집파리소리 같습니다."
+            "Buzz" -> "Buzz소리 같습니다."
+            "Bee, wasp, etc." -> "벌, 말벌 등소리 같습니다."
+            "Frog" -> "개구리소리 같습니다."
+            "Croak" -> "Croak소리 같습니다."
+            "Snake" -> "뱀소리 같습니다."
+            "Rattle" -> "딸랑이소리 같습니다."
+            "Whale vocalization" -> "고래 발성소리 같습니다."
+            "Music" -> "음악소리 같습니다."
+            "Musical instrument" -> "악기소리 같습니다."
+            "Plucked string instrument" -> "현악기소리 같습니다."
+            "Guitar" -> "기타소리 같습니다."
+            "Electric guitar" -> "일렉트릭 기타소리 같습니다."
+            "Bass guitar" -> "베이스 기타소리 같습니다."
+            "Acoustic guitar" -> "어쿠스틱 기타소리 같습니다."
+            "Steel guitar, slide guitar" -> "스틸 기타, 슬라이드 기타소리 같습니다."
+            "Tapping (guitar technique)" -> "탭핑(기타 테크닉)소리 같습니다."
+            "Strum" -> "스트럼소리 같습니다."
+            "Banjo" -> "밴조소리 같습니다."
+            "Sitar" -> "Sitar소리 같습니다."
+            "Mandolin" -> "만돌린소리 같습니다."
+            "Zither" -> "Zither소리 같습니다."
+            "Ukulele" -> "우쿨렐레소리 같습니다."
+            "Keyboard (musical)" -> "키보드(뮤지컬)소리 같습니다."
+            "Piano" -> "피아노소리 같습니다."
+            "Electric piano" -> "일렉트릭 피아노소리 같습니다."
+            "Organ" -> "오르간소리 같습니다."
+            "Electronic organ" -> "전자 오르간소리 같습니다."
+            "Hammond organ" -> "해먼드 오르간소리 같습니다."
+            "Synthesizer" -> "신디사이저소리 같습니다."
+            "Sampler" -> "샘플러소리 같습니다."
+            "Harpsichord" -> "하프시코드소리 같습니다."
+            "Percussion" -> "퍼커션소리 같습니다."
+            "Drum kit" -> "드럼 키트소리 같습니다."
+            "Drum machine" -> "드럼 머신소리 같습니다."
+            "Drum" -> "드럼소리 같습니다."
+            "Snare drum" -> "스네어 드럼소리 같습니다."
+            "Rimshot" -> "림샷소리 같습니다."
+            "Drum roll" -> "드럼 롤소리 같습니다."
+            "Bass drum" -> "베이스 드럼소리 같습니다."
+            "Timpani" -> "팀파니소리 같습니다."
+            "Tabla" -> "Tabla소리 같습니다."
+            "Cymbal" -> "심벌즈소리 같습니다."
+            "Hi-hat" -> "하이햇소리 같습니다."
+            "Wood block" -> "우드 블록소리 같습니다."
+            "Tambourine" -> "탬버린소리 같습니다."
+            "Rattle (instrument)" -> "딸랑이(악기)소리 같습니다."
+            "Maraca" -> "마라카소리 같습니다."
+            "Gong" -> "징소리 같습니다."
+            "Tubular bells" -> "관형 종소리 같습니다."
+            "Mallet percussion" -> "말렛 타악기소리 같습니다."
+            "Marimba, xylophone" -> "마림바, 실로폰소리 같습니다."
+            "Glockenspiel" -> "글로켄슈필소리 같습니다."
+            "Vibraphone" -> "비브라폰소리 같습니다."
+            "Steelpan" -> "스틸팬소리 같습니다."
+            "Orchestra" -> "오케스트라소리 같습니다."
+            "Brass instrument" -> "금관악기소리 같습니다."
+            "French horn" -> "프렌치 호른소리 같습니다."
+            "Trumpet" -> "트럼펫소리 같습니다."
+            "Trombone" -> "트롬본소리 같습니다."
+            "Bowed string instrument" -> "활 현악기소리 같습니다."
+            "String section" -> "현악기 섹션소리 같습니다."
+            "Violin, fiddle" -> "바이올린, 바이올린소리 같습니다."
+            "Pizzicato" -> "피치카토소리 같습니다."
+            "Cello" -> "첼로소리 같습니다."
+            "Double bass" -> "더블베이스소리 같습니다."
+            "Wind instrument, woodwind instrument" -> "관악기, 목관악기소리 같습니다."
+            "Flute" -> "플루트소리 같습니다."
+            "Saxophone" -> "색소폰소리 같습니다."
+            "Clarinet" -> "클라리넷소리 같습니다."
+            "Harp" -> "하프소리 같습니다."
+            "Bell" -> "Bell소리 같습니다."
+            "Church bell" -> "교회 종소리 같습니다."
+            "Jingle bell" -> "징글벨소리 같습니다."
+            "Bicycle bell" -> "자전거 벨소리 같습니다."
+            "Tuning fork" -> "소리굽쇠소리 같습니다."
+            "Chime" -> "차임소리 같습니다."
+            "Wind chime" -> "바람 종소리소리 같습니다."
+            "Change ringing (campanology)" -> "벨소리 변경(캄파놀로)소리 같습니다."
+            "Harmonica" -> "하모니카소리 같습니다."
+            "Accordion" -> "아코디언소리 같습니다."
+            "Bagpipes" -> "백파이프소리 같습니다."
+            "Didgeridoo" -> "디저리두소리 같습니다."
+            "Shofar" -> "Shofar소리 같습니다."
+            "Theremin" -> "테레민소리 같습니다."
+            "Singing bowl" -> "노래하는 그릇소리 같습니다."
+            "Scratching (performance technique)" -> "스크래칭(연주 기법)소리 같습니다."
+            "Pop music" -> "팝 음악소리 같습니다."
+            "Hip hop music" -> "힙합 음악소리 같습니다."
+            "Beatboxing" -> "비트박스소리 같습니다."
+            "Rock music" -> "록 음악소리 같습니다."
+            "Heavy metal" -> "헤비메탈소리 같습니다."
+            "Punk rock" -> "펑크 록소리 같습니다."
+            "Grunge" -> "그런지소리 같습니다."
+            "Progressive rock" -> "프로그레시브 록소리 같습니다."
+            "Rock and roll" -> "로큰롤소리 같습니다."
+            "Psychedelic rock" -> "사이키델릭 록소리 같습니다."
+            "Rhythm and blues" -> "리듬 앤 블루스소리 같습니다."
+            "Soul music" -> "소울 음악소리 같습니다."
+            "Reggae" -> "레게소리 같습니다."
+            "Country" -> "컨트리소리 같습니다."
+            "Swing music" -> "스윙 음악소리 같습니다."
+            "Bluegrass" -> "블루그래스소리 같습니다."
+            "Funk" -> "Funk소리 같습니다."
+            "Folk music" -> "포크 음악소리 같습니다."
+            "Middle Eastern music" -> "중동 음악소리 같습니다."
+            "Jazz" -> "재즈소리 같습니다."
+            "Disco" -> "디스코소리 같습니다."
+            "Classical music" -> "클래식 음악소리 같습니다."
+            "Opera" -> "오페라소리 같습니다."
+            "Electronic music" -> "일렉트로닉 음악소리 같습니다."
+            "House music" -> "하우스 음악소리 같습니다."
+            "Techno" -> "테크노소리 같습니다."
+            "Dubstep" -> "덥스텝소리 같습니다."
+            "Drum and bass" -> "드럼 및 베이스소리 같습니다."
+            "Electronica" -> "일렉트로니카소리 같습니다."
+            "Electronic dance music" -> "일렉트로닉 댄스 음악소리 같습니다."
+            "Ambient music" -> "앰비언트 음악소리 같습니다."
+            "Trance music" -> "트랜스 음악소리 같습니다."
+            "Music of Latin America" -> "라틴 아메리카 음악소리 같습니다."
+            "Salsa music" -> "살사 음악소리 같습니다."
+            "Flamenco" -> "플라멩코소리 같습니다."
+            "Blues" -> "블루스소리 같습니다."
+            "Music for children" -> "어린이를 위한 음악소리 같습니다."
+            "New-age music" -> "뉴에이지 음악소리 같습니다."
+            "Vocal music" -> "성악 음악소리 같습니다."
+            "A capella" -> "아카펠라소리 같습니다."
+            "Music of Africa" -> "아프리카 음악소리 같습니다."
+            "Afrobeat" -> "아프로비트소리 같습니다."
+            "Christian music" -> "기독교 음악소리 같습니다."
+            "Gospel music" -> "가스펠 음악소리 같습니다."
+            "Music of Asia" -> "아시아 음악소리 같습니다."
+            "Carnatic music" -> "카르나틱 음악소리 같습니다."
+            "Music of Bollywood" -> "볼리우드 음악소리 같습니다."
+            "Ska" -> "Ska소리 같습니다."
+            "Traditional music" -> "전통 음악소리 같습니다."
+            "Independent music" -> "독립 음악소리 같습니다."
+            "Song" -> "노래소리 같습니다."
+            "Background music" -> "배경 음악소리 같습니다."
+            "Theme music" -> "테마 음악소리 같습니다."
+            "Jingle (music)" -> "징글(음악)소리 같습니다."
+            "Soundtrack music" -> "사운드트랙 음악소리 같습니다."
+            "Lullaby" -> "자장가소리 같습니다."
+            "Video game music" -> "비디오 게임 음악소리 같습니다."
+            "Christmas music" -> "크리스마스 음악소리 같습니다."
+            "Dance music" -> "댄스 음악소리 같습니다."
+            "Wedding music" -> "웨딩 음악소리 같습니다."
+            "Happy music" -> "행복한 음악소리 같습니다."
+            "Sad music" -> "슬픈 음악소리 같습니다."
+            "Tender music" -> "부드러운 음악소리 같습니다."
+            "Exciting music" -> "신나는 음악소리 같습니다."
+            "Angry music" -> "화난 음악소리 같습니다."
+            "Scary music" -> "무서운 음악소리 같습니다."
+            "Wind" -> "바람소리 같습니다."
+            "Rustling leaves" -> "바스락거리는 나뭇잎소리 같습니다."
+            "Wind noise (microphone)" -> "바람 소리(마이크)소리 같습니다."
+            "Thunderstorm" -> "천둥소리 같습니다."
+            "Thunder" -> "천둥소리 같습니다."
+            "Water" -> "물소리 같습니다."
+            "Rain" -> "Rain소리 같습니다."
+            "Raindrop" -> "빗방울소리 같습니다."
+            "Rain on surface" -> "표면에 내리는 비소리 같습니다."
+            "Stream" -> "Stream소리 같습니다."
+            "Waterfall" -> "폭포소리 같습니다."
+            "Ocean" -> "바다소리 같습니다."
+            "Waves, surf" -> "파도, 서핑소리 같습니다."
+            "Steam" -> "증기소리 같습니다."
+            "Gurgling" -> "졸졸소리 같습니다."
+            "Fire" -> "불소리 같습니다."
+            "Crackle" -> "Crackle소리 같습니다."
+            "Vehicle" -> "차량소리 같습니다."
+            "Boat, Water vehicle" -> "보트, 수상 차량소리 같습니다."
+            "Sailboat, sailing ship" -> "요트, 범선소리 같습니다."
+            "Rowboat, canoe, kayak" -> "노 젓는 배, 카누, 카약소리 같습니다."
+            "Motorboat, speedboat" -> "모터보트, 스피드 보트소리 같습니다."
+            "Ship" -> "선박소리 같습니다."
+            "Motor vehicle (road)" -> "자동차(도로)소리 같습니다."
+            "Car" -> "자동차소리 같습니다."
+            "Vehicle horn, car horn, honking" -> "차량 경적, 자동차 경적, 경적 소리소리 같습니다."
+            "Toot" -> "Toot소리 같습니다."
+            "Car alarm" -> "자동차 알람소리 같습니다."
+            "Power windows, electric windows" -> "파워 윈도우, 전동 윈도우소리 같습니다."
+            "Skidding" -> "미끄러짐소리 같습니다."
+            "Tire squeal" -> "타이어 삐걱거리는 소리소리 같습니다."
+            "Car passing by" -> "지나가는 자동차소리 같습니다."
+            "Race car, auto racing" -> "경주용 자동차, 자동차 경주소리 같습니다."
+            "Truck" -> "트럭소리 같습니다."
+            "Air brake" -> "에어 브레이크소리 같습니다."
+            "Air horn, truck horn" -> "에어 혼, 트럭 경적소리 같습니다."
+            "Reversing beeps" -> "후진 경고음소리 같습니다."
+            "Ice cream truck, ice cream van" -> "아이스크림 트럭, 아이스크림 밴소리 같습니다."
+            "Bus" -> "버스소리 같습니다."
+            "Emergency vehicle" -> "긴급 차량소리 같습니다."
+            "Police car (siren)" -> "경찰차(사이렌)소리 같습니다."
+            "Ambulance (siren)" -> "구급차(사이렌)소리 같습니다."
+            "Fire engine, fire truck (siren)" -> "소방차, 소방차(사이렌)소리 같습니다."
+            "Motorcycle" -> "오토바이소리 같습니다."
+            "Traffic noise, roadway noise" -> "교통 소음, 도로 소음소리 같습니다."
+            "Rail transport" -> "철도 운송소리 같습니다."
+            "Train" -> "기차소리 같습니다."
+            "Train whistle" -> "기차 휘파람소리 같습니다."
+            "Train horn" -> "기차 경적소리 같습니다."
+            "Railroad car, train wagon" -> "철도 차량, 기차 마차소리 같습니다."
+            "Train wheels squealing" -> "기차 바퀴 삐걱거리는 소리소리 같습니다."
+            "Subway, metro, underground" -> "지하철, 지하철, 지하소리 같습니다."
+            "Aircraft" -> "항공기소리 같습니다."
+            "Aircraft engine" -> "항공기 엔진소리 같습니다."
+            "Jet engine" -> "제트 엔진소리 같습니다."
+            "Propeller, airscrew" -> "프로펠러, 에어 스크류소리 같습니다."
+            "Helicopter" -> "헬리콥터소리 같습니다."
+            "Fixed-wing aircraft, airplane" -> "고정익 항공기, 비행기소리 같습니다."
+            "Bicycle" -> "자전거소리 같습니다."
+            "Skateboard" -> "스케이트보드소리 같습니다."
+            "Engine" -> "엔진소리 같습니다."
+            "Light engine (high frequency)" -> "라이트 엔진(고주파)소리 같습니다."
+            "Dental drill, dentist's drill" -> "치과용 드릴, 치과용 드릴소리 같습니다."
+            "Lawn mower" -> "잔디 깎는 기계소리 같습니다."
+            "Chainsaw" -> "전기 톱소리 같습니다."
+            "Medium engine (mid frequency)" -> "중형 엔진(중주파)소리 같습니다."
+            "Heavy engine (low frequency)" -> "헤비 엔진(저주파)소리 같습니다."
+            "Engine knocking" -> "엔진 노킹소리 같습니다."
+            "Engine starting" -> "엔진 시동소리 같습니다."
+            "Idling" -> "아이들링소리 같습니다."
+            "Accelerating, revving, vroom" -> "가속, 회전, 부르릉소리 같습니다."
+            "Door" -> "Door소리 같습니다."
+            "Doorbell" -> "초인종소리 같습니다."
+            "Ding-dong" -> "딩동소리 같습니다."
+            "Sliding door" -> "슬라이딩 도어소리 같습니다."
+            "Slam" -> "Slam소리 같습니다."
+            "Knock" -> "노크소리 같습니다."
+            "Tap" -> "Tap소리 같습니다."
+            "Squeak" -> "Squeak소리 같습니다."
+            "Cupboard open or close" -> "찬장 열기 또는 닫기소리 같습니다."
+            "Drawer open or close" -> "서랍 열기 또는 닫기소리 같습니다."
+            "Dishes, pots, and pans" -> "접시, 냄비, 프라이팬소리 같습니다."
+            "Cutlery, silverware" -> "수저, 식기류소리 같습니다."
+            "Chopping (food)" -> "다지기(음식)소리 같습니다."
+            "Frying (food)" -> "튀김(음식)소리 같습니다."
+            "Microwave oven" -> "전자레인지소리 같습니다."
+            "Blender" -> "블렌더소리 같습니다."
+            "Water tap, faucet" -> "수도꼭지, 수도꼭지소리 같습니다."
+            "Sink (filling or washing)" -> "싱크대(물 채우기 또는 세척)소리 같습니다."
+            "Bathtub (filling or washing)" -> "욕조(물 채우기 또는 세척)소리 같습니다."
+            "Hair dryer" -> "헤어 드라이어소리 같습니다."
+            "Toilet flush" -> "화장실 수세식 변기소리 같습니다."
+            "Toothbrush" -> "칫솔소리 같습니다."
+            "Electric toothbrush" -> "전동 칫솔소리 같습니다."
+            "Vacuum cleaner" -> "진공 청소기소리 같습니다."
+            "Zipper (clothing)" -> "지퍼(의류)소리 같습니다."
+            "Keys jangling" -> "열쇠 흔들림소리 같습니다."
+            "Coin (dropping)" -> "동전(떨어짐)소리 같습니다."
+            "Scissors" -> "가위소리 같습니다."
+            "Electric shaver, electric razor" -> "전기 면도기, 전기 면도기소리 같습니다."
+            "Shuffling cards" -> "카드 섞기소리 같습니다."
+            "Typing" -> "타이핑소리 같습니다."
+            "Typewriter" -> "타자기소리 같습니다."
+            "Computer keyboard" -> "컴퓨터 키보드소리 같습니다."
+            "Writing" -> "글쓰기소리 같습니다."
+            "Alarm" -> "알람소리 같습니다."
+            "Telephone" -> "전화소리 같습니다."
+            "Telephone bell ringing" -> "전화 벨 울림소리 같습니다."
+            "Ringtone" -> "벨소리소리 같습니다."
+            "Telephone dialing, DTMF" -> "전화 걸기, DTMF소리 같습니다."
+            "Dial tone" -> "발신음소리 같습니다."
+            "Busy signal" -> "통화 중 신호소리 같습니다."
+            "Alarm clock" -> "알람 시계소리 같습니다."
+            "Siren" -> "사이렌소리 같습니다."
+            "Civil defense siren" -> "민방위 사이렌소리 같습니다."
+            "Buzzer" -> "부저소리 같습니다."
+            "Smoke detector, smoke alarm" -> "연기 감지기, 화재 경보기소리 같습니다."
+            "Fire alarm" -> "화재 경보기소리 같습니다."
+            "Foghorn" -> "포그혼소리 같습니다."
+            "Whistle" -> "호루라기소리 같습니다."
+            "Steam whistle" -> "스팀 호루라기소리 같습니다."
+            "Mechanisms" -> "메커니즘소리 같습니다."
+            "Ratchet, pawl" -> "래칫, 폴소리 같습니다."
+            "Clock" -> "시계소리 같습니다."
+            "Tick" -> "Tick소리 같습니다."
+            "Tick-tock" -> "틱톡소리 같습니다."
+            "Gears" -> "기어소리 같습니다."
+            "Pulleys" -> "풀리소리 같습니다."
+            "Sewing machine" -> "재봉틀소리 같습니다."
+            "Mechanical fan" -> "기계식 선풍기소리 같습니다."
+            "Air conditioning" -> "에어컨소리 같습니다."
+            "Cash register" -> "금전 등록기소리 같습니다."
+            "Printer" -> "프린터소리 같습니다."
+            "Camera" -> "카메라소리 같습니다."
+            "Single-lens reflex camera" -> "일안 리플렉스 카메라소리 같습니다."
+            "Tools" -> "도구소리 같습니다."
+            "Hammer" -> "Hammer소리 같습니다."
+            "Jackhammer" -> "잭해머소리 같습니다."
+            "Sawing" -> "톱질소리 같습니다."
+            "Filing (rasp)" -> "파일링(라즈)소리 같습니다."
+            "Sanding" -> "샌딩소리 같습니다."
+            "Power tool" -> "전동 공구소리 같습니다."
+            "Drill" -> "드릴소리 같습니다."
+            "Explosion" -> "폭발소리 같습니다."
+            "Gunshot, gunfire" -> "총격, 총격소리 같습니다."
+            "Machine gun" -> "기관총소리 같습니다."
+            "Fusillade" -> "포격소리 같습니다."
+            "Artillery fire" -> "포격소리 같습니다."
+            "Cap gun" -> "캡 총소리 같습니다."
+            "Fireworks" -> "폭죽소리 같습니다."
+            "Firecracker" -> "폭죽소리 같습니다."
+            "Burst, pop" -> "버스트, 팝소리 같습니다."
+            "Eruption" -> "폭발소리 같습니다."
+            "Boom" -> "Boom소리 같습니다."
+            "Wood" -> "나무소리 같습니다."
+            "Chop" -> "Chop소리 같습니다."
+            "Splinter" -> "Splinter소리 같습니다."
+            "Crack" -> "Crack소리 같습니다."
+            "Glass" -> "유리소리 같습니다."
+            "Chink, clink" -> "찰칵, 찰칵소리 같습니다."
+            "Shatter" -> "Shatter소리 같습니다."
+            "Liquid" -> "액체소리 같습니다."
+            "Splash, splatter" -> "스플래시, 튄 자국소리 같습니다."
+            "Slosh" -> "Slosh소리 같습니다."
+            "Squish" -> "Squish소리 같습니다."
+            "Drip" -> "Drip소리 같습니다."
+            "Pour" -> "Pour소리 같습니다."
+            "Trickle, dribble" -> "물방울, 드리블소리 같습니다."
+            "Gush" -> "Gush소리 같습니다."
+            "Fill (with liquid)" -> "채우기(액체로)소리 같습니다."
+            "Spray" -> "스프레이소리 같습니다."
+            "Pump (liquid)" -> "펌프(액체)소리 같습니다."
+            "Stir" -> "저어소리 같습니다."
+            "Boiling" -> "Boiling소리 같습니다."
+            "Sonar" -> "소나소리 같습니다."
+            "Arrow" -> "화살표소리 같습니다."
+            "Whoosh, swoosh, swish" -> "윙, 윙, 윙소리 같습니다."
+            "Thump, thud" -> "쿵, 쿵소리 같습니다."
+            "Thunk" -> "Thunk소리 같습니다."
+            "Electronic tuner" -> "전자 튜너소리 같습니다."
+            "Effects unit" -> "이펙트 유닛소리 같습니다."
+            "Chorus effect" -> "코러스 효과소리 같습니다."
+            "Basketball bounce" -> "농구 바운스소리 같습니다."
+            "Bang" -> "Bang소리 같습니다."
+            "Slap, smack" -> "때리기, 때리기소리 같습니다."
+            "Whack, thwack" -> "쾅, 쾅소리 같습니다."
+            "Smash, crash" -> "스매시, 크래시소리 같습니다."
+            "Breaking" -> "Breaking소리 같습니다."
+            "Bouncing" -> "Bouncing소리 같습니다."
+            "Whip" -> "Whip소리 같습니다."
+            "Flap" -> "Flap소리 같습니다."
+            "Scratch" -> "스크래치소리 같습니다."
+            "Scrape" -> "Scrape소리 같습니다."
+            "Rub" -> "Rub소리 같습니다."
+            "Roll" -> "Roll소리 같습니다."
+            "Crushing" -> "Crushing소리 같습니다."
+            "Crumpling, crinkling" -> "구겨짐, 구겨짐소리 같습니다."
+            "Tearing" -> "찢어짐소리 같습니다."
+            "Beep, bleep" -> "삐, 삐소리 같습니다."
+            "Ping" -> "Ping소리 같습니다."
+            "Ding" -> "Ding소리 같습니다."
+            "Clang" -> "Clang소리 같습니다."
+            "Squeal" -> "Squeal소리 같습니다."
+            "Creak" -> "Creak소리 같습니다."
+            "Rustle" -> "Rustle소리 같습니다."
+            "Whir" -> "Whir소리 같습니다."
+            "Clatter" -> "Clatter소리 같습니다."
+            "Sizzle" -> "Sizzle소리 같습니다."
+            "Clicking" -> "클릭소리 같습니다."
+            "Clickety-clack" -> "딸깍-딸깍소리 같습니다."
+            "Rumble" -> "럼블소리 같습니다."
+            "Plop" -> "Plop소리 같습니다."
+            "Jingle, tinkle" -> "징글, 팅클소리 같습니다."
+            "Hum" -> "Hum소리 같습니다."
+            "Zing" -> "Zing소리 같습니다."
+            "Boing" -> "Boing소리 같습니다."
+            "Crunch" -> "Crunch소리 같습니다."
+            "Silence" -> "Silence소리 같습니다."
+            "Sine wave" -> "사인파소리 같습니다."
+            "Harmonic" -> "고조파소리 같습니다."
+            "Chirp tone" -> "처프 톤소리 같습니다."
+            "Sound effect" -> "음향 효과소리 같습니다."
+            "Pulse" -> "펄스소리 같습니다."
+            "Inside, small room" -> "내부, 작은 방소리 같습니다."
+            "Inside, large room or hall" -> "내부, 큰 방 또는 홀소리 같습니다."
+            "Inside, public space" -> "내부, 공공 장소소리 같습니다."
+            "Outside, urban or manmade" -> "외부, 도시 또는 인공소리 같습니다."
+            "Outside, rural or natural" -> "외부, 시골 또는 자연소리 같습니다."
+            "Reverberation" -> "잔향소리 같습니다."
+            "Echo" -> "에코소리 같습니다."
+            "Noise" -> "소음소리 같습니다."
+            "Environmental noise" -> "환경 소음소리 같습니다."
+            "Static" -> "Static소리 같습니다."
+            "Mains hum" -> "전원 험소리 같습니다."
+            "Distortion" -> "왜곡소리 같습니다."
+            "Sidetone" -> "사이드톤소리 같습니다."
+            "Cacophony" -> "불협화음소리 같습니다."
+            "White noise" -> "화이트 노이즈소리 같습니다."
+            "Pink noise" -> "핑크 노이즈소리 같습니다."
+            "Throbbing" -> "욱신거림소리 같습니다."
+            "Vibration" -> "진동소리 같습니다."
+            "Television" -> "텔레비전소리 같습니다."
+            "Radio" -> "라디오소리 같습니다."
+            "Field recording" -> "현장 녹음소리 같습니다."
+            else -> "무슨 소리인지 모르겠습니다."
+        }
+
 
         return label
     }

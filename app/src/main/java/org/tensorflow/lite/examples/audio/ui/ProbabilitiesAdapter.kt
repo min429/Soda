@@ -56,34 +56,12 @@ class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolde
     class ViewHolder(private val binding: ItemProbabilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
         // ProgressBar의 색상 값을 저장하기 위한 배열 변수
-        private var primaryProgressColorList: IntArray
-        private var backgroundProgressColorList: IntArray
-
-
-        // ViewHolder 생성 시 ProgressBar의 색상 값을 미리 초기화 함
-        init {
-            primaryProgressColorList =
-                binding.root.resources.getIntArray((R.array.colors_progress_primary))
-            backgroundProgressColorList =
-                binding.root.resources.getIntArray((R.array.colors_progress_background))
-        }
-
 
         // ViewHolder에 데이터를 바인딩하는 함수
         fun bind(label: String, score: Float, index: Int) {
             with(binding) {
                 // 레이아웃 파일에서 labelTextView라는 View를 가져와서 메시지 값을 설정함
                 labelTextView.text = label
-
-                // 레이아웃 파일에서 progressBar라는 ProgressBar View를 가져와서
-                // ProgressBar의 색상을 index 값에 따라 설정함
-                progressBar.progressBackgroundTintList =
-                    ColorStateList.valueOf(
-                        backgroundProgressColorList[index % backgroundProgressColorList.size])
-
-                progressBar.progressTintList =
-                    ColorStateList.valueOf(
-                        primaryProgressColorList[index % primaryProgressColorList.size])
 
                 // 확률 값을 ProgressBar의 진행 상태로 표시함
                 val newValue = (score * 100).toInt()

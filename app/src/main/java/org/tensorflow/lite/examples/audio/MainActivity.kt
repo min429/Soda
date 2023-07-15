@@ -1,19 +1,3 @@
-/*
- * Copyright 2022 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *             http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.tensorflow.lite.examples.audio
 
 import android.app.ActivityManager
@@ -22,18 +6,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import org.tensorflow.lite.examples.audio.databinding.ActivityMainBinding
+import org.tensorflow.lite.examples.audio.databinding.ToolbarLayoutBinding
+import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.examples.audio.service.ForegroundService
 
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
-    private lateinit var serviceIntent: Intent
-    private lateinit var stopServiceIntent: Intent
+    private lateinit var toolbarLayoutBinding: ToolbarLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,54 +26,43 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-        serviceIntent = Intent(this, ForegroundService::class.java)
-        stopServiceIntent = Intent(this, ForegroundService::class.java)
+        // Get the toolbar layout view
+        val toolbarLayoutView = activityMainBinding.root.findViewById<View>(R.id.toolbar_layout)
+        // Bind the toolbar layout view
+        toolbarLayoutBinding = ToolbarLayoutBinding.bind(toolbarLayoutView)
+        setSupportActionBar(toolbarLayoutBinding.toolbar)
 
-        activityMainBinding.buttonSetting.setOnClickListener{
-            if (activityMainBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                activityMainBinding.drawerLayout.closeDrawer(GravityCompat.START)
-            } else {
-                activityMainBinding.drawerLayout.openDrawer(GravityCompat.START)
-            }
+        toolbarLayoutBinding.buttonSetting.setOnClickListener {
+            navigateToFragment(SettingFragment())
         }
 
-        activityMainBinding.buttonBack.setOnClickListener{
-            onBackPressed() // 뒤로가기 기능을 수행하는 메서드 호출
+        toolbarLayoutBinding.buttonBack.setOnClickListener {
+            onBackPressed()
         }
-
-        activityMainBinding.navigationView.background.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // Switch가 On인 경우
-                ContextCompat.startForegroundService(this, serviceIntent)
-                var isRunning = isMyServiceRunning(ForegroundService::class.java)
-                Log.d(TAG, "isRunning: $isRunning")
-            } else {
-                // Switch가 Off인 경우
-                stopService(stopServiceIntent)
-                var isRunning = isMyServiceRunning(ForegroundService::class.java)
-                Log.d(TAG, "isRunning: $isRunning")
-            }
-        }
-    }
-
-    // 서비스가 실행 중인지 확인하는 메서드입니다.
-    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.name == service.service.className) {
-                return true
-            }
-        }
-        return false
     }
 
     override fun onBackPressed() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-            // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
-            // (https://issuetracker.google.com/issues/139738913)
             finishAfterTransition()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun navigateToFragment(fragment: SettingFragment) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+        //현재 프래그먼트가 SettingFragment가 아닌 경우에만 백스택에 추가
+        //설정창이 여러겹 쌓이는 것을 방지
+        if (currentFragment !is SettingFragment) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
         }
     }
 

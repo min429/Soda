@@ -140,7 +140,7 @@ class AudioFragment : Fragment() {
                 Log.d("AudioFragment", "Switch is ON")
                 isSwitchOn = true
                 startRecording() //-> 녹음 재개
-                recordButton.text = "녹음 시작" // 녹음 중지 시 버튼 텍스트 변경
+                recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
             } else {
                 // Switch가 Off인 경우
                 Log.d("AudioFragment", "Switch is OFF")
@@ -167,7 +167,7 @@ class AudioFragment : Fragment() {
                     //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 기한 5분
 
                     speechRecognizer.startListening(intent)
-                    recordButton.text = "녹음 중지" // stt녹음 시작 시 버튼 텍스트 변경
+                    recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
 
                     Log.d("isListening", isListening.toString())
                     Log.d("stt", "stt 음성인식 시작")
@@ -176,7 +176,7 @@ class AudioFragment : Fragment() {
                 } else { // 음성 인식 중이면 음성인식 종료
                     isListening = false
                     speechRecognizer.stopListening()
-                    recordButton.text = "녹음 시작" // stt녹음 중지 시 버튼 텍스트 변경
+                    recordButton.setBackgroundResource(R.drawable.record_start) // 녹음 중지 시 이미지 변경
                     val text = recognizedText.joinToString(separator = " ")
                     stttext.setText(text)
                     recognizedText.clear() // 다음 인식을 위해 비우기
