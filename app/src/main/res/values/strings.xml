@@ -14,7 +14,7 @@
     ~ limitations under the License.
 -->
 <resources>
-    <string name="app_name">TFL Audio Classification</string>
+    <string name="app_name">SoDa</string>
 
     <string name="alt_threshold_button_plus">Increasing threshold of detected sound
         results button</string>
