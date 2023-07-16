@@ -33,8 +33,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         toolbarLayoutBinding.buttonSetting.setOnClickListener {
+            // Setting button을 gone으로 설정
+            toolbarLayoutBinding.buttonSetting.visibility = View.GONE
+            // TextView를 보이게 설정
+            toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
             navigateToFragment(SettingFragment())
         }
+
 
         toolbarLayoutBinding.buttonBack.setOnClickListener {
             onBackPressed()
@@ -42,12 +47,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // 현재 프래그먼트가 SettingFragment인지 확인
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment is SettingFragment) {
+            // SettingFragment에서 뒤로 가기를 눌렀을 때 setting button을 다시 보이게 함
+            toolbarLayoutBinding.buttonSetting.visibility = View.VISIBLE
+            // TextView를 다시 안보이게 함
+            toolbarLayoutBinding.toolbarTitle.visibility = View.GONE
+        }
+
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
             finishAfterTransition()
         } else {
             super.onBackPressed()
         }
     }
+
 
     private fun navigateToFragment(fragment: SettingFragment) {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)

@@ -3,20 +3,161 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/setting_container">
+    android:id="@+id/setting_fragment">
 
-    <Switch
-        android:id="@+id/background"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/background_card"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="백그라운드"
-        android:showText = "true"
-        android:textOn="On"
-        android:textOff="Off"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="400dp"/>
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="백그라운드 감지"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="60dp"/>
+
+            <Switch
+                android:id="@+id/background_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="20dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumb="@drawable/switch_thumb"
+                android:checked="true"/>
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/auto_classification_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/background_card"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="자동분류 실행"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="85dp"/>
+
+            <Switch
+                android:id="@+id/auto_classification_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="20dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumb="@drawable/switch_thumb" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/vibrate_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/auto_classification_card"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="진동 알림"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="135dp"/>
+
+            <Switch
+                android:id="@+id/vibrate_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="20dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumb="@drawable/switch_thumb" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/instruction_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vibrate_card"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="사용 설명서"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="115dp"/>
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

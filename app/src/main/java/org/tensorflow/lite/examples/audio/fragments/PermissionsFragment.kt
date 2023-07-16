@@ -20,6 +20,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -34,8 +35,8 @@ private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.RECORD_AUDIO)
  * The sole purpose of this fragment is to request permissions and, once granted, display the
  * audio fragment to the user.
  */
-class PermissionsFragment : Fragment() {
 
+class PermissionsFragment : Fragment() {
     val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
