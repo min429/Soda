@@ -67,31 +67,6 @@
             android:checked="true"
             />
 
-        <EditText
-            android:id="@+id/stt_text"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_alignBaseline="@+id/stt_button"
-            android:layout_alignBottom="@+id/stt_button"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginEnd="-113dp"
-            android:layout_marginBottom="-13dp"
-            android:layout_toStartOf="@+id/stt_button"
-            android:text="Recognition text"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/stt_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switch_button"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:alpha="0"
-            android:text="STT 변환" />
 
         <Button
             android:id="@+id/record_button"
