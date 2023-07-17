@@ -48,7 +48,6 @@ class AudioClassificationHelper(
     private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
     private var bytesRead by Delegates.notNull<Int>()
 
-
     private val classifyRunnable = Runnable {
         classifyAudio()
     }

@@ -40,7 +40,7 @@ class SettingFragment : Fragment() {
         serviceIntent = Intent(mainActivity, ForegroundService::class.java)
         stopServiceIntent = Intent(mainActivity, ForegroundService::class.java)
 
-        binding.background.setOnCheckedChangeListener { _, isChecked ->
+        binding.backgroundSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 ContextCompat.startForegroundService(mainActivity, serviceIntent)
                 val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)

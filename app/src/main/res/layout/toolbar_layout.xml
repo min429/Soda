@@ -26,6 +26,18 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/back_button" />
 
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="설정"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                android:fontFamily="@font/jua_regular"
+                android:paddingTop="5dp"
+                android:visibility="gone"/>
+
             <ImageButton
                 android:id="@+id/button_setting"
                 android:layout_width="40dp"

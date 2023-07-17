@@ -56,6 +56,8 @@ import android.speech.SpeechRecognizer
 import android.Manifest
 import android.content.pm.PackageManager
 import android.text.Editable
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -73,9 +75,20 @@ interface AudioClassificationListener {
 
 class AudioFragment : Fragment() {
     // 뷰 바인딩을 위한 변수와 어댑터 초기화
+    // 뷰 바인딩을 위한 변수와 어댑터 초기화
     private var _fragmentBinding: FragmentAudioBinding? = null
     private val fragmentAudioBinding get() = _fragmentBinding!!
     private val adapter by lazy { ProbabilitiesAdapter() }
+
+    private var recordingDotCount = 0
+    private val recordingHandler = Handler(Looper.getMainLooper())
+    private val recordingRunnable = object : Runnable {
+        override fun run() {
+            recordingDotCount = (recordingDotCount + 1) % 4
+            fragmentAudioBinding.recordingText.text = "녹음중" + ".".repeat(recordingDotCount)
+            recordingHandler.postDelayed(this, 500)
+        }
+    }
 
     // 스위치 & 버튼용
     private var isSwitchOn = true
@@ -166,6 +179,7 @@ class AudioFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 stopRecording() // -> 녹음중단
 
+
                 // 녹음시작
                 isListening = true
                 val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -173,20 +187,20 @@ class AudioFragment : Fragment() {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
                 //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 10000); // 녹음 완전 종료 후 연장 기한 10초
                 //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000); // 녹음 중간 공백 연장 기한 5초
-
                 speechRecognizer.startListening(intent)
+                fragmentAudioBinding.recordingText.visibility = View.VISIBLE
+                startRecordingAnimation()
                 recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
-
                 Log.d(TAG, "stt 음성인식 시작")
-
             }
             else { // 음성 인식 중이면 음성인식 종료
                 Log.d(TAG, "stt 음성인식 중단")
-
                 isListening = false
                 duplication_check= false
 
                 speechRecognizer.stopListening()
+                fragmentAudioBinding.recordingText.visibility = View.GONE
+                stopRecordingAnimation()
                 recordButton.setBackgroundResource(R.drawable.record_start) // 녹음 중지 시 이미지 변경
 
                 val text = resultText.joinToString(separator = " ")
@@ -252,6 +266,7 @@ class AudioFragment : Fragment() {
                     //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 10000); // 녹음 완전 종료 후 연장 기한 10초
                     //intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 10000); // 녹음 중간 공백 연장 기한 5초
                     speechRecognizer.startListening(intent)
+                    fragmentAudioBinding.recordingText.visibility = View.VISIBLE
 
                 }
             }
@@ -266,6 +281,14 @@ class AudioFragment : Fragment() {
         _fragmentBinding = null
         super.onDestroyView()
         speechRecognizer.destroy()
+    }
+
+    private fun startRecordingAnimation() {
+        recordingHandler.post(recordingRunnable)
+    }
+
+    private fun stopRecordingAnimation() {
+        recordingHandler.removeCallbacks(recordingRunnable)
     }
 
     companion object {
