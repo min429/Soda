@@ -156,7 +156,6 @@ class AudioFragment : Fragment() {
                 //Log.d(TAG, "Switch is ON")
                 isSwitchOn = true
                 startRecording() //-> 녹음 재개
-                recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
             }
             else {
                 // Switch가 Off인 경우
