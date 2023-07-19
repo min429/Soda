@@ -42,8 +42,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_marginRight="20dp"
                 android:track="@drawable/switch_track_selector"
-                android:thumb="@drawable/switch_thumb"
-                android:checked="true"/>
+                android:thumb="@drawable/switch_thumb" />
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 

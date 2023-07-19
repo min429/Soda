@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             navigateToFragment(SettingFragment())
         }
 
-
         toolbarLayoutBinding.buttonBack.setOnClickListener {
             onBackPressed()
         }

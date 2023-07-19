@@ -27,7 +27,6 @@
         android:layout_height="270dp"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_default"
-        android:layout_marginBottom="80dp"
         android:layout_marginLeft="@dimen/margin_default"
         android:layout_marginRight="@dimen/margin_default"
         android:scrollbars="vertical"
@@ -52,21 +51,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <Switch
-            android:id="@+id/switch_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="16dp"
-            android:showText = "true"
-            android:layout_marginEnd="25dp"
-            android:textOn="record ON"
-            android:textOff="record OFF"
-            android:checked="true"
-            />
-
 
         <Button
             android:id="@+id/record_button"

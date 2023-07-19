@@ -6,6 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import androidx.core.content.ContextCompat
+import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
@@ -32,7 +33,8 @@ object SoundCheckHelper {
         // RMS를 데시벨로 변환하기
         // 0에 로그를 취하는 것을 방지하기 위해 1e-7 추가하기
         soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
-        Log.d(TAG, "soundDecibel: $soundDecibel")
+        if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
+        else Log.d(TAG, "soundDecibel: $soundDecibel")
 
         // 소리 크기가 100데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
         if (soundDecibel >= 100) {
@@ -48,6 +50,8 @@ object SoundCheckHelper {
     }
 
     private fun viberate(context: Context){
+        if(!SettingFragment.vibrateSwitchState) return
+
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

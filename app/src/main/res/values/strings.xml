@@ -42,4 +42,7 @@
         <item>CPU</item>
         <item>NNAPI</item>
     </string-array>
+
+    <!-- switchState -->
+    <string name="saved_background_switch_state_key">saved_switch_state_key</string>
 </resources>

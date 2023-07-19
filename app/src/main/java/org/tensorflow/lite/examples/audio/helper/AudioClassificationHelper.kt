@@ -21,6 +21,7 @@ import android.media.AudioRecord
 import android.os.SystemClock
 import android.util.Log
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
+import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
@@ -96,7 +97,8 @@ class AudioClassificationHelper(
             //필요한 객체를 생성하는 분류기 생성
             recorder = classifier.createAudioRecord()
             //분류 시작
-            startAudioClassification()
+            if(SettingFragment.autoSwitchState)
+                startAudioClassification()
 
 
         } catch (e: IllegalStateException) {
@@ -155,9 +157,12 @@ class AudioClassificationHelper(
     }
 
     fun stopAudioClassification() {
-        recorder.stop() //오디오 녹음 중지
-        executor.shutdownNow() //분류 작업 중지
-        soundCheckExecutor.shutdownNow() //데시벨 확인 중지
+        if(::recorder.isInitialized)
+            recorder.stop() //오디오 녹음 중지
+        if(::executor.isInitialized)
+            executor.shutdownNow() //분류 작업 중지
+        if(::soundCheckExecutor.isInitialized)
+            soundCheckExecutor.shutdownNow() //데시벨 확인 중지
         Log.d(TAG, "자동녹음 중지")
     }
 

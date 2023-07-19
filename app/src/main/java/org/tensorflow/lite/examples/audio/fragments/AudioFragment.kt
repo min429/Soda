@@ -40,6 +40,8 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.os.Handler
 import android.os.Looper
+import androidx.navigation.Navigation
+import org.tensorflow.lite.examples.audio.fragments.SettingFragment.Companion.isMyServiceRunning
 
 
 private const val TAG = "AudioFragment"
@@ -53,7 +55,6 @@ class AudioFragment : Fragment() {
     // 뷰 바인딩을 위한 변수와 어댑터 초기화
     private var _fragmentBinding: FragmentAudioBinding? = null
     private val fragmentAudioBinding get() = _fragmentBinding!!
-    private val adapter by lazy { ProbabilitiesAdapter() }
 
     private var recordingDotCount = 0
     private val recordingHandler = Handler(Looper.getMainLooper())
@@ -66,11 +67,9 @@ class AudioFragment : Fragment() {
     }
 
     // 스위치 & 버튼용
-    private var isSwitchOn = true
 
     // stt 용
     private lateinit var speechRecognizer: SpeechRecognizer
-    private var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
     private var duplication_check = false // 음성인식 시작 중복 처리 플래그 변수
     private var result_check = false // 음성인식 결과 처리 플래그 변수
     val resultText = mutableListOf<String>() // 결과 stt 표기용
@@ -117,34 +116,11 @@ class AudioFragment : Fragment() {
         )
 
         // 스위치 + STT 녹음 버튼------------------------------------------------------------------------
-        val switch = fragmentAudioBinding.switchButton
         val recordButton = view.findViewById<Button>(R.id.record_button)
         val RECORDING_TIMEOUT = 5000 // 녹음 타임아웃 시간 (5초)
         var isEndOfSpeech  = false //인식된 소리가 없을 때 처리 플래그 변수
 
-        // 스위치 ON / OFF
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            if (!isListening) {
-                if (isChecked) {
-                    // Switch가 On인 경우
-                    // Log.d(TAG, "Switch is ON")
-                    isSwitchOn = true
-                    startRecording() // -> 녹음 재개
-                } else {
-                    // Switch가 Off인 경우
-                    // Log.d(TAG, "Switch is OFF")
-                    // ProbabilitiesAdapter에서 categoryList 객체를 빈 리스트로 초기화 함
-                    adapter.categoryList = emptyList()
-                    adapter.notifyDataSetChanged()
-                    isSwitchOn = false
-                    stopRecording() // -> 녹음중단
-                }
-            } else {
-                switch.isChecked = isSwitchOn  // 스위치를 다시 이전 상태로 변경
-            }
-            Log.d(TAG, "isListening: $isListening")
-            Log.d(TAG, "isListening: $isChecked")
-        }
+
 
 
         // 녹음 버튼 클릭-----------------------------------------------------------------------
@@ -180,9 +156,7 @@ class AudioFragment : Fragment() {
                             recordButton.setBackgroundResource(R.drawable.record_start) // 녹음 중지 시 이미지 변경
                             val text = resultText.joinToString(separator = " ")
                             resultText.clear()// 다음 stt인식을 위해 비우기
-                            if(isSwitchOn){
-                                startRecording()
-                            }
+                            startRecording()
                             result_check=false
                             Toast.makeText(requireContext(), "5초 이상 말소리가 감지되지 않음", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
                         }
@@ -280,16 +254,6 @@ class AudioFragment : Fragment() {
         recordingHandler.removeCallbacks(recordingRunnable)
     }
 
-    companion object {
-        var audioHelper: AudioClassificationHelper? = null
-        fun startRecording() {
-            audioHelper?.startAudioClassification()
-        }
-        fun stopRecording() {
-            audioHelper?.stopAudioClassification()
-        }
-    }
-
     // STT 음성 인식을 시작하는 startSTT 함수
     private fun startSTT() {
         // 음성 인식 시작
@@ -310,4 +274,45 @@ class AudioFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+    override fun onResume() {
+        super.onResume()
+        // Make sure that all permissions are still present, since the
+        // user could have removed them while the app was in paused state.
+        if (!PermissionsFragment.hasPermissions(requireContext())) {
+            Navigation.findNavController(requireActivity(), R.id.fragment_container)
+                .navigate(AudioFragmentDirections.actionAudioToPermissions())
+        }
+        else{
+            if(SettingFragment.autoSwitchState){
+                audioHelper?.startAudioClassification()
+                Log.d("AudioFragment", "녹음 재개")
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(!isMyServiceRunning(requireContext(), ForegroundService::class.java)){
+            audioHelper?.stopAudioClassification()
+            Log.d("AudioFragment", "녹음 중단")
+        }
+    }
+
+    companion object {
+        var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
+        var audioHelper: AudioClassificationHelper? = null
+        private val adapter by lazy { ProbabilitiesAdapter() }
+        fun startRecording() {
+            audioHelper?.startAudioClassification()
+            Log.d(TAG, "startRecording")
+        }
+        fun stopRecording() {
+            adapter.categoryList = emptyList()
+            adapter.notifyDataSetChanged()
+            audioHelper?.stopAudioClassification()
+            Log.d(TAG, "stopRecording")
+        }
+    }
+
 }
