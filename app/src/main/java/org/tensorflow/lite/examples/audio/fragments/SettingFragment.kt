@@ -77,13 +77,13 @@ class SettingFragment : Fragment() {
                     // Switch가 On인 경우
                     // Log.d(TAG, "Switch is ON")
                     autoSwitchState = true
-                    AudioFragment.startRecording() // -> 녹음 재개
+                    //AudioFragment.startRecording() // -> 녹음 재개
                 } else {
                     // Switch가 Off인 경우
                     // Log.d(TAG, "Switch is OFF")
                     // ProbabilitiesAdapter에서 categoryList 객체를 빈 리스트로 초기화 함
                     autoSwitchState = false
-                    AudioFragment.stopRecording() // -> 녹음중단
+                    //AudioFragment.stopRecording() // -> 녹음중단
                 }
             } else {
                 binding.autoClassificationSwitch.isChecked = autoSwitchState  // 스위치를 다시 이전 상태로 변경
@@ -119,5 +119,4 @@ class SettingFragment : Fragment() {
             return false
         }
     }
-
 }

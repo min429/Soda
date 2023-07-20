@@ -66,12 +66,11 @@ class AudioFragment : Fragment() {
         }
     }
 
-    // 스위치 & 버튼용
-
     // stt 용
     private lateinit var speechRecognizer: SpeechRecognizer
     private var duplication_check = false // 음성인식 시작 중복 처리 플래그 변수
     private var result_check = false // 음성인식 결과 처리 플래그 변수
+    private var record_cancel = false // 음성인식 취소 처리 플래그 변수
     val resultText = mutableListOf<String>() // 결과 stt 표기용
 
     private val audioClassificationListener = object : AudioClassificationListener {
@@ -119,19 +118,19 @@ class AudioFragment : Fragment() {
         val recordButton = view.findViewById<Button>(R.id.record_button)
         val RECORDING_TIMEOUT = 5000 // 녹음 타임아웃 시간 (5초)
         var isEndOfSpeech  = false //인식된 소리가 없을 때 처리 플래그 변수
-
-
+        val autoSwitchStateValue = SettingFragment.autoSwitchState
 
 
         // 녹음 버튼 클릭-----------------------------------------------------------------------
         recordButton.setOnClickListener {
-            if(!result_check){
+            if(!result_check){ // 결과 처리중일 때 -> 아직 결과 안나온 동안
                 if (!isListening) { // 음성 인식 중이 아닌 경우에만 음성인식 시작
 
                     //분류 중단
                     adapter.categoryList = emptyList()
                     adapter.notifyDataSetChanged()
                     stopRecording() // -> 녹음중단
+
 
                     // 녹음시작
                     isListening = true
@@ -140,32 +139,36 @@ class AudioFragment : Fragment() {
                     startRecordingAnimation()
                     recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
                     result_check=true//터치 막기
-
                     Log.d(TAG, "stt 음성인식 시작")
 
-                    // 5초 타임아웃 처리
 
+                    // 5초 타임아웃 처리
                     recordingHandler.postDelayed({
-                        if(!isEndOfSpeech ){
+                        if(!isEndOfSpeech && !record_cancel){
                             Log.e(TAG, "stt 소리X 5초 지남")
-                            isListening = false
-                            duplication_check= false
                             speechRecognizer.stopListening()
                             fragmentAudioBinding.recordingText.visibility = View.GONE
                             stopRecordingAnimation()
                             recordButton.setBackgroundResource(R.drawable.record_start) // 녹음 중지 시 이미지 변경
                             val text = resultText.joinToString(separator = " ")
                             resultText.clear()// 다음 stt인식을 위해 비우기
-                            startRecording()
+                            if(autoSwitchStateValue){
+                                startRecording()
+                                Log.d(TAG, "스위치 on 일때 자동녹음 레코딩 시작")
+                            }
                             result_check=false
+                            isListening = false
+                            duplication_check= false
                             Toast.makeText(requireContext(), "5초 이상 말소리가 감지되지 않음", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+
                         }
                     }, RECORDING_TIMEOUT.toLong())
+
+                    record_cancel = false
                 }
-                else { // 음성 인식 중이면 음성인식 종료
+                else { // 음성 인식 중이면 음성인식 종료시퀀스 -> 프래그먼트 이동
+
                     Log.d(TAG, "stt 음성인식 중단")
-                    isListening = false
-                    duplication_check= false
                     speechRecognizer.stopListening()
                     fragmentAudioBinding.recordingText.visibility = View.GONE
                     stopRecordingAnimation()
@@ -173,11 +176,35 @@ class AudioFragment : Fragment() {
                     val text = resultText.joinToString(separator = " ")
                     resultText.clear()// 다음 stt인식을 위해 비우기
                     //startRecording() //-> 녹음 재개 - 주석 처리해야 stt 중지되는 부분 처리할 수 있음
+                    isListening = false
+                    duplication_check= false
                     navigateToFragment(SttFragment(),text)//stt 처리 끝났을 시 SttFragment로 교체
                 }
 
             }
+            else{ // 강제로 취소 버튼 누를 때
+                Log.e(TAG, "stt 인식 취소")
+                speechRecognizer.stopListening()
+                fragmentAudioBinding.recordingText.visibility = View.GONE
+                stopRecordingAnimation()
+                recordButton.setBackgroundResource(R.drawable.record_start) // 녹음 중지 시 이미지 변경
+                val text = resultText.joinToString(separator = " ")
+                resultText.clear()// 다음 stt인식을 위해 비우기
+                if(autoSwitchStateValue){
+                    startRecording()
+                    Log.d(TAG, "스위치 on 일때 자동녹음 레코딩 시작")
+                }
+                result_check=false
+                isListening = false
+                duplication_check= false
+                record_cancel =true
 
+                Toast.makeText(requireContext(), "인식취소", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+
+            }
+
+
+            Log.d(TAG, "취소 여부 확인 확인 = "+ record_cancel)
         }
 
         // SpeechRecognizer 초기화 ------------------------------------------------------------------------
@@ -202,8 +229,6 @@ class AudioFragment : Fragment() {
 
             override fun onEndOfSpeech() { //동작 종료시 무조건 호출
                 Log.d(TAG, "stt onEndOfSpeech ")
-
-
             }
 
             override fun onError(error: Int) {
@@ -211,26 +236,28 @@ class AudioFragment : Fragment() {
             }
 
             override fun onResults(results: Bundle?) {
-                Log.d(TAG, "stt 처리 완료")
+                if (!record_cancel){ //인식 취소 안됬을 때만 아래 코드 실행되도록
+                    Log.d(TAG, "stt 처리 완료")
 
-                // 녹음완료 표시
-                isEndOfSpeech = true
-                result_check=false
-                //결과 출력 버튼으로 변경
-                recordButton.setBackgroundResource(R.drawable.play_button) // 녹음 중지 시 이미지 변경
-                stopRecordingAnimation()
-                fragmentAudioBinding.recordingText.text = "녹음완료"
+                    // 녹음완료 표시
+                    isEndOfSpeech = true
+                    result_check=false
+                    //결과 출력 버튼으로 변경
+                    recordButton.setBackgroundResource(R.drawable.play_button) // 녹음 중지 시 이미지 변경
+                    stopRecordingAnimation()
+                    fragmentAudioBinding.recordingText.text = "녹음완료"
 
-                // 인식된 결과 처리
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (matches != null && matches.isNotEmpty()) {
-                    resultText.add(matches[0])
-                }
+                    // 인식된 결과 처리
+                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (matches != null && matches.isNotEmpty()) {
+                        resultText.add(matches[0])
+                    }
 
-                if(isListening) {
-                    Log.d(TAG, " stt 처리 재시작")
-                    startSTT()
-                    fragmentAudioBinding.recordingText.visibility = View.VISIBLE
+                    if(isListening) {
+                        Log.d(TAG, " stt 처리 재시작")
+                        startSTT()
+                        fragmentAudioBinding.recordingText.visibility = View.VISIBLE
+                    }
                 }
             }
 
@@ -305,13 +332,13 @@ class AudioFragment : Fragment() {
         private val adapter by lazy { ProbabilitiesAdapter() }
         fun startRecording() {
             audioHelper?.startAudioClassification()
-            Log.d(TAG, "startRecording")
+            //Log.d(TAG, "startRecording")
         }
         fun stopRecording() {
             adapter.categoryList = emptyList()
             adapter.notifyDataSetChanged()
             audioHelper?.stopAudioClassification()
-            Log.d(TAG, "stopRecording")
+            //Log.d(TAG, "stopRecording")
         }
     }
 
