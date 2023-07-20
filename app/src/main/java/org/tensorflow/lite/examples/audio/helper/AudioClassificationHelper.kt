@@ -157,8 +157,7 @@ class AudioClassificationHelper(
     }
 
     fun stopAudioClassification() {
-        if(::recorder.isInitialized)
-            recorder.stop() //오디오 녹음 중지
+        recorder.stop() //오디오 녹음 중지
         if(::executor.isInitialized)
             executor.shutdownNow() //분류 작업 중지
         if(::soundCheckExecutor.isInitialized)
