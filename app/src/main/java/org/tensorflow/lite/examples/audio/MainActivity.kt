@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.tensorflow.lite.examples.audio.databinding.ActivityMainBinding
 import org.tensorflow.lite.examples.audio.databinding.ToolbarLayoutBinding
+import org.tensorflow.lite.examples.audio.fragments.AudioFragment
 import org.tensorflow.lite.examples.audio.fragments.SettingFragment
+import org.tensorflow.lite.examples.audio.fragments.WarningFragment
+import org.tensorflow.lite.examples.audio.helper.SoundCheckHelper
 import org.tensorflow.lite.examples.audio.service.ForegroundService
 
 private const val TAG = "MainActivity"
@@ -33,10 +36,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         toolbarLayoutBinding.buttonSetting.setOnClickListener {
-            // Setting button을 gone으로 설정
-            toolbarLayoutBinding.buttonSetting.visibility = View.GONE
-            // TextView를 보이게 설정
-            toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
             navigateToFragment(SettingFragment())
         }
 
@@ -45,7 +44,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // 'show_dialog' 키의 값을 가져옴 (기본값은 false)
+        val showDialog = intent.getBooleanExtra("show_dialog", false)
+
+        Log.d(TAG, "showDialog: $showDialog")
+        // 알림을 클릭하여 MainActivity를 실행했을 때 대화상자를 띄우도록 합니다.
+        // 값이 'true'이면 대화상자를 표시
+        if (showDialog) {
+            clickViewEvents(this)
+        }
+    }
+
+    // intent를 갱신하기 위해 필요
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // 새로운 Intent를 액티비티의 Intent로 설정
+        this.intent = intent
+    }
+
     override fun onBackPressed() {
+        Log.d(TAG, "onBackPressed")
         // 현재 프래그먼트가 SettingFragment인지 확인
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is SettingFragment) {
@@ -64,20 +85,31 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun navigateToFragment(fragment: SettingFragment) {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        // Setting button을 gone으로 설정
+        toolbarLayoutBinding.buttonSetting.visibility = View.GONE
+        // TextView를 보이게 설정
+        toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
+
+        if(SettingFragment.isMyServiceRunning(this, ForegroundService::class.java)){
+            // 포그라운드 서비스가 중에는 수동으로 녹음을 중단시켜줘야함
+            AudioFragment.stopRecording()
+        }
 
         //현재 프래그먼트가 SettingFragment가 아닌 경우에만 백스택에 추가
-        //설정창이 여러겹 쌓이는 것을 방지
-        if (currentFragment !is SettingFragment) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit()
-        } else {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit()
-        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)  // 백스택에 추가
+            .commit()
+    }
+
+    /** 대화상자 생성 **/
+    private fun clickViewEvents(activity: MainActivity) {
+        val dialog = WarningFragment(SoundCheckHelper.warningLabel)
+        // 알림창이 띄워져있는 동안 배경 클릭 막기
+        dialog.isCancelable = false
+        dialog.show(activity.supportFragmentManager, "WarningDialog")
+        // 대화상자를 보여준 후에는 "show_dialog" 값을 다시 false로 설정
+        intent.putExtra("show_dialog", false)
     }
 
 }

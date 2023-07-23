@@ -67,7 +67,6 @@ class AudioClassificationHelper(
         val baseOptionsBuilder = BaseOptions.builder()
             .setNumThreads(numThreads)
 
-
         // Use the specified hardware for running the model. Default to CPU.
         // Possible to also use a GPU delegate, but this requires that the classifier be created
         // on the same thread that is using the classifier, which is outside of the scope of this
@@ -173,6 +172,7 @@ class AudioClassificationHelper(
         const val DEFAULT_OVERLAP_VALUE = 0.5f //반복 실행 간격, default 값은 0.5 설정
         const val YAMNET_MODEL = "yamnet.tflite" //사용하는 모델, default 값은 YAMNET 설정
         var interval by Delegates.notNull<Long>()
+        var label: String? = null
     }
 
 }

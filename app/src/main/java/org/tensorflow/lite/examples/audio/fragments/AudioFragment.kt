@@ -41,6 +41,7 @@ import android.speech.SpeechRecognizer
 import android.os.Handler
 import android.os.Looper
 import androidx.navigation.Navigation
+import org.tensorflow.lite.examples.audio.MainActivity
 import org.tensorflow.lite.examples.audio.fragments.SettingFragment.Companion.isMyServiceRunning
 
 
@@ -79,7 +80,7 @@ class AudioFragment : Fragment() {
             requireActivity().runOnUiThread {
                 adapter.categoryList = results
                 if(!results.isEmpty())
-                    ForegroundService.label = TextMatchingHelper.textMatch(results[0])
+                    AudioClassificationHelper.label = TextMatchingHelper.textMatch(results[0])
                 adapter.notifyDataSetChanged()
             }
         }
@@ -320,9 +321,9 @@ class AudioFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        Log.d("AudioFragment", "녹음 중단")
         if(!isMyServiceRunning(requireContext(), ForegroundService::class.java)){
             audioHelper?.stopAudioClassification()
-            Log.d("AudioFragment", "녹음 중단")
         }
     }
 

@@ -26,7 +26,7 @@ class ForegroundService : Service() {
     private var interval = 1000L // 1초로 초기화
     private val updateRunnable = object : Runnable {
         override fun run() {
-            if(label != null){
+            if(AudioClassificationHelper.label != null){
                 interval = AudioClassificationHelper.interval
                 updateForegroundNotification() // 알림 업데이트 작업 수행
             }
@@ -40,7 +40,7 @@ class ForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(label != null){
+        if(AudioClassificationHelper.label != null){
             val notification = createNotification()
             startForeground(notificationId, notification)
         }
@@ -81,10 +81,11 @@ class ForegroundService : Service() {
     }
 
     private fun createNotification(): Notification {
-        // Create an intent that will open your activity when the user taps the notification
+        // 알림을 클릭했을 때 실행될 Intent 정의
         val openAppIntent = Intent(this, MainActivity::class.java)
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
+        // 알림을 클릭했을 때 openAppIntent를 실행할 수 있도록 함
         val pendingIntent = PendingIntent.getActivity(
             this,
             notificationId,
@@ -93,12 +94,12 @@ class ForegroundService : Service() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_run_service)
-            .setContentText("$label")
-            .setContentIntent(pendingIntent) // 알림을 탭해도 아무 작업도 수행하지 않음
+            .setContentText(AudioClassificationHelper.label)
+            .setContentIntent(pendingIntent) // 알림을 탭했을 때 pendingIntent가 실행됨
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
 
-        Log.d(TAG, "label: $label")
+        Log.d(TAG, "label: "+AudioClassificationHelper.label)
 
         return notification
     }
@@ -111,8 +112,6 @@ class ForegroundService : Service() {
         notificationManager.notify(notificationId, notification) // 알림 업데이트
     }
 
-    companion object{
-        var label: String? = null
-    }
+
 
 }

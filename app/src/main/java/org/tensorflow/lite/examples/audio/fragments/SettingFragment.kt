@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.audio.fragments
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -73,18 +74,7 @@ class SettingFragment : Fragment() {
         binding.autoClassificationSwitch.isChecked = autoSwitchState
         binding.autoClassificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (!AudioFragment.isListening) {
-                if (isChecked) {
-                    // Switch가 On인 경우
-                    // Log.d(TAG, "Switch is ON")
-                    autoSwitchState = true
-                    //AudioFragment.startRecording() // -> 녹음 재개
-                } else {
-                    // Switch가 Off인 경우
-                    // Log.d(TAG, "Switch is OFF")
-                    // ProbabilitiesAdapter에서 categoryList 객체를 빈 리스트로 초기화 함
-                    autoSwitchState = false
-                    //AudioFragment.stopRecording() // -> 녹음중단
-                }
+                autoSwitchState = isChecked
             } else {
                 binding.autoClassificationSwitch.isChecked = autoSwitchState  // 스위치를 다시 이전 상태로 변경
             }
