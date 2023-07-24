@@ -15,15 +15,8 @@
     ~ limitations under the License.
 -->
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" />
-    <style name="BottomSheetSpinnerItemStyle" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
-        <item name="android:textSize">20sp</item>
-    </style>
-    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:minHeight">20dp</item>
-        <item name="android:maxHeight">200dp</item>
-        <item name="android:radius">100dp</item> <!-- 모서리 각 설정 -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:statusBarColor">@color/dark_blue</item>
     </style>
 </resources>

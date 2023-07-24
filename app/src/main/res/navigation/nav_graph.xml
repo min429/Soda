@@ -30,7 +30,6 @@
             app:destination="@id/audio_fragment"
             app:popUpTo="@id/permissions_fragment"
             app:popUpToInclusive="true" />
-
     </fragment>
 
     <fragment
@@ -38,12 +37,11 @@
         android:name="org.tensorflow.lite.examples.audio.fragments.AudioFragment"
         android:label="AudioFragment" >
 
-
         <action
             android:id="@+id/action_audio_to_permissions"
             app:destination="@id/permissions_fragment"
             app:popUpTo="@id/audio_fragment"
             app:popUpToInclusive="true"/>
-
     </fragment>
+
 </navigation>

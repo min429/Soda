@@ -18,6 +18,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="theme_color">#68A4FF</color>
+    <color name="dark_blue">#133F95</color>
     <color name="deep_blue">#205CD2</color>
     <color name="blue">#428EFF</color>
     <color name="sky_blue">#B5D2FF</color>

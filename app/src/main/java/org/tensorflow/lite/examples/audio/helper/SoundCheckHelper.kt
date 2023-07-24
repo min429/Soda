@@ -52,7 +52,7 @@ object SoundCheckHelper{
         if (soundDecibel >= 80) {
             // 진동을 울리는 코드를 작성합니다
             try {
-                viberate(context)
+                vibrate(context)
             } catch (e: Exception) {
                 Log.e(TAG, "Error occurred while vibrating", e)
                 val exceptionMessage = e.message
@@ -61,7 +61,7 @@ object SoundCheckHelper{
         }
     }
 
-    private fun viberate(context: Context){
+    private fun vibrate(context: Context){
         if(!SettingFragment.vibrateSwitchState) return
 
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
