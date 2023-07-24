@@ -58,7 +58,6 @@ class SettingFragment : Fragment() {
                 putBoolean("saved_switch_state_key", isChecked) //"saved_switch_state_key"라는 키 값으로 isChecked라는 값을 SharedPreferences에 저장
                 apply()
             }
-
             if (isChecked) {
                 ContextCompat.startForegroundService(mainActivity, serviceIntent)
                 val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
@@ -73,13 +72,13 @@ class SettingFragment : Fragment() {
         /** 자동분류 스위치 **/
         binding.autoClassificationSwitch.isChecked = autoSwitchState
         binding.autoClassificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (!AudioFragment.isListening) {
-                autoSwitchState = isChecked
-            } else {
-                binding.autoClassificationSwitch.isChecked = autoSwitchState  // 스위치를 다시 이전 상태로 변경
+            if(isMyServiceRunning(requireContext(), ForegroundService::class.java)){
+                if(isChecked) AudioFragment.startRecording()
+                else AudioFragment.stopRecording()
             }
+            autoSwitchState = isChecked
             Log.d(TAG, "isListening: "+AudioFragment.isListening)
-            Log.d(TAG, "isListening: $isChecked")
+            Log.d(TAG, "isChecked: $isChecked")
         }
 
         /** 진동알림 스위치 **/
@@ -87,7 +86,6 @@ class SettingFragment : Fragment() {
         binding.vibrateSwitch.setOnCheckedChangeListener { _, isChecked ->
             vibrateSwitchState = isChecked
         }
-
     }
 
     override fun onDestroyView() {
@@ -109,4 +107,5 @@ class SettingFragment : Fragment() {
             return false
         }
     }
+
 }

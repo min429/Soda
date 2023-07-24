@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.tensorflow.lite.examples.audio.databinding.ActivityMainBinding
@@ -36,7 +37,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         toolbarLayoutBinding.buttonSetting.setOnClickListener {
-            navigateToFragment(SettingFragment())
+            if(!AudioFragment.isListening){ // stt 녹음중 아닐 때만
+                navigateToFragment(SettingFragment())
+            }
+            else{
+                Toast.makeText(this, "먼저 녹음을 완료해주세요", Toast.LENGTH_SHORT).show()
+            }
         }
 
         toolbarLayoutBinding.buttonBack.setOnClickListener {
@@ -89,11 +95,6 @@ class MainActivity : AppCompatActivity() {
         toolbarLayoutBinding.buttonSetting.visibility = View.GONE
         // TextView를 보이게 설정
         toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
-
-        if(SettingFragment.isMyServiceRunning(this, ForegroundService::class.java)){
-            // 포그라운드 서비스가 중에는 수동으로 녹음을 중단시켜줘야함
-            AudioFragment.stopRecording()
-        }
 
         //현재 프래그먼트가 SettingFragment가 아닌 경우에만 백스택에 추가
         supportFragmentManager.beginTransaction()

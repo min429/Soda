@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import org.tensorflow.lite.examples.audio.MainActivity
 import org.tensorflow.lite.examples.audio.R
+import org.tensorflow.lite.examples.audio.fragments.AudioFragment
 import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.examples.audio.fragments.WarningFragment
 import org.tensorflow.lite.support.audio.TensorAudio
@@ -80,7 +81,7 @@ object SoundCheckHelper{
         createNotification(context)
     }
 
-    /** 알림 생성 **/
+    /** 위험알림 생성 **/
     private fun createNotification(context: Context) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

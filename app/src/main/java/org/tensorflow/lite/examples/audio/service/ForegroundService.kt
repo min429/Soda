@@ -15,6 +15,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.tensorflow.lite.examples.audio.MainActivity
 import org.tensorflow.lite.examples.audio.R
+import org.tensorflow.lite.examples.audio.fragments.AudioFragment
+import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.examples.audio.helper.AudioClassificationHelper
 
 private const val TAG = "ForegroundService"
@@ -40,6 +42,9 @@ class ForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        if(AudioFragment.isAutoListening) // 자동분류 소리 인식 중이면
+        AudioFragment.startRecording()
+
         if(AudioClassificationHelper.label != null){
             val notification = createNotification()
             startForeground(notificationId, notification)
@@ -66,6 +71,8 @@ class ForegroundService : Service() {
         // 포그라운드 서비스를 종료합니다.
         stopForeground(true)
         stopSelf()
+
+        AudioFragment.stopRecording()
     }
 
     private fun createNotificationChannel() {
@@ -111,7 +118,5 @@ class ForegroundService : Service() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, notification) // 알림 업데이트
     }
-
-
 
 }

@@ -21,6 +21,7 @@ import android.media.AudioRecord
 import android.os.SystemClock
 import android.util.Log
 import org.tensorflow.lite.examples.audio.fragments.AudioClassificationListener
+import org.tensorflow.lite.examples.audio.fragments.AudioFragment
 import org.tensorflow.lite.examples.audio.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
@@ -39,12 +40,11 @@ class AudioClassificationHelper(
     var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
     var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
     var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
-    var numThreads: Int = 2 //쓰레드 개수
+    var numThreads: Int = 1 //쓰레드 개수
 
 ) {
     private lateinit var classifier: AudioClassifier
     private lateinit var tensorAudio: TensorAudio
-    private lateinit var recorder: AudioRecord
     private lateinit var executor: ScheduledThreadPoolExecutor
     private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
     private var bytesRead by Delegates.notNull<Int>()
@@ -62,7 +62,7 @@ class AudioClassificationHelper(
         initClassifier()
     }
 
-    fun initClassifier() {
+    private fun initClassifier() {
         // Set general detection options, e.g. number of used threads
         val baseOptionsBuilder = BaseOptions.builder()
             .setNumThreads(numThreads)
@@ -96,9 +96,6 @@ class AudioClassificationHelper(
             //필요한 객체를 생성하는 분류기 생성
             recorder = classifier.createAudioRecord()
             //분류 시작
-            if(SettingFragment.autoSwitchState)
-                startAudioClassification()
-
 
         } catch (e: IllegalStateException) {
             listener.onError(
@@ -111,16 +108,14 @@ class AudioClassificationHelper(
 
 
     fun startAudioClassification() {
-        Log.d(TAG,  "자동녹음 실행중")
-
         // 음성 녹음 중이면 중복 시작 방지
-        if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-            return
-        }
+        Log.d(TAG,  "자동녹음 실행")
+
         // 녹음 시작
         recorder.startRecording()
         executor = ScheduledThreadPoolExecutor(1)
         soundCheckExecutor = ScheduledThreadPoolExecutor(1)
+        Log.d(TAG, "recorderState: "+getRecorderState())
 
         // Each model will expect a specific audio recording length. This formula calculates that
         // length using the input buffer size and tensor format sample rate.
@@ -129,7 +124,7 @@ class AudioClassificationHelper(
         val lengthInMilliSeconds = ((classifier.requiredInputBufferSize * 1.0f) /
                 classifier.requiredTensorAudioFormat.sampleRate) * 1000  //오디오가 얼마나 길어야 하는지 계산
 
-        interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩값으로 반복 간격 계산
+        interval = (lengthInMilliSeconds * (1 - overlap)).toLong() //오버랩 값으로 반복 간격 계산
 
         executor.scheduleAtFixedRate(
             classifyRunnable,   //-> classifyAudio() 호출
@@ -152,16 +147,23 @@ class AudioClassificationHelper(
         val output = classifier.classify(tensorAudio) //분류 실행
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime //분류하는데 걸리는 시간 계산
         listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
-
     }
 
     fun stopAudioClassification() {
         recorder.stop() //오디오 녹음 중지
-        if(::executor.isInitialized)
+        if(::executor.isInitialized){
             executor.shutdownNow() //분류 작업 중지
-        if(::soundCheckExecutor.isInitialized)
+            Log.d(TAG, "executor shutdown")
+        }
+        if(::soundCheckExecutor.isInitialized){
             soundCheckExecutor.shutdownNow() //데시벨 확인 중지
+            Log.d(TAG, "soundCheckExecutor shutdown")
+        }
         Log.d(TAG, "자동녹음 중지")
+    }
+
+    fun getRecorderState(): Int {
+        return recorder.recordingState
     }
 
     companion object {
@@ -172,7 +174,8 @@ class AudioClassificationHelper(
         const val DEFAULT_OVERLAP_VALUE = 0.5f //반복 실행 간격, default 값은 0.5 설정
         const val YAMNET_MODEL = "yamnet.tflite" //사용하는 모델, default 값은 YAMNET 설정
         var interval by Delegates.notNull<Long>()
-        var label: String? = null
+        var label: String = "소리분류 결과가 여기에 표시됩니다."
+        lateinit var recorder: AudioRecord
     }
 
 }

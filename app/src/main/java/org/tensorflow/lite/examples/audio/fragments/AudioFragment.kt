@@ -17,6 +17,7 @@
 package org.tensorflow.lite.examples.audio.fragments
 
 import android.content.Intent
+import android.media.AudioRecord
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
@@ -121,17 +122,14 @@ class AudioFragment : Fragment() {
         var isEndOfSpeech  = false //인식된 소리가 없을 때 처리 플래그 변수
         val autoSwitchStateValue = SettingFragment.autoSwitchState
 
-
         // 녹음 버튼 클릭-----------------------------------------------------------------------
         recordButton.setOnClickListener {
             if(!result_check){ // 결과 처리중일 때 -> 아직 결과 안나온 동안
                 if (!isListening) { // 음성 인식 중이 아닌 경우에만 음성인식 시작
-
                     //분류 중단
                     adapter.categoryList = emptyList()
                     adapter.notifyDataSetChanged()
                     stopRecording() // -> 녹음중단
-
 
                     // 녹음시작
                     isListening = true
@@ -141,7 +139,6 @@ class AudioFragment : Fragment() {
                     recordButton.setBackgroundResource(R.drawable.record_stop) // 녹음 시작 시 이미지 변경
                     result_check=true//터치 막기
                     Log.d(TAG, "stt 음성인식 시작")
-
 
                     // 5초 타임아웃 처리
                     recordingHandler.postDelayed({
@@ -181,7 +178,6 @@ class AudioFragment : Fragment() {
                     duplication_check= false
                     navigateToFragment(SttFragment(),text)//stt 처리 끝났을 시 SttFragment로 교체
                 }
-
             }
             else{ // 강제로 취소 버튼 누를 때
                 Log.e(TAG, "stt 인식 취소")
@@ -203,8 +199,6 @@ class AudioFragment : Fragment() {
                 Toast.makeText(requireContext(), "인식취소", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
 
             }
-
-
             Log.d(TAG, "취소 여부 확인 확인 = "+ record_cancel)
         }
 
@@ -312,18 +306,16 @@ class AudioFragment : Fragment() {
                 .navigate(AudioFragmentDirections.actionAudioToPermissions())
         }
         else{
-            if(SettingFragment.autoSwitchState){
-                audioHelper?.startAudioClassification()
-                Log.d("AudioFragment", "녹음 재개")
+            if(SettingFragment.autoSwitchState && !isMyServiceRunning(requireContext(), ForegroundService::class.java)){
+                startRecording()
             }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("AudioFragment", "녹음 중단")
         if(!isMyServiceRunning(requireContext(), ForegroundService::class.java)){
-            audioHelper?.stopAudioClassification()
+            stopRecording()
         }
     }
 
@@ -332,14 +324,18 @@ class AudioFragment : Fragment() {
         var audioHelper: AudioClassificationHelper? = null
         private val adapter by lazy { ProbabilitiesAdapter() }
         fun startRecording() {
-            audioHelper?.startAudioClassification()
-            //Log.d(TAG, "startRecording")
+            if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_RECORDING){
+                audioHelper?.startAudioClassification()
+                Log.d(TAG, "녹음 재개")
+            }
         }
         fun stopRecording() {
-            adapter.categoryList = emptyList()
-            adapter.notifyDataSetChanged()
-            audioHelper?.stopAudioClassification()
-            //Log.d(TAG, "stopRecording")
+            if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_STOPPED){
+                audioHelper?.stopAudioClassification()
+                adapter.categoryList = emptyList()
+                adapter.notifyDataSetChanged()
+                Log.d(TAG, "녹음 중단")
+            }
         }
     }
 
