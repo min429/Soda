@@ -8,7 +8,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "org.tensorflow.lite.examples.audio"
+        applicationId "com.soda.soda"
         minSdk 23
         targetSdk 32
         versionCode 1

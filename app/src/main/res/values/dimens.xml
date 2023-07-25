@@ -15,7 +15,6 @@
     ~ limitations under the License.
 -->
 <resources>
-
     <dimen name="label_text_size">16sp</dimen>
     <dimen name="label_width">92dp</dimen>
     <dimen name="margin_default">16dp</dimen>

@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/permissions_fragment"
-        android:name="org.tensorflow.lite.examples.audio.fragments.PermissionsFragment"
+        android:name="com.soda.soda.fragments.PermissionsFragment"
         android:label="PermissionsFragment" >
 
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/audio_fragment"
-        android:name="org.tensorflow.lite.examples.audio.fragments.AudioFragment"
+        android:name="com.soda.soda.fragments.AudioFragment"
         android:label="AudioFragment" >
 
         <action
