@@ -207,11 +207,11 @@ class AudioFragment : Fragment() {
             override fun onReadyForSpeech(params: Bundle?) {
                 // 음성 인식 준비 완료
                 if (!duplication_check) {
-                    Toast.makeText(requireContext(), "음성 인식 시작", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+//                    Toast.makeText(requireContext(), "음성 인식 시작", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
                     duplication_check = true
                 }
                 else{
-                    Toast.makeText(requireContext(), "음성 인식 중간 이어서~", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
+//                    Toast.makeText(requireContext(), "음성 인식 중간 이어서~", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
                 }
             }
 

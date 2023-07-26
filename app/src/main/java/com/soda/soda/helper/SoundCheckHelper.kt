@@ -49,7 +49,7 @@ object SoundCheckHelper{
         Log.d(TAG, "recorderState: "+AudioFragment.audioHelper?.getRecorderState())
 
         // 소리 크기가 100데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
-        if (soundDecibel >= 80) {
+        if (soundDecibel >= 0) {
             // 진동을 울리는 코드를 작성합니다
             try {
                 vibrate(context)
@@ -63,6 +63,20 @@ object SoundCheckHelper{
 
     private fun vibrate(context: Context){
         if(!SettingFragment.vibrateSwitchState) return
+        if(AudioClassificationHelper.label == null) return
+        if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
+            AudioClassificationHelper.label!! != "총 소리 같습니다."){
+            return
+        }
 
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
@@ -82,6 +96,8 @@ object SoundCheckHelper{
 
     /** 위험알림 생성 **/
     private fun createNotification(context: Context) {
+        warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
+
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -106,10 +122,6 @@ object SoundCheckHelper{
             openAppIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-
-        if (AudioClassificationHelper.label != null) {
-            warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
-        }
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentText(warningLabel)
