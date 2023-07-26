@@ -14,6 +14,7 @@ import com.soda.soda.MainActivity
 import com.soda.soda.R
 import com.soda.soda.databinding.FragmentSettingBinding
 import com.soda.soda.service.ForegroundService
+import org.tensorflow.lite.examples.audio.fragments.UserguideFragment
 
 private const val TAG = "SettingFragment"
 
@@ -85,11 +86,23 @@ class SettingFragment : Fragment() {
         binding.vibrateSwitch.setOnCheckedChangeListener { _, isChecked ->
             vibrateSwitchState = isChecked
         }
+
+        /** 사용설명서 **/
+        binding.instructionCard.setOnClickListener {
+            navigateToFragment(UserguideFragment())
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun navigateToFragment(fragment: UserguideFragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     companion object {

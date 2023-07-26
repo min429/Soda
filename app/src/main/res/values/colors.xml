@@ -9,4 +9,5 @@
     <color name="sky_blue">#B5D2FF</color>
     <color name="white_blue">#E3EEFF</color>
     <color name="transparent">#00000000</color>
+    <color name="dimmedBackground">#88000000</color>
 </resources>
