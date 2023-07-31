@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         toolbarLayoutBinding.buttonSetting.setOnClickListener {
-            if(!AudioFragment.isListening){ // stt 녹음중 아닐 때만
+            if(!AudioFragment.isListening()){ // stt 녹음중 아닐 때만
                 navigateToFragment(SettingFragment())
             }
             else{

@@ -43,6 +43,8 @@ class SettingFragment : Fragment(){
         serviceIntent = Intent(mainActivity, ForegroundService::class.java)
         stopServiceIntent = Intent(mainActivity, ForegroundService::class.java)
 
+        Log.d(TAG, "Thread: "+Thread.activeCount())
+
         /** 백그라운드 스위치 **/
         binding.backgroundSwitch.isChecked = backgroundSwitchState
         binding.backgroundSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -72,8 +74,6 @@ class SettingFragment : Fragment(){
                 else AudioFragment.stopRecording()
             }
             autoSwitchState = isChecked
-            Log.d(TAG, "isListening: "+ AudioFragment.isListening)
-            Log.d(TAG, "isChecked: $isChecked")
         }
 
         /** 진동알림 스위치 **/

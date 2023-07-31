@@ -51,7 +51,6 @@ object SoundCheckHelper{
         soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
-        Log.d(TAG, "recorderState: "+AudioFragment.audioHelper?.getRecorderState())
 
         // 소리 크기가 80데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
         if (soundDecibel >= 80) {
