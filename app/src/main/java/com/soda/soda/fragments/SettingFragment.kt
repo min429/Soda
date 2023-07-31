@@ -43,8 +43,6 @@ class SettingFragment : Fragment(){
         serviceIntent = Intent(mainActivity, ForegroundService::class.java)
         stopServiceIntent = Intent(mainActivity, ForegroundService::class.java)
 
-        Log.d(TAG, "Thread: "+Thread.activeCount())
-
         /** 백그라운드 스위치 **/
         binding.backgroundSwitch.isChecked = backgroundSwitchState
         binding.backgroundSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -57,12 +55,8 @@ class SettingFragment : Fragment(){
             }
             if (isChecked) {
                 ContextCompat.startForegroundService(mainActivity, serviceIntent)
-                val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
-                Log.d(TAG, "isRunning: $isRunning")
             } else {
                 mainActivity.stopService(stopServiceIntent)
-                val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
-                Log.d(TAG, "isRunning: $isRunning")
             }
         }
 

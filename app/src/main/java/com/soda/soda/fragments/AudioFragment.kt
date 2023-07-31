@@ -348,6 +348,10 @@ class AudioFragment : Fragment() {
             return audioHelper!!
         }
 
+        fun setAudioHelper(){
+            audioHelper = null
+        }
+
         fun isListening(): Boolean {
             return isListening
         }

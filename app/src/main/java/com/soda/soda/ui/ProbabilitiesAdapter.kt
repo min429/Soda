@@ -53,8 +53,6 @@ class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolde
     // ViewHolder 클래스
     class ViewHolder(private val binding: ItemProbabilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        // ProgressBar의 색상 값을 저장하기 위한 배열 변수
-
         // ViewHolder에 데이터를 바인딩하는 함수
         fun bind(label: String, score: Float, index: Int) {
             with(binding) {

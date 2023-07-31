@@ -14,7 +14,9 @@ import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.WarningFragment
+import com.soda.soda.helper.AudioClassificationHelper
 import com.soda.soda.helper.SoundCheckHelper
+import com.soda.soda.service.ForegroundService
 
 private const val TAG = "MainActivity"
 
@@ -30,7 +32,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate")
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
@@ -67,7 +68,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         // 'show_dialog' 키의 값을 가져옴 (기본값은 false)
         val showDialog = intent.getBooleanExtra("show_dialog", false)
 
-        Log.d(TAG, "showDialog: $showDialog")
         // 알림을 클릭하여 MainActivity를 실행했을 때 대화상자를 띄우도록 합니다.
         // 값이 'true'이면 대화상자를 표시
         if (showDialog) {
@@ -87,6 +87,15 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 액티비티가 종료될 때 Object에 설정된 인터페이스 제거
         SoundCheckHelper.setInterface(null)
+        // 포그라운드 서비스를 종료합니다.
+        stopService(Intent(this, ForegroundService::class.java))
+        // 녹음 및 스레드 작업 종료
+        AudioFragment.getAudioHelper().stopAudioClassification()
+
+        // audioHelper = null로 초기화 -> 앱을 다시 실행할 때마다 audioHelper를 다시 생성해야 함
+        // 앱을 다시 실행할 때마다 MainActivity가 다시 생성되므로
+        // AudioFragment에서 다시 requireContext()로 context를 갱신한 후 다시 audioHelper객체를 생성하면서 context를 넘겨줘야 함
+        AudioFragment.setAudioHelper()
     }
 
     override fun onPause() {
@@ -95,7 +104,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
     }
 
     override fun onBackPressed() {
-        Log.d(TAG, "onBackPressed")
         // 현재 프래그먼트가 SettingFragment인지 확인
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is SettingFragment) {

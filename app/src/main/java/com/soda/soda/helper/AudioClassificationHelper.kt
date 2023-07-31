@@ -32,24 +32,29 @@ import kotlin.properties.Delegates
 private const val TAG = "AudioClassificationHelper"
 
 class AudioClassificationHelper(
-    val context: Context,
-    val listener: AudioClassificationListener,
-    var currentModel: String = YAMNET_MODEL, //현재 모델
-    var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
-    var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
-    var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
-    var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
-    var numThreads: Int = 1 //쓰레드 개수
+    private val context: Context,
+    private val listener: AudioClassificationListener,
+    private var currentModel: String = YAMNET_MODEL, //현재 모델
+    private var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
+    private var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
+    private var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
+    private var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
+    private var numThreads: Int = 1 //쓰레드 개수
 
 ) {
     private lateinit var classifier: AudioClassifier
     private lateinit var tensorAudio: TensorAudio
-//    private lateinit var executor: ScheduledThreadPoolExecutor
-//    private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
+    private lateinit var executor: ScheduledThreadPoolExecutor
+    private lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
     private var bytesRead by Delegates.notNull<Int>()
 
     private val classifyRunnable = Runnable {
-        classifyAudio()
+        try {
+            classifyAudio()
+        }catch (e: Exception){
+            var errorMessage = e.message
+            Log.e(TAG, "classifyAudioError: $errorMessage")
+        }
     }
 
     // 새로운 스레드에서 소리 크기 확인 및 진동 울리기
@@ -105,8 +110,7 @@ class AudioClassificationHelper(
             listener.onError(
                 "Audio Classifier failed to initialize. See error logs for details"
             )
-
-            Log.e("AudioClassification", "TFLite failed to load with error: " + e.message)
+            Log.e(TAG, "AudioClassificationError: " + e.message)
         }
     }
 
@@ -155,7 +159,6 @@ class AudioClassificationHelper(
         if(soundCheckExecutor != null){
             soundCheckExecutor.shutdownNow() //데시벨 확인 중지
         }
-        Log.d(TAG, "자동녹음 중지")
     }
 
     fun getRecorderState(): Int {
@@ -172,8 +175,6 @@ class AudioClassificationHelper(
         var interval by Delegates.notNull<Long>()
         var label: String = "소리분류 결과가 여기에 표시됩니다."
         lateinit var recorder: AudioRecord
-        lateinit var executor: ScheduledThreadPoolExecutor
-        lateinit var soundCheckExecutor: ScheduledThreadPoolExecutor
     }
 
 }
