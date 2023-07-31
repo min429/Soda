@@ -141,10 +141,8 @@ class AudioClassificationHelper(
 
     private fun classifyAudio() {
         bytesRead = tensorAudio.load(recorder)
-        var inferenceTime = SystemClock.uptimeMillis()
         val output = classifier.classify(tensorAudio) //분류 실행
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime //분류하는데 걸리는 시간 계산
-        listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
+        listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
     }
 
     fun stopAudioClassification() {

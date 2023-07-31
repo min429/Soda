@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import com.soda.soda.databinding.ActivityMainBinding
 import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
@@ -16,15 +17,24 @@ import com.soda.soda.helper.SoundCheckHelper
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity() {
+interface DialogInterface{
+    fun dialogEvents()
+}
+
+class MainActivity : AppCompatActivity(), DialogInterface{
     private lateinit var activityMainBinding: ActivityMainBinding
     private lateinit var toolbarLayoutBinding: ToolbarLayoutBinding
+    private var currentDialog: DialogFragment? = null
+    private var isPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        // 인터페이스 설정
+        SoundCheckHelper.setInterface(this)
 
         // Get the toolbar layout view
         val toolbarLayoutView = activityMainBinding.root.findViewById<View>(R.id.toolbar_layout)
@@ -48,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        isPaused = false
 
         // 'show_dialog' 키의 값을 가져옴 (기본값은 false)
         val showDialog = intent.getBooleanExtra("show_dialog", false)
@@ -56,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         // 알림을 클릭하여 MainActivity를 실행했을 때 대화상자를 띄우도록 합니다.
         // 값이 'true'이면 대화상자를 표시
         if (showDialog) {
-            clickViewEvents(this)
+            dialogEvents()
         }
     }
 
@@ -65,6 +76,18 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         // 새로운 Intent를 액티비티의 Intent로 설정
         this.intent = intent
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // 액티비티가 종료될 때 Object에 설정된 인터페이스 제거
+        SoundCheckHelper.setInterface(null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isPaused = true
     }
 
     override fun onBackPressed() {
@@ -85,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun navigateToFragment(fragment: SettingFragment) {
         // Setting button을 gone으로 설정
         toolbarLayoutBinding.buttonSetting.visibility = View.GONE
@@ -100,13 +122,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** 대화상자 생성 **/
-    private fun clickViewEvents(activity: MainActivity) {
+    override fun dialogEvents() {
+        // 백그라운드에서 실행된 경우 팝업을 띄우지 않음
+        if(isPaused) return
+
+        // 이전에 띄워진 다이얼로그가 있으면 닫기
+        currentDialog?.dismiss()
+
         val dialog = WarningFragment(SoundCheckHelper.warningLabel)
         // 알림창이 띄워져있는 동안 배경 클릭 막기
         dialog.isCancelable = false
-        dialog.show(activity.supportFragmentManager, "WarningDialog")
+        dialog.show(this.supportFragmentManager, "WarningDialog")
         // 대화상자를 보여준 후에는 "show_dialog" 값을 다시 false로 설정
         intent.putExtra("show_dialog", false)
+
+        // 현재 띄워진 다이얼로그를 기억하여 나중에 닫기 위해 변수에 저장
+        currentDialog = dialog
     }
 
 }

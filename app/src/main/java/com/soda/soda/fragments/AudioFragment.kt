@@ -49,7 +49,7 @@ private const val TAG = "AudioFragment"
 
 interface AudioClassificationListener {
     fun onError(error: String)  // 오류 발생 시 호출
-    fun onResult(results: List<Category>, inferenceTime: Long)  // 결과가 도착하면 호출
+    fun onResult(results: List<Category>)  // 결과가 도착하면 호출
 }
 
 class AudioFragment : Fragment() {
@@ -76,7 +76,7 @@ class AudioFragment : Fragment() {
 
     private val audioClassificationListener = object : AudioClassificationListener {
         // 결과가 도착하면 호출되며, 전달된 결과 및 추론 시간 정보를 기반으로 어댑터를 업데이트합니다.
-        override fun onResult(results: List<Category>, inferenceTime: Long) {
+        override fun onResult(results: List<Category>) {
             requireActivity().runOnUiThread {
                 adapter.categoryList = results
                 if(!results.isEmpty())

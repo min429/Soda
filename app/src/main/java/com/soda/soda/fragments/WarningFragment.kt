@@ -32,7 +32,7 @@ class WarningFragment(
         _binding = FragmentWarningBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // 레이아웃 배경을 투명하게 해줌, 필수 아님
+        // 레이아웃 배경을 투명하게 해줌
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.confirmTextView.text = text
