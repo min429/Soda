@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dimmedBackground">
+    android:layout_height="wrap_content"
+    android:background="@drawable/userguide"
+    android:layout_gravity="center"
+    android:minWidth="350dp"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/guideline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:layout_marginLeft="@dimen/margin_width"
+                    android:layout_marginRight="@dimen/margin_width"
+                    android:fontFamily="@font/jua_regular"
+                    android:gravity="left"
+                    android:paddingBottom="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    tools:text="guideline" />
+        </ScrollView>
 
 
-
-        <TextView
-            android:id="@+id/guideline"
-            android:layout_width="380dp"
-            android:layout_height="600dp"
-            android:layout_gravity="center|top"
-            android:layout_marginLeft="@dimen/margin_width"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="@dimen/margin_width"
-            android:background="@drawable/stt_rectangle"
-            android:fontFamily="@font/jua_regular"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="30sp"
-            tools:text="guideline" />
-
-
-</FrameLayout>
+</LinearLayout>
