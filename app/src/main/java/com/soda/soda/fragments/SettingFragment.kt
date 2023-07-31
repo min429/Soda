@@ -89,20 +89,14 @@ class SettingFragment : Fragment() {
 
         /** 사용설명서 **/
         binding.instructionCard.setOnClickListener {
-            navigateToFragment(UserguideFragment())
+            val userguideFragment = UserguideFragment()
+            userguideFragment.show(parentFragmentManager, "userguide_dialog")
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun navigateToFragment(fragment: UserguideFragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     companion object {
