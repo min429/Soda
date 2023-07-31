@@ -1,5 +1,6 @@
 package com.soda.soda
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         Log.d(TAG, "onCreate")
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        // 백그라운드 스위치 상태 설정
+        setBackgroundSwitchState(this)
 
         // 인터페이스 설정
         SoundCheckHelper.setInterface(this)
@@ -138,6 +142,15 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 현재 띄워진 다이얼로그를 기억하여 나중에 닫기 위해 변수에 저장
         currentDialog = dialog
+    }
+
+    /** 백그라운드 스위치 상태 설정 **/
+    fun setBackgroundSwitchState(activity: MainActivity){
+        // Restore switch state from SharedPreferences
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져오고 sharedPref.getBoolean은 이 키 값에 해당하는 값이
+        //SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환함
+        SettingFragment.backgroundSwitchState = sharedPref.getBoolean(getString(R.string.saved_background_switch_state_key), false)
     }
 
 }

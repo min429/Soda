@@ -41,8 +41,10 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.os.Handler
 import android.os.Looper
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
+import kotlin.properties.Delegates
 
 
 private const val TAG = "AudioFragment"
@@ -259,6 +261,13 @@ class AudioFragment : Fragment() {
 
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
+
+        var serviceIntent = Intent(requireActivity(), ForegroundService::class.java)
+        if(SettingFragment.backgroundSwitchState){
+            ContextCompat.startForegroundService(requireActivity(), serviceIntent)
+            val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
+            Log.d(TAG, "isRunning: $isRunning")
+        }
     }
 
     override fun onDestroyView() {
@@ -321,6 +330,7 @@ class AudioFragment : Fragment() {
     companion object {
         var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
         var audioHelper: AudioClassificationHelper? = null
+//        val audioHelper: AudioClassificationHelper by Delegates.notNull()
         private val adapter by lazy { ProbabilitiesAdapter() }
         fun startRecording() {
             if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_RECORDING){
