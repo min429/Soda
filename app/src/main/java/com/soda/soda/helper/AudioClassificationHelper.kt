@@ -19,10 +19,12 @@ package com.soda.soda.helper
 import android.content.Context
 import android.media.AudioRecord
 import android.util.Log
+import com.soda.soda.MainActivity
 import com.soda.soda.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
+import java.lang.Exception
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -52,7 +54,12 @@ class AudioClassificationHelper(
 
     // 새로운 스레드에서 소리 크기 확인 및 진동 울리기
     private val soundCheckRunnable = Runnable {
-        SoundCheckHelper.soundCheck(tensorAudio, bytesRead, context)
+        try {
+            SoundCheckHelper.soundCheck(tensorAudio, bytesRead, context)
+        } catch (e: Exception){ // bytesRead가 초기화되지 않았는데 함수가 실행될 수 있음 + 기타 오류 방지
+            var errorMessage = e.message
+            Log.e(TAG, "soundcheckError: $errorMessage")
+        }
     }
 
     init {
@@ -135,7 +142,6 @@ class AudioClassificationHelper(
     }
 
     private fun classifyAudio() {
-        Log.d(TAG, "Thread: "+Thread.activeCount())
         bytesRead = tensorAudio.load(recorder)
         val output = classifier.classify(tensorAudio) //분류 실행
         listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달

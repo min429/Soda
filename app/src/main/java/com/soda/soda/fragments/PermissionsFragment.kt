@@ -41,10 +41,10 @@ class PermissionsFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(context, "Permission request granted", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "권한 허용됨", Toast.LENGTH_LONG).show()
                 navigateToAudioFragment()
             } else {
-                Toast.makeText(context, "Permission request denied", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "권한 거부됨", Toast.LENGTH_LONG).show()
             }
         }
 

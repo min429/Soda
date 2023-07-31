@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import com.soda.soda.DialogInterface
 import com.soda.soda.MainActivity
 import com.soda.soda.R
-import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
@@ -35,7 +34,6 @@ object SoundCheckHelper{
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
-
         // 버퍼에서 읽은 데이터를 소리 크기로 변환하여 확인합니다
         var soundAmplitude = 0.0
         for (i in 0 until bytesRead) {

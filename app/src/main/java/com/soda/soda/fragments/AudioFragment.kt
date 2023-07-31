@@ -198,9 +198,6 @@ class AudioFragment : Fragment() {
                 isListening = false
                 duplication_check= false
                 record_cancel =true
-
-                Toast.makeText(requireContext(), "인식취소", Toast.LENGTH_SHORT).show() // 수정: applicationContext 대신 requireContext() 사용
-
             }
             Log.d(TAG, "취소 여부 확인 확인 = "+ record_cancel)
         }

@@ -94,8 +94,6 @@ class SettingFragment : Fragment(){
         _binding = null
     }
 
-
-
     /** 백그라운드 스위치 상태 설정 **/
     fun setBackgroundSwitchState(activity: MainActivity){
         // Restore switch state from SharedPreferences
