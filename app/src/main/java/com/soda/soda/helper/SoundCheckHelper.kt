@@ -6,11 +6,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.soda.soda.DialogInterface
 import com.soda.soda.MainActivity
 import com.soda.soda.R
 import com.soda.soda.fragments.AudioFragment
@@ -27,6 +30,8 @@ object SoundCheckHelper{
     private val notificationId = 2
     lateinit var warningLabel: String
     var soundDecibel: Int = 0
+    private var dialogInterface: DialogInterface? = null
+    private var isVibrating = false
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
@@ -46,10 +51,9 @@ object SoundCheckHelper{
         soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
-        Log.d(TAG, "recorderState: "+AudioFragment.audioHelper?.getRecorderState())
 
-        // 소리 크기가 100데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
-        if (soundDecibel >= 0) {
+        // 소리 크기가 80데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
+        if (soundDecibel >= 80) {
             // 진동을 울리는 코드를 작성합니다
             try {
                 vibrate(context)
@@ -62,8 +66,9 @@ object SoundCheckHelper{
     }
 
     private fun vibrate(context: Context){
-        if(!SettingFragment.vibrateSwitchState) return
-        if(AudioClassificationHelper.label == null) return
+        if(!SettingFragment.vibrateSwitchState) return // 진동알림 off
+        if (isVibrating) return // 이미 진동 중
+        if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
         if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
             AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
             AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
@@ -78,6 +83,7 @@ object SoundCheckHelper{
             return
         }
 
+        isVibrating = true
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -92,6 +98,11 @@ object SoundCheckHelper{
             }
         }
         createNotification(context)
+
+        // 3초 후에 isVibrating 변수를 false로 설정하여 다시 진동이 가능하게 함
+        Handler(Looper.getMainLooper()).postDelayed({
+            isVibrating = false
+        }, 3000)
     }
 
     /** 위험알림 생성 **/
@@ -130,6 +141,12 @@ object SoundCheckHelper{
             .setContentIntent(pendingIntent)
             .build()
         notificationManager.notify(notificationId, notification)
+
+        dialogInterface?.dialogEvents()
+    }
+
+    fun setInterface(dialogInterface: DialogInterface?) {
+        this.dialogInterface = dialogInterface
     }
 
 }

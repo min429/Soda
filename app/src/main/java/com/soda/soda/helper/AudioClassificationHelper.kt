@@ -18,7 +18,6 @@ package com.soda.soda.helper
 
 import android.content.Context
 import android.media.AudioRecord
-import android.os.SystemClock
 import android.util.Log
 import com.soda.soda.fragments.AudioClassificationListener
 import org.tensorflow.lite.support.audio.TensorAudio
@@ -106,14 +105,10 @@ class AudioClassificationHelper(
 
 
     fun startAudioClassification() {
-        // 음성 녹음 중이면 중복 시작 방지
-        Log.d(TAG,  "자동녹음 실행")
-
         // 녹음 시작
         recorder.startRecording()
         executor = ScheduledThreadPoolExecutor(1)
         soundCheckExecutor = ScheduledThreadPoolExecutor(1)
-        Log.d(TAG, "recorderState: "+getRecorderState())
 
         // Each model will expect a specific audio recording length. This formula calculates that
         // length using the input buffer size and tensor format sample rate.
@@ -140,22 +135,19 @@ class AudioClassificationHelper(
     }
 
     private fun classifyAudio() {
+        Log.d(TAG, "Thread: "+Thread.activeCount())
         bytesRead = tensorAudio.load(recorder)
-        var inferenceTime = SystemClock.uptimeMillis()
         val output = classifier.classify(tensorAudio) //분류 실행
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime //분류하는데 걸리는 시간 계산
-        listener.onResult(output[0].categories, inferenceTime) //분류 결과를 리스너에게 전달
+        listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
     }
 
     fun stopAudioClassification() {
         recorder.stop() //오디오 녹음 중지
         if(executor != null){
             executor?.shutdownNow() //분류 작업 중지
-            Log.d(TAG, "executor shutdown")
         }
         if(soundCheckExecutor != null){
             soundCheckExecutor.shutdownNow() //데시벨 확인 중지
-            Log.d(TAG, "soundCheckExecutor shutdown")
         }
         Log.d(TAG, "자동녹음 중지")
     }

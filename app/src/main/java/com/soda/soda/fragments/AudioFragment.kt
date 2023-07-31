@@ -41,15 +41,17 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.os.Handler
 import android.os.Looper
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
+import kotlin.properties.Delegates
 
 
 private const val TAG = "AudioFragment"
 
 interface AudioClassificationListener {
     fun onError(error: String)  // 오류 발생 시 호출
-    fun onResult(results: List<Category>, inferenceTime: Long)  // 결과가 도착하면 호출
+    fun onResult(results: List<Category>)  // 결과가 도착하면 호출
 }
 
 class AudioFragment : Fragment() {
@@ -76,7 +78,7 @@ class AudioFragment : Fragment() {
 
     private val audioClassificationListener = object : AudioClassificationListener {
         // 결과가 도착하면 호출되며, 전달된 결과 및 추론 시간 정보를 기반으로 어댑터를 업데이트합니다.
-        override fun onResult(results: List<Category>, inferenceTime: Long) {
+        override fun onResult(results: List<Category>) {
             requireActivity().runOnUiThread {
                 adapter.categoryList = results
                 if(!results.isEmpty())
@@ -110,10 +112,12 @@ class AudioFragment : Fragment() {
         fragmentAudioBinding.recyclerView.adapter = adapter
 
         // AudioClassificationHelper 객체 생성 및 초기화
-        audioHelper = AudioClassificationHelper(
-            requireContext(),
-            audioClassificationListener
-        )
+        if(audioHelper == null){
+            audioHelper = AudioClassificationHelper(
+                requireContext(),
+                audioClassificationListener
+            )
+        }
 
         // 스위치 + STT 녹음 버튼------------------------------------------------------------------------
         val recordButton = view.findViewById<Button>(R.id.record_button)
@@ -259,6 +263,12 @@ class AudioFragment : Fragment() {
 
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
+
+        val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
+        var serviceIntent = Intent(requireActivity(), ForegroundService::class.java)
+        if(SettingFragment.backgroundSwitchState && !isRunning){
+            ContextCompat.startForegroundService(requireActivity(), serviceIntent)
+        }
     }
 
     override fun onDestroyView() {
@@ -319,8 +329,8 @@ class AudioFragment : Fragment() {
     }
 
     companion object {
-        var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
-        var audioHelper: AudioClassificationHelper? = null
+        private var isListening = false // 음성 인식 중 여부를 추적하는 플래그 변수
+        private var audioHelper: AudioClassificationHelper? = null
         private val adapter by lazy { ProbabilitiesAdapter() }
         fun startRecording() {
             if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_RECORDING){
@@ -335,6 +345,14 @@ class AudioFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 Log.d(TAG, "녹음 중단")
             }
+        }
+
+        fun getAudioHelper(): AudioClassificationHelper {
+            return audioHelper!!
+        }
+
+        fun isListening(): Boolean {
+            return isListening
         }
     }
 
