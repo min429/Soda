@@ -46,12 +46,11 @@ import androidx.navigation.Navigation
 import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
 import kotlin.properties.Delegates
 
-
 private const val TAG = "AudioFragment"
 
 interface AudioClassificationListener {
-    fun onError(error: String)  // 오류 발생 시 호출
-    fun onResult(results: List<Category>)  // 결과가 도착하면 호출
+    fun onError(error: String)
+    fun onResult(results: List<Category>)
 }
 
 class AudioFragment : Fragment() {
@@ -77,7 +76,7 @@ class AudioFragment : Fragment() {
     val resultText = mutableListOf<String>() // 결과 stt 표기용
 
     private val audioClassificationListener = object : AudioClassificationListener {
-        // 결과가 도착하면 호출되며, 전달된 결과 및 추론 시간 정보를 기반으로 어댑터를 업데이트합니다.
+
         override fun onResult(results: List<Category>) {
             requireActivity().runOnUiThread {
                 adapter.categoryList = results
@@ -86,7 +85,7 @@ class AudioFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
-        // 오류 발생 시 호출되며 Toast 메시지 출력 후 어댑터를 초기화하여 화면에 표시되는 확률값을 모두 0으로 만듭니다.
+
         override fun onError(error: String) {
             requireActivity().runOnUiThread {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
@@ -101,14 +100,12 @@ class AudioFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // 뷰 바인딩 초기화
         _fragmentBinding = FragmentAudioBinding.inflate(inflater, container, false)
         return fragmentAudioBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 어댑터 설정
         fragmentAudioBinding.recyclerView.adapter = adapter
 
         // AudioClassificationHelper 객체 생성 및 초기화
@@ -124,6 +121,7 @@ class AudioFragment : Fragment() {
         val RECORDING_TIMEOUT = 5000 // 녹음 타임아웃 시간 (5초)
         var isEndOfSpeech  = false //인식된 소리가 없을 때 처리 플래그 변수
         val autoSwitchStateValue = SettingFragment.autoSwitchState
+
 
         // 녹음 버튼 클릭-----------------------------------------------------------------------
         recordButton.setOnClickListener {
@@ -198,6 +196,7 @@ class AudioFragment : Fragment() {
                 isListening = false
                 duplication_check= false
                 record_cancel =true
+                recordingHandler.removeCallbacksAndMessages(null)
             }
             Log.d(TAG, "취소 여부 확인 확인 = "+ record_cancel)
         }
@@ -218,7 +217,7 @@ class AudioFragment : Fragment() {
 
             override fun onBeginningOfSpeech() {} //동작 시작시 무조건 호출
 
-            override fun onRmsChanged(rmsdB: Float) {} // 계속 호출되는 함수
+            override fun onRmsChanged(rmsdB: Float) {}
 
             override fun onBufferReceived(buffer: ByteArray?) {}
 
@@ -356,5 +355,4 @@ class AudioFragment : Fragment() {
             return isListening
         }
     }
-
 }
