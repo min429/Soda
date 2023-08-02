@@ -24,7 +24,7 @@ class ForegroundService : Service() {
     private val channelId = "ForegroundServiceChannel"
     private val notificationId = 1
     private val handler = Handler(Looper.getMainLooper())
-    private var interval = 1000L // 1초로 초기화
+    private var interval = 1000L // 1초
     private val updateRunnable = object : Runnable {
         override fun run() {
             if(AudioClassificationHelper.label != null){
@@ -48,7 +48,6 @@ class ForegroundService : Service() {
             startForeground(notificationId, notification)
         }
 
-        // 포그라운드 서비스의 작업을 수행하는 코드를 추가할 수 있습니다.
         // 주기적으로 알림 업데이트를 위해 Runnable 실행
         handler.postDelayed(updateRunnable, interval)
 
@@ -61,12 +60,11 @@ class ForegroundService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // 포그라운드 서비스 종료 시 수행할 작업이 있다면 여기에 추가할 수 있습니다.
 
         // Runnable 중지
         handler.removeCallbacks(updateRunnable)
 
-        // 포그라운드 서비스를 종료합니다.
+        // 포그라운드 서비스 종료
         stopForeground(true)
         stopSelf()
 
@@ -109,12 +107,11 @@ class ForegroundService : Service() {
         return notification
     }
 
-    // 포그라운드 알림을 업데이트하는 함수
+    /** 포그라운드 알림을 업데이트하는 함수 **/
     private fun updateForegroundNotification() {
         val notification = createNotification() // 새로운 알림 생성
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, notification) // 알림 업데이트
     }
-
 }

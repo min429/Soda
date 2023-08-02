@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import com.soda.soda.R
 
-
 class SttFragment : Fragment() {
     private var Rtext: String? = null
 
@@ -38,13 +37,13 @@ class SttFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //stt 텍스트 가져오기
+        /** stt 텍스트 가져오기 **/
         val sttResultTextView = view.findViewById<TextView>(R.id.stt_result)
         Rtext?.let {
             sttResultTextView.text = it
         }
 
-        // 중앙 X= 뒤로가기
+        /** 중앙 X= 뒤로가기 **/
         val xButton = view.findViewById<Button>(R.id.x_button)
         xButton.setOnClickListener {
             requireActivity().onBackPressed()

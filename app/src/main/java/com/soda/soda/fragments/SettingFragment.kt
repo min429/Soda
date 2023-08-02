@@ -46,7 +46,6 @@ class SettingFragment : Fragment(){
         /** 백그라운드 스위치 **/
         binding.backgroundSwitch.isChecked = backgroundSwitchState
         binding.backgroundSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Save switch state to SharedPreferences when state changes
             val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
             with (sharedPref.edit()) {
                 putBoolean("saved_switch_state_key", isChecked) //"saved_switch_state_key"라는 키 값으로 isChecked라는 값을 SharedPreferences에 저장
@@ -90,7 +89,6 @@ class SettingFragment : Fragment(){
 
     /** 백그라운드 스위치 상태 설정 **/
     fun setBackgroundSwitchState(activity: MainActivity){
-        // Restore switch state from SharedPreferences
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져오고 sharedPref.getBoolean은 이 키 값에 해당하는 값이
         //SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환함
@@ -112,5 +110,4 @@ class SettingFragment : Fragment(){
             return false
         }
     }
-
 }

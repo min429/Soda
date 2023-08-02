@@ -38,7 +38,7 @@ class AudioClassificationHelper(
     private var classificationThreshold: Float = DISPLAY_THRESHOLD,//분류 임계값
     private var overlap: Float = DEFAULT_OVERLAP_VALUE, //오버랩 값
     private var numOfResults: Int = DEFAULT_NUM_OF_RESULTS, //결과 개수
-    private var currentDelegate: Int = 0,// 현재 대리자 (CPU, NNAPI)
+    private var currentDelegate: Int = 0,// (CPU, NNAPI)
     private var numThreads: Int = 1 //쓰레드 개수
 
 ) {
@@ -72,14 +72,10 @@ class AudioClassificationHelper(
     }
 
     private fun initClassifier() {
-        // Set general detection options, e.g. number of used threads
         val baseOptionsBuilder = BaseOptions.builder()
             .setNumThreads(numThreads)
 
-        // Use the specified hardware for running the model. Default to CPU.
-        // Possible to also use a GPU delegate, but this requires that the classifier be created
-        // on the same thread that is using the classifier, which is outside of the scope of this
-        // sample's design.
+        // 모델 실행을 위해 지정된 CPU 하드웨어를 사용
         when (currentDelegate) {
             DELEGATE_CPU -> {
                 // Default
@@ -89,8 +85,6 @@ class AudioClassificationHelper(
                 baseOptionsBuilder.useNnapi()
             }
         }
-
-        // Configures a set of parameters for the classifier and what results will be returned.
         val options = AudioClassifier.AudioClassifierOptions.builder()
             .setScoreThreshold(classificationThreshold) //분류할 임계값 설정
             .setMaxResults(numOfResults) //분류 결과의 최대 개수
@@ -98,7 +92,6 @@ class AudioClassificationHelper(
             .build()
 
         try {
-            // Create the classifier and required supporting objects
             classifier = AudioClassifier.createFromFileAndOptions(context, currentModel, options)
             tensorAudio = classifier.createInputTensorAudio()
 
@@ -121,10 +114,9 @@ class AudioClassificationHelper(
         executor = ScheduledThreadPoolExecutor(1)
         soundCheckExecutor = ScheduledThreadPoolExecutor(1)
 
-        // Each model will expect a specific audio recording length. This formula calculates that
-        // length using the input buffer size and tensor format sample rate.
-        // For example, YAMNET expects 0.975 second length recordings.
-        // This needs to be in milliseconds to avoid the required Long value dropping decimals.
+        // 각 모델은 특정 오디오 녹음 길이를 예상함.  ex)YAMNET=> 0.975초 길이의 녹음 예상
+        // 이 수식은 입력 버퍼 크기와 텐서 형식 샘플 속도를 사용하여 해당 길이를 계산함
+        // 필요한 Long 값에서 소수점으로 떨어지는 것을 방지하려면 밀리초 단위 필요
         val lengthInMilliSeconds = ((classifier.requiredInputBufferSize * 1.0f) /
                 classifier.requiredTensorAudioFormat.sampleRate) * 1000  //오디오가 얼마나 길어야 하는지 계산
 
@@ -148,7 +140,7 @@ class AudioClassificationHelper(
     private fun classifyAudio() {
         bytesRead = tensorAudio.load(recorder)
         val output = classifier.classify(tensorAudio) //분류 실행
-        listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
+        listener.onResult(output[0].categories) //분류 결과 리스너에게 전달
     }
 
     fun stopAudioClassification() {
