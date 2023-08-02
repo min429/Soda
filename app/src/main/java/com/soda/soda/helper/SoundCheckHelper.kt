@@ -34,25 +34,23 @@ object SoundCheckHelper{
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
-        // 버퍼에서 읽은 데이터를 소리 크기로 변환하여 확인합니다
+        // 버퍼에서 읽은 데이터 -> 소리 크기로 변환후 확인
         var soundAmplitude = 0.0
         for (i in 0 until bytesRead) {
             val sample = buffer.getFloatValue(i)
             soundAmplitude += sample * sample
         }
 
-        // Root Mean Square (RMS) 계산하기
+        // Root Mean Square (RMS) 계산
         val rms = kotlin.math.sqrt(soundAmplitude / bytesRead)
 
-        // RMS를 데시벨로 변환하기
-        // 0에 로그를 취하는 것을 방지하기 위해 1e-7 추가하기
+        // RMS를 데시벨로 변환 (0에 로그를 취하는 것을 방지하기 위해 1e-7 추가)
         soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
 
-        // 소리 크기가 80데시벨 이상인 경우 핸드폰에 진동을 울리는 코드를 작성합니다
+        // 소리 크기가 80데시벨 이상 -> 핸드폰 진동
         if (soundDecibel >= 80) {
-            // 진동을 울리는 코드를 작성합니다
             try {
                 vibrate(context)
             } catch (e: Exception) {
@@ -63,6 +61,7 @@ object SoundCheckHelper{
         }
     }
 
+    /** 진동 함수 **/
     private fun vibrate(context: Context){
         if(!SettingFragment.vibrateSwitchState) return // 진동알림 off
         if (isVibrating) return // 이미 진동 중
@@ -97,7 +96,7 @@ object SoundCheckHelper{
         }
         createNotification(context)
 
-        // 3초 후에 isVibrating 변수를 false로 설정하여 다시 진동이 가능하게 함
+        // 3초 후 다시 진동이 발생 가능화
         Handler(Looper.getMainLooper()).postDelayed({
             isVibrating = false
         }, 3000)
@@ -121,10 +120,9 @@ object SoundCheckHelper{
         // 알림을 클릭했을 때 실행될 Intent 정의
         val openAppIntent = Intent(context, MainActivity::class.java)
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        // 'show_dialog' 키에 'true' 값을 추가 -> 해당 알림을 클릭했을 때만 대화상자 띄우기 위해
-        openAppIntent.putExtra("show_dialog", true)
+        openAppIntent.putExtra("show_dialog", true) // 'show_dialog' 키에 'true' 값을 추가 -> 해당 알림을 클릭했을 때만 대화상자 띄우기 위해
 
-        // 알림을 클릭했을 때 openAppIntent를 실행할 수 있도록 함
+        // 알림을 클릭했을 때 openAppIntent 실행
         val pendingIntent = PendingIntent.getActivity(
             context,
             notificationId,
@@ -135,7 +133,7 @@ object SoundCheckHelper{
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentText(warningLabel)
             .setSmallIcon(R.drawable.ic_warning)
-            .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
+            .setAutoCancel(true) // 알림 탭할 시 ->  제거
             .setContentIntent(pendingIntent)
             .build()
         notificationManager.notify(notificationId, notification)

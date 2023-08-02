@@ -57,7 +57,7 @@ class AudioClassificationHelper(
         }
     }
 
-    // 새로운 스레드에서 소리 크기 확인 및 진동 울리기
+    /** 새로운 스레드에서 소리 크기 확인 및 진동 울리기 **/
     private val soundCheckRunnable = Runnable {
         try {
             SoundCheckHelper.soundCheck(tensorAudio, bytesRead, context)
@@ -75,10 +75,9 @@ class AudioClassificationHelper(
         val baseOptionsBuilder = BaseOptions.builder()
             .setNumThreads(numThreads)
 
-        // 모델 실행을 위해 지정된 CPU 하드웨어를 사용
+        /** 모델 실행을 위해 지정된 CPU 하드웨어 사용 **/
         when (currentDelegate) {
             DELEGATE_CPU -> {
-                // Default
                 //모델은 CPU에서 실행
             }
             DELEGATE_NNAPI -> {
@@ -94,11 +93,9 @@ class AudioClassificationHelper(
         try {
             classifier = AudioClassifier.createFromFileAndOptions(context, currentModel, options)
             tensorAudio = classifier.createInputTensorAudio()
-
             //필요한 객체를 생성하는 분류기 생성
             recorder = classifier.createAudioRecord()
             //분류 시작
-
         } catch (e: IllegalStateException) {
             listener.onError(
                 "Audio Classifier failed to initialize. See error logs for details"
@@ -108,8 +105,8 @@ class AudioClassificationHelper(
     }
 
 
+    /** 녹음 시작 함수 **/
     fun startAudioClassification() {
-        // 녹음 시작
         recorder.startRecording()
         executor = ScheduledThreadPoolExecutor(1)
         soundCheckExecutor = ScheduledThreadPoolExecutor(1)

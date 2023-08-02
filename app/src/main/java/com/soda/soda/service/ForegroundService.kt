@@ -84,11 +84,11 @@ class ForegroundService : Service() {
     }
 
     private fun createNotification(): Notification {
-        // 알림을 클릭했을 때 실행될 Intent 정의
+        // 알림 클릭 시 실행될 Intent 정의
         val openAppIntent = Intent(this, MainActivity::class.java)
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        // 알림을 클릭했을 때 openAppIntent를 실행할 수 있도록 함
+        // 알림 클릭 시 openAppIntent를 실행
         val pendingIntent = PendingIntent.getActivity(
             this,
             notificationId,
@@ -98,7 +98,7 @@ class ForegroundService : Service() {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_run_service)
             .setContentText(AudioClassificationHelper.label)
-            .setContentIntent(pendingIntent) // 알림을 탭했을 때 pendingIntent가 실행됨
+            .setContentIntent(pendingIntent) // 알림 탭했을 시 pendingIntent 실행
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
 
