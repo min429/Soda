@@ -41,8 +41,6 @@ private val PERMISSIONS_REQUIRED = arrayOf(
  * audio fragment to the user.
  */
 
-private const val TAG = "PermissionsFragment"
-
 class PermissionsFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
@@ -51,12 +49,11 @@ class PermissionsFragment : Fragment() {
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            if (permissions[Manifest.permission.RECORD_AUDIO] == true) {
+            if (permissions[Manifest.permission.RECORD_AUDIO] == true && permissions[Manifest.permission.POST_NOTIFICATIONS] == true) {
                 navigateToAudioFragment()
             }
             else{
-                Log.d(TAG, "소리 인식")
-                mainActivity.showAuthorizationDialog(requireContext(), "소리 인식")
+                mainActivity.showAuthorizationDialog(requireContext(), "소리 인식, 위험 알림")
             }
         }
 
@@ -76,9 +73,6 @@ class PermissionsFragment : Fragment() {
                 requireContext(),
                 it
             ) != PackageManager.PERMISSION_GRANTED
-        }
-        for(it in permissionsNotGranted){
-            Log.d(TAG, "permissionsNotGranted: $it")
         }
         when {
             // 모두 허용 -> AudioFragment로 이동

@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.soda.soda.databinding.ActivityMainBinding
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity(), DialogInterface{
     private lateinit var toolbarLayoutBinding: ToolbarLayoutBinding
     private var currentDialog: DialogFragment? = null
     private var isPaused = false
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        // 앱 권한 설정 화면에서 돌아왔을 때 수행
+        this.recreate()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +71,12 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         toolbarLayoutBinding.buttonBack.setOnClickListener {
             onBackPressed()
+        }
+
+        // ActivityResult API를 사용하기 위한 초기화
+        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            // 결과 처리. 이 경우 단순히 설정 화면에서 돌아왔을 때 수행됩니다.
+
         }
     }
 
@@ -98,7 +109,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         // 포그라운드 서비스를 종료합니다.
         stopService(Intent(this, ForegroundService::class.java))
         // 녹음 및 스레드 작업 종료
-        AudioFragment.getAudioHelper().stopAudioClassification()
+        AudioFragment.getAudioHelper()?.stopAudioClassification()
 
         // audioHelper = null로 초기화 -> 앱을 다시 실행할 때마다 audioHelper를 다시 생성해야 함
         // 앱을 다시 실행할 때마다 MainActivity가 다시 생성되므로
@@ -183,7 +194,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
             dialog.dismiss()
             // 핸드폰 설정 화면으로 이동
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + context.packageName))
-            startActivity(intent)
+            startForResult.launch(intent)
         }
 
         dialog.findViewById<Button>(R.id.no_button)?.setOnClickListener {

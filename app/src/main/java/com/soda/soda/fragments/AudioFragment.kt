@@ -341,8 +341,8 @@ class AudioFragment : Fragment() {
             }
         }
 
-        fun getAudioHelper(): AudioClassificationHelper {
-            return audioHelper!!
+        fun getAudioHelper(): AudioClassificationHelper? {
+            return audioHelper
         }
 
         fun setAudioHelper(){
