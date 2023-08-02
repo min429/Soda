@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
                 return
             }
         }
-        else if (currentFragment is SettingFragment) { // SettingFragment != NavHostFragment
+        if (currentFragment is SettingFragment) { // SettingFragment != NavHostFragment
             // SettingFragment에서 뒤로 가기를 눌렀을 때 setting button을 다시 보이게 함
             toolbarLayoutBinding.buttonSetting.visibility = View.VISIBLE
             // TextView를 다시 안보이게 함

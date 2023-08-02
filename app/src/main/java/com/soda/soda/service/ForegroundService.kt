@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import com.soda.soda.MainActivity
 import com.soda.soda.R
 import com.soda.soda.fragments.AudioFragment
+import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.helper.AudioClassificationHelper
 
 private const val TAG = "ForegroundService"
@@ -90,6 +91,9 @@ class ForegroundService : Service() {
         val openAppIntent = Intent(this, MainActivity::class.java)
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
+        var label = AudioClassificationHelper.label
+        if(!SettingFragment.autoSwitchState) label = "현재 자동분류가 꺼져있는 상태입니다."
+
         // 알림을 클릭했을 때 openAppIntent를 실행할 수 있도록 함
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -99,7 +103,7 @@ class ForegroundService : Service() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_run_service)
-            .setContentText(AudioClassificationHelper.label)
+            .setContentText(label)
             .setContentIntent(pendingIntent) // 알림을 탭했을 때 pendingIntent가 실행됨
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
