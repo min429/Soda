@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -18,9 +19,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.NavHostFragment
 import com.soda.soda.databinding.ActivityMainBinding
 import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
+import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.WarningFragment
 import com.soda.soda.helper.SoundCheckHelper
@@ -125,7 +128,21 @@ class MainActivity : AppCompatActivity(), DialogInterface{
     override fun onBackPressed() {
         // 현재 프래그먼트가 SettingFragment인지 확인
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment is SettingFragment) {
+        if(currentFragment is NavHostFragment){ // AudioFragment, PermissionsFragment = NavHostFragment
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+            val currentNavHostFragment = navHostFragment.childFragmentManager.fragments[0]
+            // currentNavHostFragment = AudioFragment or PermissionsFragment
+            if (currentNavHostFragment is PermissionsFragment) {
+                // PermissionsFragment에서 뒤로 가기를 눌렀을 때 앱을 종료함
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition()
+                } else {
+                    finish()
+                }
+                return
+            }
+        }
+        else if (currentFragment is SettingFragment) { // SettingFragment != NavHostFragment
             // SettingFragment에서 뒤로 가기를 눌렀을 때 setting button을 다시 보이게 함
             toolbarLayoutBinding.buttonSetting.visibility = View.VISIBLE
             // TextView를 다시 안보이게 함
