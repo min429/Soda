@@ -311,9 +311,7 @@ class AudioFragment : Fragment() {
                 .navigate(AudioFragmentDirections.actionAudioToPermissions())
         }
         else{
-            if(SettingFragment.autoSwitchState){
-                startRecording()
-            }
+            startRecording()
         }
     }
 

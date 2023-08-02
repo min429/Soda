@@ -21,6 +21,7 @@ import android.media.AudioRecord
 import android.util.Log
 import com.soda.soda.MainActivity
 import com.soda.soda.fragments.AudioClassificationListener
+import com.soda.soda.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 import org.tensorflow.lite.task.core.BaseOptions
@@ -147,8 +148,10 @@ class AudioClassificationHelper(
 
     private fun classifyAudio() {
         bytesRead = tensorAudio.load(recorder)
-        val output = classifier.classify(tensorAudio) //분류 실행
-        listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
+        if(SettingFragment.autoSwitchState){
+            val output = classifier.classify(tensorAudio) //분류 실행
+            listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
+        }
     }
 
     fun stopAudioClassification() {
