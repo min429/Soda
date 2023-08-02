@@ -1,11 +1,19 @@
 package com.soda.soda
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
+import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -14,7 +22,6 @@ import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.WarningFragment
-import com.soda.soda.helper.AudioClassificationHelper
 import com.soda.soda.helper.SoundCheckHelper
 import com.soda.soda.service.ForegroundService
 
@@ -22,6 +29,7 @@ private const val TAG = "MainActivity"
 
 interface DialogInterface{
     fun dialogEvents()
+    fun showAuthorizationDialog(context: Context, feature: String)
 }
 
 class MainActivity : AppCompatActivity(), DialogInterface{
@@ -150,6 +158,39 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 현재 띄워진 다이얼로그를 기억하여 나중에 닫기 위해 변수에 저장
         currentDialog = dialog
+    }
+
+    /** 권한 대화상자 **/
+    override fun showAuthorizationDialog(context: Context, feature: String) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.authorization_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams?.gravity = Gravity.BOTTOM // 화면의 밑에 위치하도록 설정
+
+        // 100px 만큼 margin 추가
+        val marginInPx = 200
+        layoutParams?.y = marginInPx
+
+        // TextView 설정
+        val textView = dialog.findViewById<TextView>(R.id.confirm_textView)
+        textView?.text = feature+"을 위해 권한을 허용해 주세요."
+
+        dialog.findViewById<Button>(R.id.yes_button)?.setOnClickListener {
+            dialog.dismiss()
+            // 핸드폰 설정 화면으로 이동
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + context.packageName))
+            startActivity(intent)
+        }
+
+        dialog.findViewById<Button>(R.id.no_button)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     /** 백그라운드 스위치 상태 설정 **/
