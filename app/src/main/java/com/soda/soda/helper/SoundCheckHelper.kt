@@ -66,18 +66,20 @@ object SoundCheckHelper{
         if(!SettingFragment.vibrateSwitchState) return // 진동알림 off
         if (isVibrating) return // 이미 진동 중
         if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
-        if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
-            AudioClassificationHelper.label!! != "총 소리 같습니다."){
-            return
+        if(SettingFragment.autoSwitchState){
+            if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
+                AudioClassificationHelper.label!! != "총 소리 같습니다."){
+                return
+            }
         }
 
         isVibrating = true
@@ -104,7 +106,10 @@ object SoundCheckHelper{
 
     /** 위험알림 생성 **/
     private fun createNotification(context: Context) {
-        warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
+        if(SettingFragment.autoSwitchState)
+            warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
+        else
+            warningLabel = "큰 소리가 난 것 같습니다. 주의하세요!"
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

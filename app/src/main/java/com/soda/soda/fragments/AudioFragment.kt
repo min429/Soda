@@ -298,14 +298,13 @@ class AudioFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (!PermissionsFragment.hasPermissions(requireContext())) {
+        if (!PermissionsFragment.hasAudioPermission(requireContext())) {
+
             Navigation.findNavController(requireActivity(), R.id.fragment_container)
                 .navigate(AudioFragmentDirections.actionAudioToPermissions())
         }
         else{
-            if(SettingFragment.autoSwitchState){
-                startRecording()
-            }
+            startRecording()
         }
     }
 
@@ -335,8 +334,8 @@ class AudioFragment : Fragment() {
             }
         }
 
-        fun getAudioHelper(): AudioClassificationHelper {
-            return audioHelper!!
+        fun getAudioHelper(): AudioClassificationHelper? {
+            return audioHelper
         }
 
         fun setAudioHelper(){

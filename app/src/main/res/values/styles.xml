@@ -19,4 +19,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:statusBarColor">@color/dark_blue</item>
     </style>
+
+    <style name="TransparentDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

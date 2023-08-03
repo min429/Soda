@@ -20,42 +20,63 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.soda.soda.R
+import android.util.Log
+import com.soda.soda.MainActivity
 
-private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.RECORD_AUDIO)
+private val PERMISSIONS_REQUIRED = arrayOf(
+    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.POST_NOTIFICATIONS,
+    Manifest.permission.VIBRATE,
+    Manifest.permission.FOREGROUND_SERVICE,
+    Manifest.permission.INTERNET)
 
 class PermissionsFragment : Fragment() {
-    val requestPermissionLauncher =
+    private lateinit var mainActivity: MainActivity
+
+    /** 권한 요청 런처 **/
+    private val requestPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Toast.makeText(context, "권한 허용됨", Toast.LENGTH_LONG).show()
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions[Manifest.permission.RECORD_AUDIO] == true && permissions[Manifest.permission.POST_NOTIFICATIONS] == true) {
                 navigateToAudioFragment()
-            } else {
-                Toast.makeText(context, "권한 거부됨", Toast.LENGTH_LONG).show()
+            }
+            else{
+                mainActivity.showAuthorizationDialog(requireContext(), "소리 인식, 위험 알림")
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when {
+
+        mainActivity = requireActivity() as MainActivity
+
+        checkPermissionAndRequest()
+    }
+
+    /** 권한 체크 및 요청 **/
+    private fun checkPermissionAndRequest() {
+        // 허용된 권한 확인
+        val permissionsNotGranted = PERMISSIONS_REQUIRED.filter {
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED -> {
+                it
+            ) != PackageManager.PERMISSION_GRANTED
+        }
+        when {
+            // 모두 허용 -> AudioFragment로 이동
+            permissionsNotGranted.isEmpty() -> {
                 navigateToAudioFragment()
             }
+            // 그렇지 않다면 허용되지 않은 권한만 요청
             else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.RECORD_AUDIO)
+                requestPermissionLauncher.launch(permissionsNotGranted.toTypedArray())
             }
         }
     }
@@ -72,6 +93,16 @@ class PermissionsFragment : Fragment() {
         fun hasPermissions(context: Context) = PERMISSIONS_REQUIRED.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
+
+        fun hasAudioPermission(context: Context) : Boolean{
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun hasNotificationsPermission(context: Context) : Boolean{
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        }
     }
+
 }
+
 
