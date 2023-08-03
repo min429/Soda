@@ -49,13 +49,17 @@ object SoundCheckHelper{
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
 
-        // 소리 크기가 80데시벨 이상 -> 핸드폰 진동
-        if (soundDecibel >= 80) {
+        // 소리 크기가 50데시벨 이상 -> 핸드폰 진동
+        if (soundDecibel >= 50) {
             try {
                 if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
                 if(SettingFragment.autoSwitchState){
-                    if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
+                    if(AudioClassificationHelper.label!! != "자동차 경적 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "트럭 경적 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "기차 경적 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "경보 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "화재 경보 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "자동차 도난 경보 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
@@ -64,7 +68,14 @@ object SoundCheckHelper{
                         AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "총 소리 같습니다."){
+                        AudioClassificationHelper.label!! != "포격 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "총 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "소리 지르는 것 같습니다." &&
+                        AudioClassificationHelper.label!! != "어린 아이가 소리 지르는 것 같습니다." &&
+                        AudioClassificationHelper.label!! != "울부짖는 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "부서지는 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "깨지는 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "물체가 부딪치거나 떨어지는 소리 같습니다."){
                         return
                     }
                 }
