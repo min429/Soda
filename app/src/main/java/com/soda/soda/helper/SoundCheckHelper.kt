@@ -45,12 +45,12 @@ object SoundCheckHelper{
         val rms = kotlin.math.sqrt(soundAmplitude / bytesRead)
 
         // RMS를 데시벨로 변환 (0에 로그를 취하는 것을 방지하기 위해 1e-7 추가)
-        soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 20).toInt()
+        soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 5).toInt()
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
 
-        // 소리 크기가 50데시벨 이상 -> 핸드폰 진동
-        if (soundDecibel >= 50) {
+        // 소리 크기가 45데시벨 이상 -> 핸드폰 진동
+        if (soundDecibel >= 45) {
             try {
                 if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
                 if(SettingFragment.autoSwitchState){
@@ -69,7 +69,6 @@ object SoundCheckHelper{
                         AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "포격 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "총 소리 같습니다." &&
                         AudioClassificationHelper.label!! != "소리 지르는 것 같습니다." &&
                         AudioClassificationHelper.label!! != "어린 아이가 소리 지르는 것 같습니다." &&
                         AudioClassificationHelper.label!! != "울부짖는 소리 같습니다." &&
