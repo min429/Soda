@@ -89,7 +89,7 @@ object SoundCheckHelper{
                 vibrator.vibrate(
                     VibrationEffect.createOneShot(
                         1000,
-                        VibrationEffect.DEFAULT_AMPLITUDE
+                        255
                     )
                 )
             } else {
