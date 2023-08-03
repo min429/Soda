@@ -203,6 +203,8 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         // TextView 설정
         val textView = dialog.findViewById<TextView>(R.id.confirm_textView)
         textView?.text = feature+"을 위해 권한을 허용해 주세요."
+        if(feature == "소리 인식")
+            textView?.text = feature+"을 위해 마이크 권한을 허용해 주세요."
 
         dialog.findViewById<Button>(R.id.yes_button)?.setOnClickListener {
             dialog.dismiss()
@@ -213,6 +215,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         dialog.findViewById<Button>(R.id.no_button)?.setOnClickListener {
             dialog.dismiss()
+            finish()
         }
 
         dialog.show()

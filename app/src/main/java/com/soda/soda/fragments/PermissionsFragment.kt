@@ -30,11 +30,7 @@ import android.util.Log
 import com.soda.soda.MainActivity
 
 private val PERMISSIONS_REQUIRED = arrayOf(
-    Manifest.permission.RECORD_AUDIO,
-    Manifest.permission.POST_NOTIFICATIONS,
-    Manifest.permission.VIBRATE,
-    Manifest.permission.FOREGROUND_SERVICE,
-    Manifest.permission.INTERNET)
+    Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
 
 class PermissionsFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
@@ -44,11 +40,12 @@ class PermissionsFragment : Fragment() {
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            if (permissions[Manifest.permission.RECORD_AUDIO] == true && permissions[Manifest.permission.POST_NOTIFICATIONS] == true) {
+            // 허용되지 않은 권한에 RECORD_AUDIO가 없거나 RECORD_AUDIO가 허용된 경우
+            if (!permissions.contains(Manifest.permission.RECORD_AUDIO) || permissions[Manifest.permission.RECORD_AUDIO] == true) {
                 navigateToAudioFragment()
             }
             else{
-                mainActivity.showAuthorizationDialog(requireContext(), "소리 인식, 위험 알림")
+                mainActivity.showAuthorizationDialog(requireContext(), "소리 인식")
             }
         }
 
