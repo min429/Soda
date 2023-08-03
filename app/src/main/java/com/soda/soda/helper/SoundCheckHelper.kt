@@ -30,7 +30,7 @@ object SoundCheckHelper{
     lateinit var warningLabel: String
     var soundDecibel: Int = 0
     private var dialogInterface: DialogInterface? = null
-    private var isVibrating = false
+    private var isNotifying = false
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
@@ -52,9 +52,25 @@ object SoundCheckHelper{
         // 소리 크기가 80데시벨 이상 -> 핸드폰 진동
         if (soundDecibel >= 80) {
             try {
-                vibrate(context)
+                if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
+                if(SettingFragment.autoSwitchState){
+                    if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
+                        AudioClassificationHelper.label!! != "총 소리 같습니다."){
+                        return
+                    }
+                }
+                createNotification(context)
             } catch (e: Exception) {
-                Log.e(TAG, "Error occurred while vibrating", e)
+                Log.e(TAG, "Error occurred while notifying", e)
                 val exceptionMessage = e.message
                 Log.e(TAG, "Exception message: $exceptionMessage")
             }
@@ -64,25 +80,7 @@ object SoundCheckHelper{
     /** 진동 함수 **/
     private fun vibrate(context: Context){
         if(!SettingFragment.vibrateSwitchState) return // 진동알림 off
-        if (isVibrating) return // 이미 진동 중
-        if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
-        if(SettingFragment.autoSwitchState){
-            if(AudioClassificationHelper.label!! != "경적 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "화재 경보기 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
-                AudioClassificationHelper.label!! != "총 소리 같습니다."){
-                return
-            }
-        }
 
-        isVibrating = true
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -96,16 +94,13 @@ object SoundCheckHelper{
                 vibrator.vibrate(2000)
             }
         }
-        createNotification(context)
-
-        // 3초 후 다시 진동이 발생 가능
-        Handler(Looper.getMainLooper()).postDelayed({
-            isVibrating = false
-        }, 3000)
     }
 
     /** 위험알림 생성 **/
     private fun createNotification(context: Context) {
+        if (isNotifying) return // 이미 위험 알림중
+        isNotifying = true
+
         if(SettingFragment.autoSwitchState)
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
         else
@@ -144,6 +139,13 @@ object SoundCheckHelper{
         notificationManager.notify(notificationId, notification)
 
         dialogInterface?.dialogEvents()
+
+        vibrate(context)
+
+        // 3초 후 다시 진동이 발생 가능
+        Handler(Looper.getMainLooper()).postDelayed({
+            isNotifying = false
+        }, 3000)
     }
 
     fun setInterface(dialogInterface: DialogInterface?) {
