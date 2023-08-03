@@ -25,7 +25,7 @@ class ForegroundService : Service() {
     private val channelId = "ForegroundServiceChannel"
     private val notificationId = 1
     private val handler = Handler(Looper.getMainLooper())
-    private var interval = 1000L // 1초로 초기화
+    private var interval = 1000L // 1초
     private val updateRunnable = object : Runnable {
         override fun run() {
             if(AudioClassificationHelper.label != null){
@@ -49,7 +49,6 @@ class ForegroundService : Service() {
             startForeground(notificationId, notification)
         }
 
-        // 포그라운드 서비스의 작업을 수행하는 코드를 추가할 수 있습니다.
         // 주기적으로 알림 업데이트를 위해 Runnable 실행
         handler.postDelayed(updateRunnable, interval)
 
@@ -62,12 +61,11 @@ class ForegroundService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // 포그라운드 서비스 종료 시 수행할 작업이 있다면 여기에 추가할 수 있습니다.
 
         // Runnable 중지
         handler.removeCallbacks(updateRunnable)
 
-        // 포그라운드 서비스를 종료합니다.
+        // 포그라운드 서비스 종료
         stopForeground(true)
         stopSelf()
 
@@ -87,14 +85,14 @@ class ForegroundService : Service() {
     }
 
     private fun createNotification(): Notification {
-        // 알림을 클릭했을 때 실행될 Intent 정의
+        // 알림 클릭 시 실행될 Intent 정의
         val openAppIntent = Intent(this, MainActivity::class.java)
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         var label = AudioClassificationHelper.label
         if(!SettingFragment.autoSwitchState) label = "현재 자동분류가 꺼져있는 상태입니다."
+        // 알림을 클릭시 openAppIntent를 실행
 
-        // 알림을 클릭했을 때 openAppIntent를 실행할 수 있도록 함
         val pendingIntent = PendingIntent.getActivity(
             this,
             notificationId,
@@ -104,7 +102,7 @@ class ForegroundService : Service() {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_run_service)
             .setContentText(label)
-            .setContentIntent(pendingIntent) // 알림을 탭했을 때 pendingIntent가 실행됨
+            .setContentIntent(pendingIntent) // 알림 탭했을 시 pendingIntent 실행
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
 
@@ -113,12 +111,11 @@ class ForegroundService : Service() {
         return notification
     }
 
-    // 포그라운드 알림을 업데이트하는 함수
+    /** 포그라운드 알림을 업데이트하는 함수 **/
     private fun updateForegroundNotification() {
         val notification = createNotification() // 새로운 알림 생성
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, notification) // 알림 업데이트
     }
-
 }

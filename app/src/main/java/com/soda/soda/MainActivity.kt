@@ -57,14 +57,14 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         // 인터페이스 설정
         SoundCheckHelper.setInterface(this)
 
-        // Get the toolbar layout view
+        // 툴바 레이아웃 뷰 가져오기
         val toolbarLayoutView = activityMainBinding.root.findViewById<View>(R.id.toolbar_layout)
-        // Bind the toolbar layout view
+        // 툴바 레이아웃 뷰 바인딩
         toolbarLayoutBinding = ToolbarLayoutBinding.bind(toolbarLayoutView)
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
         toolbarLayoutBinding.buttonSetting.setOnClickListener {
-            if(!AudioFragment.isListening()){ // stt 녹음중 아닐 때만
+            if(!AudioFragment.isListening()){ // stt 녹음중이 아닐 때
                 navigateToFragment(SettingFragment())
             }
             else{
@@ -89,15 +89,12 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 'show_dialog' 키의 값을 가져옴 (기본값은 false)
         val showDialog = intent.getBooleanExtra("show_dialog", false)
-
-        // 알림을 클릭하여 MainActivity를 실행했을 때 대화상자를 띄우도록 합니다.
-        // 값이 'true'이면 대화상자를 표시
         if (showDialog) {
             dialogEvents()
         }
     }
 
-    // intent를 갱신하기 위해 필요
+    /** intent 갱신용 함수**/
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // 새로운 Intent를 액티비티의 Intent로 설정
@@ -109,11 +106,11 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 액티비티가 종료될 때 Object에 설정된 인터페이스 제거
         SoundCheckHelper.setInterface(null)
-        // 포그라운드 서비스를 종료합니다.
+        // 포그라운드 서비스를 종료
         stopService(Intent(this, ForegroundService::class.java))
         // 녹음 및 스레드 작업 종료
-        AudioFragment.getAudioHelper()?.stopAudioClassification()
 
+        AudioFragment.getAudioHelper()?.stopAudioClassification()
         // audioHelper = null로 초기화 -> 앱을 다시 실행할 때마다 audioHelper를 다시 생성해야 함
         // 앱을 다시 실행할 때마다 MainActivity가 다시 생성되므로
         // AudioFragment에서 다시 requireContext()로 context를 갱신한 후 다시 audioHelper객체를 생성하면서 context를 넘겨줘야 함
@@ -145,7 +142,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         if (currentFragment is SettingFragment) { // SettingFragment != NavHostFragment
             // SettingFragment에서 뒤로 가기를 눌렀을 때 setting button을 다시 보이게 함
             toolbarLayoutBinding.buttonSetting.visibility = View.VISIBLE
-            // TextView를 다시 안보이게 함
+            // TextView 가리기
             toolbarLayoutBinding.toolbarTitle.visibility = View.GONE
         }
 
@@ -156,16 +153,14 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         }
     }
 
-    private fun navigateToFragment(fragment: SettingFragment) {
-        // Setting button을 gone으로 설정
-        toolbarLayoutBinding.buttonSetting.visibility = View.GONE
-        // TextView를 보이게 설정
-        toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
 
-        //현재 프래그먼트가 SettingFragment가 아닌 경우에만 백스택에 추가
+    /** 프래그먼트 교체함수 **/
+    private fun navigateToFragment(fragment: SettingFragment) {
+        toolbarLayoutBinding.buttonSetting.visibility = View.GONE
+        toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)  // 백스택에 추가
+            .addToBackStack(null)
             .commit()
     }
 
@@ -178,9 +173,11 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         currentDialog?.dismiss()
 
         val dialog = WarningFragment(SoundCheckHelper.warningLabel)
+
         // 알림창이 띄워져있는 동안 배경 클릭 막기
         dialog.isCancelable = false
         dialog.show(this.supportFragmentManager, "WarningDialog")
+
         // 대화상자를 보여준 후에는 "show_dialog" 값을 다시 false로 설정
         intent.putExtra("show_dialog", false)
 
@@ -225,8 +222,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
     private fun setBackgroundSwitchState(activity: MainActivity){
         // Restore switch state from SharedPreferences
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져오고 sharedPref.getBoolean은 이 키 값에 해당하는 값이
-        //SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환함
+        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져옴. sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환
         SettingFragment.backgroundSwitchState = sharedPref.getBoolean(getString(R.string.saved_background_switch_state_key), false)
     }
 
