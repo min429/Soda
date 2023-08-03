@@ -88,17 +88,17 @@ object SoundCheckHelper{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(
                     VibrationEffect.createOneShot(
-                        1000,
+                        2000,
                         255
                     )
                 )
             } else {
-                vibrator.vibrate(1000)
+                vibrator.vibrate(2000)
             }
         }
         createNotification(context)
 
-        // 3초 후 다시 진동이 발생 가능화
+        // 3초 후 다시 진동이 발생 가능
         Handler(Looper.getMainLooper()).postDelayed({
             isVibrating = false
         }, 3000)
