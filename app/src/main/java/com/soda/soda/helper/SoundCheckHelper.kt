@@ -22,9 +22,11 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
 
 private const val TAG = "SoundCheckHelper"
-private lateinit var buffer: TensorBuffer
+
+private var DECIBEL_THRESHOLD = 100
 
 object SoundCheckHelper{
+    private lateinit var buffer: TensorBuffer
     private val channelId = "VibrateChannel"
     private val notificationId = 2
     lateinit var warningLabel: String
@@ -49,8 +51,12 @@ object SoundCheckHelper{
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
 
-        // 소리 크기가 45데시벨 이상 -> 핸드폰 진동
-        if (soundDecibel >= 45) {
+        DECIBEL_THRESHOLD =
+            if(!SettingFragment.autoSwitchState) 120
+            else 45
+
+        // 소리 크기가 임계값 이상 -> 핸드폰 진동
+        if (soundDecibel >= DECIBEL_THRESHOLD) {
             try {
                 if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
                 if(SettingFragment.autoSwitchState){
