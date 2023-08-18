@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -158,10 +160,47 @@ object SoundCheckHelper{
 
         vibrate(context)
 
+
+        // 플래시 효과발생 = 5회 100ms 간격
+        flashRepeatedly(context, times = 5, interval = 100)
+
+
         // 3초 후 다시 진동이 발생 가능
         Handler(Looper.getMainLooper()).postDelayed({
             isNotifying = false
         }, 3000)
+    }
+
+
+    /** 플래시 효과 반복 함수  **/
+    private fun flashRepeatedly(context: Context, times: Int, interval: Long) {
+        val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val cameraId = cameraManager.cameraIdList[0]  // 첫 번째 카메라 선택 (일반적으로 후면 카메라)
+
+        val handler = Handler(Looper.getMainLooper())
+        var flashCount = 0
+        val flashRunnable: Runnable = object : Runnable {
+            override fun run() {
+                if (flashCount < times * 2) { // 각 깜박임은 켜짐과 꺼짐 두 번씩이므로 times * 2 번 반복
+                    val enable = flashCount % 2 == 0
+                    try {
+                        cameraManager.setTorchMode(cameraId, enable)
+                    } catch (e: CameraAccessException) {
+                        e.printStackTrace()
+                    }
+                    flashCount++
+                    handler.postDelayed(this, interval)
+                } else {
+                    try {
+                        cameraManager.setTorchMode(cameraId, false) // 마지막에 플래시 끄기
+                    } catch (e: CameraAccessException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        flashRunnable.run()
     }
 
     fun setInterface(dialogInterface: DialogInterface?) {
