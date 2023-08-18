@@ -162,7 +162,7 @@ class AudioClassificationHelper(
         const val DELEGATE_CPU = 0 //메인 쓰레드에서 작동
         const val DELEGATE_NNAPI = 1 //NN API 딜리게이트 사용
         const val DISPLAY_THRESHOLD = 0.3f //결과 출력에 영향을 미치는 임계선 값
-        const val DEFAULT_NUM_OF_RESULTS = 1 //분류 결과의 최대 개수, default 2개 설정
+        const val DEFAULT_NUM_OF_RESULTS = 1 //분류 결과의 최대 개수, default 1개 설정
         const val DEFAULT_OVERLAP_VALUE = 0.5f //반복 실행 간격, default 값은 0.5 설정
         const val YAMNET_MODEL = "yamnet.tflite" //사용하는 모델, default 값은 YAMNET 설정
         var interval by Delegates.notNull<Long>()

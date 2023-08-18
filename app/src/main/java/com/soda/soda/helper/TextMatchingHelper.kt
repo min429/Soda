@@ -16,11 +16,11 @@ object TextMatchingHelper {
             "Narration, monologue" -> "내레이션 소리 같습니다."
             "Babbling" -> "아기 옹알이 소리 같습니다."
             "Speech synthesizer" -> "합성 음성 같습니다."
-            "Shout" -> "소리 지르는 것 같습니다."
+            "Shout" -> "고함 소리 같습니다."
             "Bellow" -> "울부짖는 소리 같습니다."
             "Whoop" -> "환호하는 소리 같습니다."
-            "Yell" -> "소리 지르는 것 같습니다."
-            "Children shouting" -> "어린이가 소리 지르는 것 같습니다."
+            "Yell" -> "고함 소리 같습니다."
+            "Children shouting" -> "어린 아이 비명 소리 같습니다."
             "Screaming" -> "비명 소리 같습니다."
             "Whispering" -> "속삭이는 소리 같습니다."
             "Laughter" -> "웃음소리 같습니다."
@@ -327,9 +327,9 @@ object TextMatchingHelper {
             "Ice cream truck, ice cream van" -> "아이스크림 트럭 소리 같습니다."
             "Bus" -> "버스 소리 같습니다."
             "Emergency vehicle" -> "긴급 차량 소리 같습니다."
-            "Police car (siren)" -> "경찰차(사이렌) 소리 같습니다."
-            "Ambulance (siren)" -> "구급차(사이렌) 소리 같습니다."
-            "Fire engine, fire truck (siren)" -> "소방차(사이렌) 소리 같습니다."
+            "Police car (siren)" -> "경찰차 사이렌 소리 같습니다."
+            "Ambulance (siren)" -> "구급차 사이렌 소리 같습니다."
+            "Fire engine, fire truck (siren)" -> "소방차 사이렌 소리 같습니다."
             "Motorcycle" -> "오토바이 소리 같습니다."
             "Traffic noise, roadway noise" -> "교통 소음, 도로 소음 소리 같습니다."
             "Rail transport" -> "철도 운송 소리 같습니다."
@@ -464,8 +464,8 @@ object TextMatchingHelper {
             "Sonar" -> "음파 탐지기 소리 같습니다."
             "Arrow" -> "화살 소리 같습니다."
             "Whoosh, swoosh, swish" -> "뭔가 빠르게 지나갈 때 나는 소리 같습니다."
-            "Thump, thud" -> "물체가 부딪치거나 떨어지는 소리 같습니다."
-            "Thunk" ->"물체가 부딪치거나 떨어지는 소리 같습니다."
+            "Thump, thud" -> "부딪치는 소리 같습니다."
+            "Thunk" ->"부딪치는 소리 같습니다."
             "Electronic tuner" -> "전자 조율기 소리 같습니다."
             "Effects unit" -> "음악 효과 장치 소리 같습니다."
             "Chorus effect" -> "코러스 효과 소리 같습니다."
@@ -493,7 +493,7 @@ object TextMatchingHelper {
             "Creak" -> "뭔가 스치면서 나는 소음 같습니다."
             "Rustle" -> "부드럽게 쉬쉬거리는 소리 같습니다."
             "Whir" -> "빠르게 회전하는 물체 소리 같습니다."
-            "Clatter" -> "물체가 부딪치거나 떨어지는 소리 같습니다."
+            "Clatter" -> "부딪치는 소리 같습니다."
             "Sizzle" -> "물체를 구울 때 지글거리는 소리 같습니다."
             "Clicking" -> "클릭 소리 같습니다."
             "Clickety-clack" -> "딸깍-딸깍 소리 같습니다."
@@ -533,7 +533,7 @@ object TextMatchingHelper {
             "Field recording" -> "현장 녹음 소리 같습니다."
             else -> "무슨 소리인지 모르겠습니다."
         }
-
         return label
     }
+
 }

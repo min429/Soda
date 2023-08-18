@@ -19,6 +19,7 @@ import com.soda.soda.DialogInterface
 import com.soda.soda.MainActivity
 import com.soda.soda.R
 import com.soda.soda.fragments.SettingFragment
+import com.soda.soda.fragments.WarningCustomFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
@@ -61,30 +62,10 @@ object SoundCheckHelper{
         if (soundDecibel >= DECIBEL_THRESHOLD) {
             try {
                 if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
+                Log.d(TAG, "label: ${AudioClassificationHelper.label}")
                 if(SettingFragment.autoSwitchState){
-                    if(AudioClassificationHelper.label!! != "자동차 경적 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "트럭 경적 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "기차 경적 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "경보 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "화재 경보 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "자동차 도난 경보 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "구급차(사이렌) 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "소방차(사이렌) 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "경찰차(사이렌) 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "사이렌 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "민방위 사이렌 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "비명 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "쾅 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "폭발 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "포격 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "소리 지르는 것 같습니다." &&
-                        AudioClassificationHelper.label!! != "어린 아이가 소리 지르는 것 같습니다." &&
-                        AudioClassificationHelper.label!! != "울부짖는 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "부서지는 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "깨지는 소리 같습니다." &&
-                        AudioClassificationHelper.label!! != "물체가 부딪치거나 떨어지는 소리 같습니다."){
+                    if(!WarningCustomFragment.warningSounds.containsValue(AudioClassificationHelper.label)) // 위험 소리가 아닌 경우
                         return
-                    }
                 }
                 createNotification(context)
             } catch (e: Exception) {

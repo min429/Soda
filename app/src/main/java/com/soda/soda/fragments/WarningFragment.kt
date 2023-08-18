@@ -42,4 +42,5 @@ class WarningFragment(
         super.onDestroyView()
         _binding = null
     }
+
 }

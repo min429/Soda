@@ -80,5 +80,10 @@ dependencies {
     androidTestImplementation "androidx.test:runner:1.4.0"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
 
+    // audio
     implementation 'org.tensorflow:tensorflow-lite-task-audio:0.4.0'
+
+    // gson for Json translation
+    implementation 'com.google.code.gson:gson:2.8.6'
+
 }

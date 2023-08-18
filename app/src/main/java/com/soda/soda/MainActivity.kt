@@ -25,6 +25,7 @@ import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
+import com.soda.soda.fragments.WarningCustomFragment
 import com.soda.soda.fragments.WarningFragment
 import com.soda.soda.helper.SoundCheckHelper
 import com.soda.soda.service.ForegroundService
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
+        // 위험 소리 설정
+        WarningCustomFragment.loadData(this)
+
         // 백그라운드 스위치 상태 설정
         setBackgroundSwitchState(this)
 
@@ -74,12 +78,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         toolbarLayoutBinding.buttonBack.setOnClickListener {
             onBackPressed()
-        }
-
-        // ActivityResult API를 사용하기 위한 초기화
-        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            // 결과 처리. 이 경우 단순히 설정 화면에서 돌아왔을 때 수행됩니다.
-
         }
     }
 
@@ -223,10 +221,11 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
     /** 백그라운드 스위치 상태 설정 **/
     private fun setBackgroundSwitchState(activity: MainActivity){
-        // Restore switch state from SharedPreferences
+        //SharedPreferences에서 스위치 상태 가져옴
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져옴. sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환
-        SettingFragment.backgroundSwitchState = sharedPref.getBoolean(getString(R.string.saved_background_switch_state_key), false)
+        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져옴.
+        //sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환
+        SettingFragment.backgroundSwitchState = sharedPref.getBoolean("saved_switch_state_key", false)
     }
 
 }

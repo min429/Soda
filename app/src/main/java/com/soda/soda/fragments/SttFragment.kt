@@ -48,6 +48,6 @@ class SttFragment : Fragment() {
         xButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
     }
+
 }
