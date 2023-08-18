@@ -10,6 +10,7 @@ import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -22,6 +23,8 @@ import com.soda.soda.fragments.SettingFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
+import android.app.KeyguardManager
+
 
 private const val TAG = "SoundCheckHelper"
 
@@ -55,7 +58,7 @@ object SoundCheckHelper{
 
         DECIBEL_THRESHOLD =
             if(!SettingFragment.autoSwitchState) 120
-            else 45
+            else 20
 
         // 소리 크기가 임계값 이상 -> 핸드폰 진동
         if (soundDecibel >= DECIBEL_THRESHOLD) {
@@ -86,6 +89,7 @@ object SoundCheckHelper{
                         return
                     }
                 }
+
                 createNotification(context)
             } catch (e: Exception) {
                 Log.e(TAG, "Error occurred while notifying", e)
@@ -118,6 +122,12 @@ object SoundCheckHelper{
     private fun createNotification(context: Context) {
         if (isNotifying) return // 이미 위험 알림중
         isNotifying = true
+
+        if (!isScreenOn(context)) {
+            turnScreenOn(context)
+        }
+
+
 
         if(SettingFragment.autoSwitchState)
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
@@ -158,7 +168,7 @@ object SoundCheckHelper{
 
         dialogInterface?.dialogEvents()
 
-        vibrate(context)
+        vibrate(context) //진동 발생
 
 
         // 플래시 효과발생 = 5회 100ms 간격
@@ -200,6 +210,33 @@ object SoundCheckHelper{
         }
 
         flashRunnable.run()
+    }
+    /** 화면을 켜는 함수 **/
+    private fun turnScreenOn(context: Context) {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        // 화면이 이미 켜져 있는 경우에는 추가 동작 필요 없음
+        if (powerManager.isInteractive) {
+            return
+        }
+
+        // 화면을 켜기 위한 WakeLock을 획득
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+            "MyApp::MyWakelockTag"
+        )
+
+        wakeLock.acquire(5000) // 화면을 최대 5초간 켜도록 설정
+
+        // WakeLock을 해제하여 화면을 다시 잠그도록 설정
+        wakeLock.release()
+    }
+
+
+    /** 화면을 켜져있는지 여부 확인 함수 **/
+    private fun isScreenOn(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return powerManager.isInteractive
     }
 
 
