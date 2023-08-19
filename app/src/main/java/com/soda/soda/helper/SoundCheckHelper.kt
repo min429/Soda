@@ -89,6 +89,12 @@ object SoundCheckHelper{
                         return
                     }
                 }
+                // 강제로 앱 실행
+                val openAppIntent = Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra("show_dialog", true)
+                }
+                context.startActivity(openAppIntent)
 
                 createNotification(context)
             } catch (e: Exception) {
@@ -145,26 +151,26 @@ object SoundCheckHelper{
             notificationManager.createNotificationChannel(channel)
         }
 
-        // 알림을 클릭했을 때 실행될 Intent 정의
-        val openAppIntent = Intent(context, MainActivity::class.java)
-        openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        openAppIntent.putExtra("show_dialog", true) // 'show_dialog' 키에 'true' 값을 추가 -> 해당 알림을 클릭했을 때만 대화상자 띄우기 위해
-
-        // 알림을 클릭했을 때 openAppIntent 실행
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            notificationId,
-            openAppIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val notification = NotificationCompat.Builder(context, channelId)
-            .setContentText(warningLabel)
-            .setSmallIcon(R.drawable.ic_warning)
-            .setAutoCancel(true) // 알림 탭할 시 ->  제거
-            .setContentIntent(pendingIntent)
-            .build()
-        notificationManager.notify(notificationId, notification)
+//        // 알림을 클릭했을 때 실행될 Intent 정의
+//        val openAppIntent = Intent(context, MainActivity::class.java)
+//        openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//        openAppIntent.putExtra("show_dialog", true) // 'show_dialog' 키에 'true' 값을 추가 -> 해당 알림을 클릭했을 때만 대화상자 띄우기 위해
+//
+//        // 알림을 클릭했을 때 openAppIntent 실행
+//        val pendingIntent = PendingIntent.getActivity(
+//            context,
+//            notificationId,
+//            openAppIntent,
+//            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+//        )
+//
+//        val notification = NotificationCompat.Builder(context, channelId)
+//            .setContentText(warningLabel)
+//            .setSmallIcon(R.drawable.ic_warning)
+//            .setAutoCancel(true) // 알림 탭할 시 ->  제거
+//            .setContentIntent(pendingIntent)
+//            .build()
+//        notificationManager.notify(notificationId, notification)
 
         dialogInterface?.dialogEvents()
 
