@@ -91,6 +91,7 @@ class AudioFragment : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -110,6 +111,7 @@ class AudioFragment : Fragment() {
                 audioClassificationListener
             )
         }
+
 
         /** STT 기능 관련 변수 (onViewCreated 내부) **/
         val recordButton = view.findViewById<Button>(R.id.record_button)

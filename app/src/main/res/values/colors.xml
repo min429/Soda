@@ -10,4 +10,5 @@
     <color name="white_blue">#E3EEFF</color>
     <color name="transparent">#00000000</color>
     <color name="dimmedBackground">#88000000</color>
+    <color name="red">#FF0000</color>
 </resources>

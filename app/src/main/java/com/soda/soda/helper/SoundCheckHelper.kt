@@ -10,6 +10,7 @@ import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -23,6 +24,14 @@ import com.soda.soda.fragments.WarningCustomFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
+import android.app.KeyguardManager
+import android.graphics.Color
+import android.graphics.PixelFormat
+import android.view.Gravity
+import android.view.WindowManager
+import android.widget.TextView
+import com.soda.soda.LockScreenActivity
+
 
 private const val TAG = "SoundCheckHelper"
 
@@ -56,7 +65,7 @@ object SoundCheckHelper{
 
         DECIBEL_THRESHOLD =
             if(!SettingFragment.autoSwitchState) 120
-            else 45
+            else 20
 
         // 소리 크기가 임계값 이상 -> 핸드폰 진동
         if (soundDecibel >= DECIBEL_THRESHOLD) {
@@ -67,7 +76,16 @@ object SoundCheckHelper{
                     if(!WarningCustomFragment.warningSounds.containsValue(AudioClassificationHelper.label)) // 위험 소리가 아닌 경우
                         return
                 }
+
+//                // 강제로 앱 실행
+//                val openAppIntent = Intent(context, MainActivity::class.java).apply {
+//                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    putExtra("show_dialog", true)
+//                }
+//                context.startActivity(openAppIntent)
+
                 createNotification(context)
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error occurred while notifying", e)
                 val exceptionMessage = e.message
@@ -100,10 +118,29 @@ object SoundCheckHelper{
         if (isNotifying) return // 이미 위험 알림중
         isNotifying = true
 
+        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
         if(SettingFragment.autoSwitchState)
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
         else
             warningLabel = "큰 소리가 난 것 같습니다. 주의하세요!"
+
+
+        // 락 스크린 액티비티 잠금화면 위에 띄우기 ::
+        if (!isScreenOn(context)) {
+            turnScreenOn(context)
+
+            if (keyguardManager.isKeyguardLocked) {
+                launchLockScreenActivity(context, warningLabel)
+            }
+
+        }
+        else{
+            if (keyguardManager.isKeyguardLocked) {
+                launchLockScreenActivity(context, warningLabel)
+            }
+        }
+
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -139,7 +176,12 @@ object SoundCheckHelper{
 
         dialogInterface?.dialogEvents()
 
-        vibrate(context)
+        vibrate(context) //진동 발생
+
+
+        // 플래시 효과발생 = 5회 100ms 간격
+        flashRepeatedly(context, times = 5, interval = 100)
+
 
 
         // 플래시 효과발생 = 5회 100ms 간격
@@ -180,12 +222,56 @@ object SoundCheckHelper{
                 }
             }
         }
-
         flashRunnable.run()
+    }
+    /** 화면을 켜는 함수 **/
+    private fun turnScreenOn(context: Context) {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        // 화면이 이미 켜져 있는 경우에는 추가 동작 필요 없음
+        if (powerManager.isInteractive) {
+            return
+        }
+
+        // 화면을 켜기 위한 WakeLock을 획득
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+            "MyApp::MyWakelockTag"
+        )
+
+        wakeLock.acquire(5000) // 화면을 최대 5초간 켜도록 설정
+
+        // WakeLock을 해제하여 화면을 다시 잠그도록 설정
+        wakeLock.release()
+    }
+
+
+    /** 화면을 켜져있는지 여부 확인 함수 **/
+    private fun isScreenOn(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return powerManager.isInteractive
+    }
+
+
+    private fun launchLockScreenActivity(context: Context, notificationText: String) {
+        // 잠금화면 상태일 때만 LockScreenActivity를 띄움
+        val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+        openLockScreenIntent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        openLockScreenIntent.putExtra("notification_text", notificationText)
+        context.startActivity(openLockScreenIntent)
+
+        // 2초 후에 LockScreenActivity를 닫음
+        Handler(Looper.getMainLooper()).postDelayed({
+            val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+            closeLockScreenIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            closeLockScreenIntent.putExtra("close_lock_screen", true)
+            context.startActivity(closeLockScreenIntent)
+        }, 2000)
     }
 
     fun setInterface(dialogInterface: DialogInterface?) {
         this.dialogInterface = dialogInterface
     }
-
 }

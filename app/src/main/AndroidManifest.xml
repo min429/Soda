@@ -4,9 +4,11 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -16,14 +18,23 @@
         android:supportsRtl="true"
         android:taskAffinity=""
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".LockScreenActivity"
+            android:theme="@style/LockScreenTheme"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true"
+            android:exported="false"
+            android:launchMode="singleTask">
+        </activity>
 
-        <service android:name="com.soda.soda.service.ForegroundService"/>
+        <service android:name=".service.ForegroundService" />
 
         <activity
-            android:name="com.soda.soda.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
