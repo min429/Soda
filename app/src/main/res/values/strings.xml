@@ -15,7 +15,4 @@
 -->
 <resources>
     <string name="app_name">SODA</string>
-
-    <!-- switchState -->
-    <string name="saved_background_switch_state_key">saved_switch_state_key</string>
 </resources>

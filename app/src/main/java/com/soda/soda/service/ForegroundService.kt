@@ -106,8 +106,6 @@ class ForegroundService : Service() {
             .setAutoCancel(true) // 알림을 탭한 후 자동으로 제거
             .build()
 
-        Log.d(TAG, "label: "+ AudioClassificationHelper.label)
-
         return notification
     }
 
@@ -118,4 +116,5 @@ class ForegroundService : Service() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, notification) // 알림 업데이트
     }
+
 }

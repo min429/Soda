@@ -67,4 +67,5 @@ class WarningFragment(
         handler.removeCallbacks(backgroundColorRunnable) // 핸들러 콜백 중지
         _binding = null
     }
+
 }

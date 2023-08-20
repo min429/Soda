@@ -35,5 +35,5 @@ class UserguideFragment :  DialogFragment() {
                 "2. 자동분류 : \n\n스위치를 ON 하면 2번기능인 음성분류를 계속 실행하고 OFF 하면 2번기능 음성분류를 중단합니다. \n\n"+
                 "3. 진동알림 : \n\n스위치를 ON 하면 1번기능인 위험상황 알림시 진동을 발생시키고, OFF 하면 진동을 발생시키지 않습니다."
     }
-    companion object {}
+
 }
