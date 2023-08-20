@@ -24,6 +24,12 @@ import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.math.log10
 import android.app.KeyguardManager
+import android.graphics.Color
+import android.graphics.PixelFormat
+import android.view.Gravity
+import android.view.WindowManager
+import android.widget.TextView
+import com.soda.soda.LockScreenActivity
 
 
 private const val TAG = "SoundCheckHelper"
@@ -89,6 +95,7 @@ object SoundCheckHelper{
                         return
                     }
                 }
+
 //                // 강제로 앱 실행
 //                val openAppIntent = Intent(context, MainActivity::class.java).apply {
 //                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -97,6 +104,7 @@ object SoundCheckHelper{
 //                context.startActivity(openAppIntent)
 
                 createNotification(context)
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error occurred while notifying", e)
                 val exceptionMessage = e.message
@@ -129,16 +137,58 @@ object SoundCheckHelper{
         if (isNotifying) return // 이미 위험 알림중
         isNotifying = true
 
-        if (!isScreenOn(context)) {
-            turnScreenOn(context)
-        }
-
-
+        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
 
         if(SettingFragment.autoSwitchState)
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
         else
             warningLabel = "큰 소리가 난 것 같습니다. 주의하세요!"
+
+
+        // 락 스크린 액티비티 잠금화면 위에 띄우기 ::
+        if (!isScreenOn(context)) {
+            turnScreenOn(context)
+
+            if (keyguardManager.isKeyguardLocked) {
+                // 잠금화면 상태일 때만 LockScreenActivity를 띄움
+                val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+                openLockScreenIntent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                openLockScreenIntent.putExtra("notification_text", warningLabel) // 텍스트 전달
+                context.startActivity(openLockScreenIntent)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // 2초 후에 LockScreenActivity를 닫음
+                    val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+                    closeLockScreenIntent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    closeLockScreenIntent.putExtra("close_lock_screen", true)
+                    context.startActivity(closeLockScreenIntent)
+                }, 2000)
+            }
+
+        }
+        else{
+            if (keyguardManager.isKeyguardLocked) {
+                // 잠금화면 상태일 때만 LockScreenActivity를 띄움
+                val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+                openLockScreenIntent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                openLockScreenIntent.putExtra("notification_text", warningLabel) // 텍스트 전달
+                context.startActivity(openLockScreenIntent)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // 2초 후에 LockScreenActivity를 닫음
+                    val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+                    closeLockScreenIntent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    closeLockScreenIntent.putExtra("close_lock_screen", true)
+                    context.startActivity(closeLockScreenIntent)
+                }, 2000)
+            }
+
+        }
+
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -180,6 +230,7 @@ object SoundCheckHelper{
         // 플래시 효과발생 = 5회 100ms 간격
         flashRepeatedly(context, times = 5, interval = 100)
 
+
         // 3초 후 다시 진동이 발생 가능
         Handler(Looper.getMainLooper()).postDelayed({
             isNotifying = false
@@ -214,7 +265,6 @@ object SoundCheckHelper{
                 }
             }
         }
-
         flashRunnable.run()
     }
     /** 화면을 켜는 함수 **/
