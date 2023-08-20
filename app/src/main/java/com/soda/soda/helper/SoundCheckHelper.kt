@@ -150,43 +150,14 @@ object SoundCheckHelper{
             turnScreenOn(context)
 
             if (keyguardManager.isKeyguardLocked) {
-                // 잠금화면 상태일 때만 LockScreenActivity를 띄움
-                val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
-                openLockScreenIntent.flags =
-                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                openLockScreenIntent.putExtra("notification_text", warningLabel) // 텍스트 전달
-                context.startActivity(openLockScreenIntent)
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    // 2초 후에 LockScreenActivity를 닫음
-                    val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
-                    closeLockScreenIntent.flags =
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    closeLockScreenIntent.putExtra("close_lock_screen", true)
-                    context.startActivity(closeLockScreenIntent)
-                }, 2000)
+                launchLockScreenActivity(context, warningLabel)
             }
 
         }
         else{
             if (keyguardManager.isKeyguardLocked) {
-                // 잠금화면 상태일 때만 LockScreenActivity를 띄움
-                val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
-                openLockScreenIntent.flags =
-                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                openLockScreenIntent.putExtra("notification_text", warningLabel) // 텍스트 전달
-                context.startActivity(openLockScreenIntent)
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    // 2초 후에 LockScreenActivity를 닫음
-                    val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
-                    closeLockScreenIntent.flags =
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    closeLockScreenIntent.putExtra("close_lock_screen", true)
-                    context.startActivity(closeLockScreenIntent)
-                }, 2000)
+                launchLockScreenActivity(context, warningLabel)
             }
-
         }
 
 
@@ -296,8 +267,27 @@ object SoundCheckHelper{
     }
 
 
+    private fun launchLockScreenActivity(context: Context, notificationText: String) {
+        // 잠금화면 상태일 때만 LockScreenActivity를 띄움
+        val openLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+        openLockScreenIntent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        openLockScreenIntent.putExtra("notification_text", notificationText)
+        context.startActivity(openLockScreenIntent)
+
+        // 2초 후에 LockScreenActivity를 닫음
+        Handler(Looper.getMainLooper()).postDelayed({
+            val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
+            closeLockScreenIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            closeLockScreenIntent.putExtra("close_lock_screen", true)
+            context.startActivity(closeLockScreenIntent)
+        }, 2000)
+    }
+
+
+
     fun setInterface(dialogInterface: DialogInterface?) {
         this.dialogInterface = dialogInterface
     }
-
 }
