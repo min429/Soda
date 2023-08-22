@@ -32,10 +32,8 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.soda.soda.LockScreenActivity
 
-
+var DECIBEL_THRESHOLD = 100
 private const val TAG = "SoundCheckHelper"
-
-private var DECIBEL_THRESHOLD = 100
 
 object SoundCheckHelper{
     private lateinit var buffer: TensorBuffer
@@ -62,10 +60,11 @@ object SoundCheckHelper{
         soundDecibel = (30 * log10(rms * 5000 + 1e-7) - 5).toInt()
         if(soundDecibel < 0) Log.d(TAG, "soundDecibel: 0")
         else Log.d(TAG, "soundDecibel: $soundDecibel")
+        Log.d(TAG, "DECIBEL_THRESHOLD: $DECIBEL_THRESHOLD")
 
         DECIBEL_THRESHOLD =
             if(!SettingFragment.autoSwitchState) 120
-            else 20
+            else DECIBEL_THRESHOLD
 
         // 소리 크기가 임계값 이상 -> 핸드폰 진동
         if (soundDecibel >= DECIBEL_THRESHOLD) {
@@ -125,22 +124,18 @@ object SoundCheckHelper{
         else
             warningLabel = "큰 소리가 난 것 같습니다. 주의하세요!"
 
-
         // 락 스크린 액티비티 잠금화면 위에 띄우기 ::
         if (!isScreenOn(context)) {
             turnScreenOn(context)
-
             if (keyguardManager.isKeyguardLocked) {
                 launchLockScreenActivity(context, warningLabel)
             }
-
         }
         else{
             if (keyguardManager.isKeyguardLocked) {
                 launchLockScreenActivity(context, warningLabel)
             }
         }
-
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -178,22 +173,17 @@ object SoundCheckHelper{
 
         vibrate(context) //진동 발생
 
-
         // 플래시 효과발생 = 5회 100ms 간격
         flashRepeatedly(context, times = 5, interval = 100)
 
-
-
         // 플래시 효과발생 = 5회 100ms 간격
         flashRepeatedly(context, times = 5, interval = 100)
-
 
         // 3초 후 다시 진동이 발생 가능
         Handler(Looper.getMainLooper()).postDelayed({
             isNotifying = false
         }, 3000)
     }
-
 
     /** 플래시 효과 반복 함수  **/
     private fun flashRepeatedly(context: Context, times: Int, interval: Long) {
@@ -224,6 +214,7 @@ object SoundCheckHelper{
         }
         flashRunnable.run()
     }
+
     /** 화면을 켜는 함수 **/
     private fun turnScreenOn(context: Context) {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -245,13 +236,11 @@ object SoundCheckHelper{
         wakeLock.release()
     }
 
-
     /** 화면을 켜져있는지 여부 확인 함수 **/
     private fun isScreenOn(context: Context): Boolean {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         return powerManager.isInteractive
     }
-
 
     private fun launchLockScreenActivity(context: Context, notificationText: String) {
         // 잠금화면 상태일 때만 LockScreenActivity를 띄움
@@ -274,4 +263,5 @@ object SoundCheckHelper{
     fun setInterface(dialogInterface: DialogInterface?) {
         this.dialogInterface = dialogInterface
     }
+
 }

@@ -1,7 +1,6 @@
 package com.soda.soda.fragments
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +24,6 @@ class WarningCustomFragment : Fragment(R.layout.fragment_warning_custom), OnItem
     private var _binding: FragmentWarningCustomBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: WarningCustomAdapter
-//    private var warningSoundsList: MutableList<Item> = items.toMutableList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

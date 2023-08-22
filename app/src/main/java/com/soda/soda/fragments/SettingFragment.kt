@@ -83,6 +83,14 @@ class SettingFragment : Fragment(){
             transaction.commit()
         }
 
+        /** 데시벨 설정 **/
+        binding.decibelCard.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, DecibelCustomFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
         /** 사용설명서 **/
         binding.instructionCard.setOnClickListener {
             val userguideFragment = UserguideFragment()

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:paddingTop="20dp">
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -14,4 +13,5 @@
         tools:listitem="@layout/item_warning_custom"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"/>
+
 </LinearLayout>
