@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,11 +69,25 @@ class PermissionsFragment : Fragment() {
 
 
         // 다른앱 위애 표기 부분 권한 허용 함수 코드 작성
-        top_of_otherDialog(requireContext(), "위험 알림")
-
+        if (!hasOverlayPermission(requireContext())) {
+            top_of_otherDialog(requireContext(), "위험 알림")
+        }
 
         checkPermissionAndRequest()
     }
+
+    /** 다른 앱 위에 표시 권한 체크 **/
+    private fun hasOverlayPermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            // 마시멜로우 이전 버전에서는 항상 허용되어 있다고 간주
+            return true
+        }
+        return Settings.canDrawOverlays(context)
+    }
+
+
+
+
     /** 권한 대화상자 **/
     fun top_of_otherDialog(context: Context, feature: String) {
         val dialog = Dialog(context)
