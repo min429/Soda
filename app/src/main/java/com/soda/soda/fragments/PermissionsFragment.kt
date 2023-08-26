@@ -17,9 +17,15 @@
 package com.soda.soda.fragments
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -27,13 +33,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.soda.soda.R
 import android.util.Log
+import android.view.Gravity
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import com.soda.soda.MainActivity
 
 private val PERMISSIONS_REQUIRED = arrayOf(
     Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
 
+
 class PermissionsFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
+
 
     /** 권한 요청 런처 **/
     private val requestPermissionLauncher =
@@ -54,7 +66,47 @@ class PermissionsFragment : Fragment() {
 
         mainActivity = requireActivity() as MainActivity
 
+
+        // 다른앱 위애 표기 부분 권한 허용 함수 코드 작성
+        top_of_otherDialog(requireContext(), "위험 알림")
+
+
         checkPermissionAndRequest()
+    }
+    /** 권한 대화상자 **/
+    fun top_of_otherDialog(context: Context, feature: String) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.authorization_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams?.gravity = Gravity.BOTTOM // 화면의 밑에 위치하도록 설정
+
+        // 100px 만큼 margin 추가
+        val marginInPx = 200
+        layoutParams?.y = marginInPx
+
+        // TextView 설정
+        val textView = dialog.findViewById<TextView>(R.id.confirm_textView)
+        textView?.text = feature+"을 위해 다른앱 위에 표시권한을 허용해 주세요."
+        if(feature == "소리 인식")
+            textView?.text = feature+"을 위해 다른앱 위에 표시권한을 허용해 주세요."
+
+        dialog.findViewById<Button>(R.id.yes_button)?.setOnClickListener {
+            dialog.dismiss()
+            // 다른 앱 위에 표시되는 권한 설정 화면으로 이동
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.packageName))
+            context.startActivity(intent)
+        }
+
+        dialog.findViewById<Button>(R.id.no_button)?.setOnClickListener {
+            dialog.dismiss()
+            // 다이얼로그를 닫을 때 추가적인 작업을 수행하고 싶다면 여기에 추가합니다.
+        }
+
+        dialog.show()
     }
 
     /** 권한 체크 및 요청 **/
@@ -77,6 +129,7 @@ class PermissionsFragment : Fragment() {
             }
         }
     }
+
 
     private fun navigateToAudioFragment() {
         lifecycleScope.launchWhenStarted {
