@@ -86,8 +86,6 @@ class PermissionsFragment : Fragment() {
     }
 
 
-
-
     /** 권한 대화상자 **/
     fun top_of_otherDialog(context: Context, feature: String) {
         val dialog = Dialog(context)

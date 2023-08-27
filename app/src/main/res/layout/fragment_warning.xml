@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:minHeight="50dp"
-        android:textSize="14sp"
+        android:textSize="25sp"
+        android:fontFamily="@font/jua_regular"
+
         tools:text="위험한 소리인 것 같습니다."
         android:textColor="@color/black"/>
 

@@ -32,6 +32,9 @@ class WarningFragment(
             view?.setBackgroundResource(backgroundResId) // 배경 리소스 설정
             isRedBackground = !isRedBackground // 배경 색상 변경 여부 업데이트
 
+            // 배경 색상 변경될 때마다 텍스트 색상 업데이트
+            updateTextColors(isRedBackground)
+
             handler.postDelayed(this, 200) // 0.2초마다 반복
         }
     }
@@ -62,6 +65,21 @@ class WarningFragment(
         }
         return view
     }
+
+
+    private fun updateTextColors(isRedBackground: Boolean) {
+        val textColorResId = if (isRedBackground) {
+            android.R.color.black
+        } else {
+            android.R.color.white
+        }
+        val textColor = requireContext().getColor(textColorResId)
+
+        // 텍스트 색상 업데이트
+        binding.confirmTextView.setTextColor(textColor)
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacks(backgroundColorRunnable) // 핸들러 콜백 중지

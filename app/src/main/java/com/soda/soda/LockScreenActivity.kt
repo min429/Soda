@@ -51,9 +51,11 @@ class LockScreenActivity : AppCompatActivity() {
             override fun run() {
                 Log.d("LockScreenActivity", "Changing background color")
                 if (isRedBackground) {
-                    updateBackgroundDrawable(binding.root.context, R.drawable.background_shape_red)
+                    // 배경이 빨간색일 때는 배경을 흰색으로, 텍스트 색상을 검은색으로 변경
+                    updateBackgroundAndTextColor(binding.root.context, R.drawable.background_shape_red, android.R.color.white)
                 } else {
-                    updateBackgroundDrawable(binding.root.context, R.drawable.background_shape_white)
+                    // 배경이 흰색일 때는 배경을 빨간색으로, 텍스트 색상을 흰색으로 변경
+                    updateBackgroundAndTextColor(binding.root.context, R.drawable.background_shape_white, android.R.color.black)
                 }
                 isRedBackground = !isRedBackground
                 handler.postDelayed(this, 200)
@@ -62,10 +64,15 @@ class LockScreenActivity : AppCompatActivity() {
         handler.post(backgroundChangeRunnable)
     }
 
-    private fun updateBackgroundDrawable(context: Context, drawableResId: Int) {
-        val backgroundDrawable = ContextCompat.getDrawable(context, drawableResId)
+
+    private fun updateBackgroundAndTextColor(context: Context, backgroundResId: Int, textColorResId: Int) {
+        val backgroundDrawable = ContextCompat.getDrawable(context, backgroundResId)
+        val textColor = ContextCompat.getColor(context, textColorResId)
+
         binding.lockScreenLayout.background = backgroundDrawable
+        binding.lockScreenText.setTextColor(textColor)
     }
+
 
     private fun updateLockScreenText(text: String) {
         binding.lockScreenText.text = text
