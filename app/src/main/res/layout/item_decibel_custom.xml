@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/decibel_box"
+    android:padding="10dp"
+    android:layout_marginTop="10dp">
+
+    <TextView
+        android:id="@+id/dB_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="120dB:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="1dp"/>
+
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전투기 이착륙 소음"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"/>
+
+</LinearLayout>

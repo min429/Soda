@@ -178,7 +178,7 @@ object SoundCheckHelper{
         // 플래시 효과발생 = 5회 100ms 간격
         flashRepeatedly(context, times = 5, interval = 100)
 
-        // 3초 후 다시 진동이 발생 가능
+        // 3초 후 다시 위험 알림
         Handler(Looper.getMainLooper()).postDelayed({
             isNotifying = false
         }, 3000)
