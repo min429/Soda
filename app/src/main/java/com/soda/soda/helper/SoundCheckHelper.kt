@@ -40,6 +40,7 @@ object SoundCheckHelper{
     private val channelId = "VibrateChannel"
     private val notificationId = 2
     lateinit var warningLabel: String
+    lateinit var warningLock: String
     var soundDecibel: Int = 0
     private var dialogInterface: DialogInterface? = null
     private var isNotifying = false
@@ -76,12 +77,17 @@ object SoundCheckHelper{
                         return
                 }
 
-//                // 강제로 앱 실행
-//                val openAppIntent = Intent(context, MainActivity::class.java).apply {
-//                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                    putExtra("show_dialog", true)
-//                }
-//                context.startActivity(openAppIntent)
+                //강제로 앱 실행
+                val openAppIntent = Intent(context, MainActivity::class.java).apply {
+                    //flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra("show_dialog", true)
+                }
+                if (isScreenOn(context)) {
+                    // 화면이 켜져 있을 때, 앱을 실행합니다.
+                    openAppIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    context.startActivity(openAppIntent)
+                }
+
 
                 createNotification(context)
 
@@ -119,8 +125,10 @@ object SoundCheckHelper{
 
         val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
 
-        if(SettingFragment.autoSwitchState)
+        if(SettingFragment.autoSwitchState){
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
+            warningLock = (AudioClassificationHelper.label?.substring(0, AudioClassificationHelper.label.length - 5) ?: "") + " 발생!!"
+        }
         else
             warningLabel = "큰 소리가 난 것 같습니다. 주의하세요!"
 
@@ -128,12 +136,12 @@ object SoundCheckHelper{
         if (!isScreenOn(context)) {
             turnScreenOn(context)
             if (keyguardManager.isKeyguardLocked) {
-                launchLockScreenActivity(context, warningLabel)
+                launchLockScreenActivity(context, warningLock)
             }
         }
         else{
             if (keyguardManager.isKeyguardLocked) {
-                launchLockScreenActivity(context, warningLabel)
+                launchLockScreenActivity(context, warningLock)
             }
         }
 
