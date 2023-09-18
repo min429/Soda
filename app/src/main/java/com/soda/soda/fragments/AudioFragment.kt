@@ -16,6 +16,7 @@
 
 package com.soda.soda.fragments
 
+import ChattingFragment
 import android.content.Intent
 import android.media.AudioRecord
 import android.os.Bundle
@@ -110,6 +111,20 @@ class AudioFragment : Fragment() {
                 requireContext(),
                 audioClassificationListener
             )
+        }
+
+        /** 임시 채팅 프래그먼트 이동 관련 코드 **/
+
+        val leftButton = view.findViewById<Button>(R.id.left_button)
+        leftButton.setOnClickListener {
+            // 이동할 프래그먼트인 ChattingFragment를 생성합니다.
+            val destinationFragment = ChattingFragment()
+
+            // ChattingFragment로 이동합니다.
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, destinationFragment)
+                .addToBackStack(null) // 백스택에 추가하여 이전 프래그먼트로 돌아갈 수 있도록 합니다.
+                .commit()
         }
 
 

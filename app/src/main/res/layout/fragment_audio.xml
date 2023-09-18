@@ -17,7 +17,7 @@
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_probability" />
-    
+
     <TextView
         android:id="@+id/recording_text"
         android:layout_width="wrap_content"
@@ -36,6 +36,21 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <!-- 새로운 버튼 추가 -->
+
+        <Button
+            android:id="@+id/left_button"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:layout_alignTop="@id/record_button"
+            android:layout_alignBottom="@id/record_button"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="54dp"
+            android:text="임시 채팅" />
 
         <Button
             android:id="@+id/record_button"
