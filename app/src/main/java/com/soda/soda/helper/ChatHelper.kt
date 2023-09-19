@@ -1,11 +1,18 @@
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.soda.soda.R
 
-class ChatHelper(private val chatMessages: MutableList<String>) : RecyclerView.Adapter<ChatHelper.ViewHolder>() {
+class ChatHelper(private val chatMessages: MutableList<ChatHelper.ChatMessage>) : RecyclerView.Adapter<ChatHelper.ViewHolder>() {
+
+    data class ChatMessage(
+        val message: String,
+        val isUserMessage: Boolean
+    )
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val messageText: TextView = itemView.findViewById(R.id.message_text)
@@ -17,15 +24,29 @@ class ChatHelper(private val chatMessages: MutableList<String>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.messageText.text = chatMessages[position]
+        val chatMessage = chatMessages[position]
+        holder.messageText.text = chatMessage.message
+
+        // isUserMessage 속성에 따라 메시지의 위치와 배경을 설정
+        if (chatMessage.isUserMessage) {
+            // 사용자가 보낸 메시지인 경우
+            holder.messageText.setBackgroundResource(R.drawable.bubble_outgoing)
+            // 메시지를 오른쪽으로 정렬
+            holder.itemView.findViewById<LinearLayout>(R.id.message_layout).gravity = Gravity.END // 사용자 메시지인 경우 오른쪽 정렬
+        } else {
+            // 상대방이 보낸 메시지인 경우
+            holder.messageText.setBackgroundResource(R.drawable.bubble_incoming)
+            // 메시지를 왼쪽으로 정렬
+            holder.itemView.findViewById<LinearLayout>(R.id.message_layout).gravity = Gravity.START // 상대방 메시지인 경우 왼쪽 정렬
+        }
     }
 
     override fun getItemCount(): Int {
         return chatMessages.size
     }
 
-    fun addMessage(message: String) {
-        chatMessages.add(message)
+    fun addMessage(chatMessage: ChatMessage) {
+        chatMessages.add(chatMessage)
         notifyDataSetChanged()
     }
 }

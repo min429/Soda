@@ -137,6 +137,7 @@ class AudioFragment : Fragment() {
 
         /** STT 녹음 버튼 클릭 이벤트 **/
         recordButton.setOnClickListener {
+            Log.d(TAG, "버튼은 눌름")
             if(!result_check){
                 // STT 음성 인식 중이 아닌 경우에만 음성인식 시작
                 if (!isListening) {
@@ -336,6 +337,17 @@ class AudioFragment : Fragment() {
         private var isListening = false
         private var audioHelper: AudioClassificationHelper? = null
         private val adapter by lazy { ProbabilitiesAdapter() }
+
+        // Getter 메서드 추가
+        fun getAdapterInstance(): ProbabilitiesAdapter {
+            return adapter
+        }
+
+        //setter 추가
+        fun setListening(value: Boolean) {
+            isListening = value
+        }
+
         fun startRecording() {
             if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_RECORDING){
                 audioHelper?.startAudioClassification()
