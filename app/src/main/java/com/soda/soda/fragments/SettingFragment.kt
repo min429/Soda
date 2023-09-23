@@ -75,6 +75,12 @@ class SettingFragment : Fragment(){
             vibrateSwitchState = isChecked
         }
 
+        /** 플래시 알림 스위치 **/
+        binding.flashSwitch.isChecked = flashSwitchState
+        binding.flashSwitch.setOnCheckedChangeListener { _, isChecked ->
+            flashSwitchState = isChecked
+        }
+
         /** 위험 소리 설정 **/
         binding.warningCustomCard.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
@@ -107,6 +113,7 @@ class SettingFragment : Fragment(){
         var autoSwitchState: Boolean = true
         var vibrateSwitchState: Boolean = true
         var backgroundSwitchState by Delegates.notNull<Boolean>()
+        var flashSwitchState: Boolean = true
 
         fun isMyServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
             val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

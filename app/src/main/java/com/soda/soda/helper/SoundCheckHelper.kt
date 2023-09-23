@@ -172,11 +172,14 @@ object SoundCheckHelper{
 
         vibrate(context) //진동 발생
 
-        // 플래시 효과발생 = 5회 100ms 간격
-        flashRepeatedly(context, times = 5, interval = 100)
 
-        // 플래시 효과발생 = 5회 100ms 간격
-        flashRepeatedly(context, times = 5, interval = 100)
+        if (SettingFragment.flashSwitchState){
+            // 플래시 효과발생 = 5회 100ms 간격
+            flashRepeatedly(context, times = 5, interval = 100)
+
+            // 플래시 효과발생 = 5회 100ms 간격
+            flashRepeatedly(context, times = 5, interval = 100)
+        }
 
         // 3초 후 다시 위험 알림
         Handler(Looper.getMainLooper()).postDelayed({
