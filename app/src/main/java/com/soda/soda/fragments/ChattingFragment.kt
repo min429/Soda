@@ -68,6 +68,8 @@ class ChattingFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = chatAdapter
 
+
+
         val sendButton = binding.sendButton // 바인딩으로 Button 참조
         val chatInput = binding.chatInput // 바인딩으로 TextView 참조
 
@@ -270,6 +272,10 @@ class ChattingFragment : Fragment() {
 
     private fun addChatMessage(chatMessage: ChatHelper.ChatMessage) {
         chatAdapter.addMessage(chatMessage)
-
+        // RecyclerView에서 마지막 아이템 위치로 스크롤
+        val lastItemPosition = chatAdapter.itemCount - 1
+        if (lastItemPosition >= 0) {
+            binding.chatMessageList.scrollToPosition(lastItemPosition)
+        }
     }
 }
