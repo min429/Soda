@@ -17,7 +17,10 @@
 package com.soda.soda.fragments
 
 import ChattingFragment
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioRecord
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -46,6 +49,9 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
 import kotlin.properties.Delegates
+
+private const val requestCode = 123
+
 
 private const val TAG = "AudioFragment"
 
@@ -104,6 +110,12 @@ class AudioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 메시지 전송 권한을 요청하는 함수 호출
+        if (!hasSMSPermission(requireContext())) {
+            requestSMSPermission(requireContext())
+        }
+
         fragmentAudioBinding.recyclerView.adapter = adapter
 
         if(audioHelper == null){
@@ -313,6 +325,28 @@ class AudioFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+    ///////////////////
+    /** 메시지 전송 권한을 가지고 있는지 확인하는 함수 **/
+    private fun hasSMSPermission(context: Context): Boolean {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        return ContextCompat.checkSelfPermission(context, permission) == granted
+    }
+
+    /** 메시지 전송 권한을 요청하는 함수 **/
+    private fun requestSMSPermission(context: Context) {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        if (ContextCompat.checkSelfPermission(context, permission) != granted) {
+            requestPermissions(arrayOf(permission), requestCode)
+        }
+    }
+
+
+
 
     override fun onResume() {
         super.onResume()

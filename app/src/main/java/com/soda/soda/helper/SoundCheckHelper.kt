@@ -27,6 +27,7 @@ import kotlin.math.log10
 import android.app.KeyguardManager
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.telephony.SmsManager
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
@@ -77,6 +78,14 @@ object SoundCheckHelper{
                         return
                 }
 
+                // SMS를 보낼 내용과 수신자 전화번호 설정
+                val phoneNumber = "01050333209" // 예시 전화번호
+                val message = "테스트!!" // 보낼 SMS 내용을 입력하세요.
+
+
+                Log.e(TAG, "SMS sent TRYYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                // SMS를 보내는 코드 호출
+                sendSMS(context, phoneNumber, message)
                 createNotification(context)
 
             } catch (e: Exception) {
@@ -274,6 +283,17 @@ object SoundCheckHelper{
 //            closeLockScreenIntent.putExtra("close_lock_screen", true)
 //            context.startActivity(closeLockScreenIntent)
 //        }, 2000)
+    }
+
+
+    private fun sendSMS(context: Context, phoneNumber: String, message: String) {
+        try {
+            val smsManager = SmsManager.getDefault()
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+            Log.e(TAG, "SMS sent successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending SMS: ${e.message}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", e)
+        }
     }
 
     fun setInterface(dialogInterface: DialogInterface?) {
