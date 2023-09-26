@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/message_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="메시지 전송 설정"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="60dp"/>
+
+            <Switch
+                android:id="@+id/message_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="20dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumb="@drawable/switch_thumb" />
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- 스위치 아래에 추가 양식을 중앙에 위치시킵니다. -->
+    <LinearLayout
+        android:layout_width="365dp"
+        android:layout_height="269dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="68dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_card">
+
+        <!-- 번호 입력 EditText -->
+        <EditText
+            android:id="@+id/phone_number_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="번호를 설정하세요."
+            android:inputType="phone" />
+
+        <!-- 메시지 내용 입력 EditText -->
+        <EditText
+            android:id="@+id/message_content_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="메시지 내용을 설정하세요."
+            android:inputType="textMultiLine"
+            android:minLines="3" />
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="104dp"
+            android:layout_height="66dp"
+            android:text="저장"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <!-- 저장 버튼 추가 -->
+</androidx.constraintlayout.widget.ConstraintLayout>

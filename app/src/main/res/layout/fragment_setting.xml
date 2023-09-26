@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/background_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/auto_classification_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -139,7 +139,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vibrate_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -182,7 +182,7 @@
         app:layout_constraintTop_toBottomOf="@+id/flash_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -213,7 +213,7 @@
         app:layout_constraintTop_toBottomOf="@+id/warning_custom_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 
@@ -236,7 +236,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/instruction_card"
+        android:id="@+id/messagego_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -244,7 +244,39 @@
         app:layout_constraintTop_toBottomOf="@+id/decibel_card"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#00FFFFFF"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/setting_box"
+                android:text="메시지 전송 설정"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jua_regular"
+                android:paddingBottom="2dp"
+                android:paddingRight="115dp"/>
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/instruction_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagego_card"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#00FFFFFF"
         app:cardElevation="0dp">
 

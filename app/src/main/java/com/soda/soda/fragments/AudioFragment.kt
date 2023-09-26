@@ -52,7 +52,6 @@ import kotlin.properties.Delegates
 
 private const val requestCode = 123
 
-
 private const val TAG = "AudioFragment"
 
 interface AudioClassificationListener {

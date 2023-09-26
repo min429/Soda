@@ -1,5 +1,6 @@
 package com.soda.soda.fragments
 
+import MessageSettingFragment
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -93,6 +94,14 @@ class SettingFragment : Fragment(){
         binding.decibelCard.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, DecibelCustomFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        /** 메시지 전송 설정 **/
+        binding.messagegoCard.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, MessageSettingFragment())
             transaction.addToBackStack(null)
             transaction.commit()
         }

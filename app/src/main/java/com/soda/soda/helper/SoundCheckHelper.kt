@@ -45,6 +45,20 @@ object SoundCheckHelper{
     var soundDecibel: Int = 0
     private var dialogInterface: DialogInterface? = null
     private var isNotifying = false
+    private var savedPhoneNumber: String? = null
+    private var savedMessage: String? = null
+
+    // 디폴트 번호와 메시지 설정
+    val phoneNumber = "01050980318" // 대상 전화번호
+    val message = "테스트!!" // 보낼 메시지 내용
+
+    init {
+        // SoundCheckHelper 객체 초기화 시 디폴트 전화번호와 메시지 설정
+        savedPhoneNumber = phoneNumber
+        savedMessage = message
+    }
+
+
 
     fun soundCheck(tensorAudio: TensorAudio, bytesRead: Int, context: Context) {
         buffer = tensorAudio.tensorBuffer
@@ -78,14 +92,7 @@ object SoundCheckHelper{
                         return
                 }
 
-                // SMS를 보낼 내용과 수신자 전화번호 설정
-                val phoneNumber = "01050333209" // 예시 전화번호
-                val message = "테스트!!" // 보낼 SMS 내용을 입력하세요.
 
-
-                Log.e(TAG, "SMS sent TRYYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                // SMS를 보내는 코드 호출
-                sendSMS(context, phoneNumber, message)
                 createNotification(context)
 
             } catch (e: Exception) {
@@ -180,6 +187,10 @@ object SoundCheckHelper{
         dialogInterface?.dialogEvents()
 
         vibrate(context) //진동 발생
+
+        Log.e(TAG, "SMS sent TRYYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        // SMS를 보내는 코드 호출
+        SoundCheckHelper.sendSavedSMS(context)
 
 
         if (SettingFragment.flashSwitchState){
@@ -286,11 +297,31 @@ object SoundCheckHelper{
     }
 
 
-    private fun sendSMS(context: Context, phoneNumber: String, message: String) {
+    // 전화번호와 메시지를 설정하는 함수
+    fun setPhoneNumberAndMessage(phoneNumber: String, message: String) {
+        savedPhoneNumber = phoneNumber
+        savedMessage = message
+        Log.e(TAG, "SMS 주소 설정 완료!!!!!!!!!!!!!!!!")
+    }
+
+    // 저장된 전화번호와 메시지를 사용하여 SMS를 보내는 함수
+    fun sendSavedSMS(context: Context) {
         try {
-            val smsManager = SmsManager.getDefault()
-            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
-            Log.e(TAG, "SMS sent successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            // 메시지 스위치가 켜져 있는 경우에만 SMS를 보냅니다.
+            if (MessageSettingFragment.messageSwitchState) {
+                val phoneNumber = savedPhoneNumber
+                val message = savedMessage
+
+                if (phoneNumber != null && message != null) {
+                    val smsManager = SmsManager.getDefault()
+                    smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                    Log.e(TAG, "SMS sent successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                } else {
+                    Log.e(TAG, "Phone number or message is null. SMS not sent.")
+                }
+            } else {
+                Log.e(TAG, "Message switch is off. SMS not sent.")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error sending SMS: ${e.message}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", e)
         }
