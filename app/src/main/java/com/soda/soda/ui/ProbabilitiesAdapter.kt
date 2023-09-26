@@ -16,10 +16,12 @@
 
 package com.soda.soda.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.soda.soda.databinding.ItemProbabilityBinding
+import com.soda.soda.helper.AudioClassificationHelper
 import com.soda.soda.helper.TextMatchingHelper
 import org.tensorflow.lite.support.label.Category
 
@@ -41,6 +43,7 @@ class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolde
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // categoryList에서 특정 position의 카테고리 정보를 가져옴
         val category = categoryList[position]
+        if(isExcluded(category.label)) return
 
         holder.bind(TextMatchingHelper.textMatch(category), category.score, category.index)
     }
@@ -64,6 +67,13 @@ class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolde
                 progressBar.progress = newValue
             }
         }
+    }
+
+    private fun isExcluded(label: String) : Boolean {
+        Log.d("SurroundCustomFragment", "$label")
+        Log.d("SurroundCustomFragment", "${AudioClassificationHelper.excludedLabel}")
+        Log.d("SurroundCustomFragment", "excludedLabel: ${AudioClassificationHelper.excludedLabel.contains(label)}")
+        return AudioClassificationHelper.excludedLabel.contains(label)
     }
 
 }

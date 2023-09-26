@@ -78,7 +78,7 @@ class AudioFragment : Fragment() {
             requireActivity().runOnUiThread {
                 adapter.categoryList = results
                 if(!results.isEmpty())
-                    AudioClassificationHelper.label = TextMatchingHelper.textMatch(results[0])
+                    selectLabel(results)
                 adapter.notifyDataSetChanged()
             }
         }
@@ -88,6 +88,17 @@ class AudioFragment : Fragment() {
                 adapter.categoryList = emptyList()
                 adapter.notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun selectLabel(results: List<Category>) {
+        val selectedCategory = results.firstOrNull { it.label !in AudioClassificationHelper.excludedLabel }
+
+        if (selectedCategory != null) {
+            AudioClassificationHelper.label = selectedCategory.label
+        } else {
+            // 모든 카테고리가 excludedLabel에 포함되어 있는 경우의 처리, 필요에 따라 수정
+            Log.d(TAG, "모든 카테고리가 제외 목록에 포함되어 있습니다.")
         }
     }
 

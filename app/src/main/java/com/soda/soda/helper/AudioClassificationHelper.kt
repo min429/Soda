@@ -141,7 +141,6 @@ class AudioClassificationHelper(
             val output = classifier.classify(tensorAudio) //분류 실행
             listener.onResult(output[0].categories) //분류 결과를 리스너에게 전달
         }
-
     }
 
     fun stopAudioClassification() {
@@ -168,6 +167,7 @@ class AudioClassificationHelper(
         var interval by Delegates.notNull<Long>()
         var label: String = "소리분류 결과가 여기에 표시됩니다."
         lateinit var recorder: AudioRecord
+        var excludedLabel: List<String> = listOf("Silence")
     }
 
 }

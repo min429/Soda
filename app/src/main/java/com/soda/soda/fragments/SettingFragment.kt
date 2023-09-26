@@ -91,6 +91,14 @@ class SettingFragment : Fragment(){
             transaction.commit()
         }
 
+        /** 주변환경 설정 **/
+        binding.surroundCard.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SurroundCustomFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
         /** 사용설명서 **/
         binding.instructionCard.setOnClickListener {
             val userguideFragment = UserguideFragment()
