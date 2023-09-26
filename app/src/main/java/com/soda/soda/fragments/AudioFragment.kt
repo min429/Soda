@@ -16,7 +16,11 @@
 
 package com.soda.soda.fragments
 
+import ChattingFragment
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioRecord
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -45,6 +49,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
 import kotlin.properties.Delegates
+
+private const val requestCode = 123
 
 private const val TAG = "AudioFragment"
 
@@ -114,6 +120,12 @@ class AudioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 메시지 전송 권한을 요청하는 함수 호출
+        if (!hasSMSPermission(requireContext())) {
+            requestSMSPermission(requireContext())
+        }
+
         fragmentAudioBinding.recyclerView.adapter = adapter
 
         if(audioHelper == null){
@@ -121,6 +133,20 @@ class AudioFragment : Fragment() {
                 requireContext(),
                 audioClassificationListener
             )
+        }
+
+        /** 임시 채팅 프래그먼트 이동 관련 코드 **/
+
+        val leftButton = view.findViewById<Button>(R.id.left_button)
+        leftButton.setOnClickListener {
+            // 이동할 프래그먼트인 ChattingFragment를 생성합니다.
+            val destinationFragment = ChattingFragment()
+
+            // ChattingFragment로 이동합니다.
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, destinationFragment)
+                .addToBackStack(null) // 백스택에 추가하여 이전 프래그먼트로 돌아갈 수 있도록 합니다.
+                .commit()
         }
 
 
@@ -133,6 +159,7 @@ class AudioFragment : Fragment() {
 
         /** STT 녹음 버튼 클릭 이벤트 **/
         recordButton.setOnClickListener {
+            Log.d(TAG, "버튼은 눌름")
             if(!result_check){
                 // STT 음성 인식 중이 아닌 경우에만 음성인식 시작
                 if (!isListening) {
@@ -309,6 +336,28 @@ class AudioFragment : Fragment() {
             .commit()
     }
 
+    ///////////////////
+    /** 메시지 전송 권한을 가지고 있는지 확인하는 함수 **/
+    private fun hasSMSPermission(context: Context): Boolean {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        return ContextCompat.checkSelfPermission(context, permission) == granted
+    }
+
+    /** 메시지 전송 권한을 요청하는 함수 **/
+    private fun requestSMSPermission(context: Context) {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        if (ContextCompat.checkSelfPermission(context, permission) != granted) {
+            requestPermissions(arrayOf(permission), requestCode)
+        }
+    }
+
+
+
+
     override fun onResume() {
         super.onResume()
         if (!PermissionsFragment.hasAudioPermission(requireContext())) {
@@ -332,6 +381,17 @@ class AudioFragment : Fragment() {
         private var isListening = false
         private var audioHelper: AudioClassificationHelper? = null
         private val adapter by lazy { ProbabilitiesAdapter() }
+
+        // Getter 메서드 추가
+        fun getAdapterInstance(): ProbabilitiesAdapter {
+            return adapter
+        }
+
+        //setter 추가
+        fun setListening(value: Boolean) {
+            isListening = value
+        }
+
         fun startRecording() {
             if(audioHelper?.getRecorderState() != AudioRecord.RECORDSTATE_RECORDING){
                 audioHelper?.startAudioClassification()

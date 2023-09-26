@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <!-- 채팅 메시지 목록을 표시할 RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_message_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        />
+
+
+    <TextView
+        android:id="@+id/recording_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/recording_box"
+        android:text="녹음중"
+        android:fontFamily="@font/jua_regular"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:visibility="gone"
+        android:paddingBottom="5dp"/>
+
+    <!-- stt 녹음버튼 -->
+    <Button
+        android:id="@+id/record_button"
+        android:layout_width="101dp"
+        android:layout_height="109dp"
+        android:layout_gravity="end"
+        android:background="@drawable/record_start"
+        android:stateListAnimator="@null"
+        />
+
+
+    <!-- 채팅 입력창과 전송 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/chat_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="메시지 입력"
+            android:maxLines="3"/>
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="전송"/>
+    </LinearLayout>
+
+</LinearLayout>

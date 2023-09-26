@@ -17,6 +17,7 @@
 package com.soda.soda.fragments
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -38,11 +39,14 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import com.soda.soda.MainActivity
 
-private val PERMISSIONS_REQUIRED = arrayOf(
-    Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
 
+private val PERMISSIONS_REQUIRED = arrayOf(
+    Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS
+)
+private const val requestCode = 123
 
 class PermissionsFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
@@ -73,8 +77,34 @@ class PermissionsFragment : Fragment() {
             top_of_otherDialog(requireContext(), "위험 알림")
         }
 
+//        // 메시지 전송 권한을 요청하는 함수 호출
+//        if (!hasSMSPermission(requireContext())) {
+//            requestSMSPermission(requireContext())
+//        }
+
+        // 최종확인 파트
         checkPermissionAndRequest()
     }
+
+    /** 메시지 전송 권한을 가지고 있는지 확인하는 함수 **/
+    private fun hasSMSPermission(context: Context): Boolean {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        return ContextCompat.checkSelfPermission(context, permission) == granted
+    }
+
+    /** 메시지 전송 권한을 요청하는 함수 **/
+    private fun requestSMSPermission(context: Context) {
+        val permission = Manifest.permission.SEND_SMS
+        val granted = PackageManager.PERMISSION_GRANTED
+
+        if (ContextCompat.checkSelfPermission(context, permission) != granted) {
+            requestPermissions(arrayOf(permission), requestCode)
+        }
+    }
+
+
 
     /** 다른 앱 위에 표시 권한 체크 **/
     private fun hasOverlayPermission(context: Context): Boolean {
@@ -122,8 +152,10 @@ class PermissionsFragment : Fragment() {
         dialog.show()
     }
 
+
     /** 권한 체크 및 요청 **/
     private fun checkPermissionAndRequest() {
+
         // 허용된 권한 확인
         val permissionsNotGranted = PERMISSIONS_REQUIRED.filter {
             ContextCompat.checkSelfPermission(
@@ -131,9 +163,12 @@ class PermissionsFragment : Fragment() {
                 it
             ) != PackageManager.PERMISSION_GRANTED
         }
+
         when {
             // 모두 허용 -> AudioFragment로 이동
             permissionsNotGranted.isEmpty() -> {
+
+                // 오디오 프래그먼트 이동
                 navigateToAudioFragment()
             }
             // 그렇지 않다면 허용되지 않은 권한만 요청
