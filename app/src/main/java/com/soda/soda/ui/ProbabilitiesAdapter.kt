@@ -28,6 +28,10 @@ import org.tensorflow.lite.support.label.Category
 class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolder>() {
     // 분류 결과를 저장하기 위한 List<Category> 변수
     var categoryList: List<Category> = emptyList()
+        set(value) {
+            field = value.filterNot { isExcluded(it.label) } // excludedLabel 필터링
+            notifyDataSetChanged()
+        }
 
     // ViewHolder 생성 함수
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,7 +47,6 @@ class ProbabilitiesAdapter : RecyclerView.Adapter<ProbabilitiesAdapter.ViewHolde
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // categoryList에서 특정 position의 카테고리 정보를 가져옴
         val category = categoryList[position]
-        if(isExcluded(category.label)) return
 
         holder.bind(TextMatchingHelper.textMatch(category), category.score, category.index)
     }

@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat
 import com.soda.soda.DialogInterface
 import com.soda.soda.MainActivity
 import com.soda.soda.R
-import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.WarningCustomFragment
 import org.tensorflow.lite.support.audio.TensorAudio
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
@@ -32,6 +31,7 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
 import com.soda.soda.LockScreenActivity
+import com.soda.soda.fragments.SubSettingFragment
 
 var DECIBEL_THRESHOLD = 100
 private const val TAG = "SoundCheckHelper"
@@ -79,7 +79,7 @@ object SoundCheckHelper{
         Log.d(TAG, "DECIBEL_THRESHOLD: $DECIBEL_THRESHOLD")
 
         DECIBEL_THRESHOLD =
-            if(!SettingFragment.autoSwitchState) 120
+            if(!SubSettingFragment.autoSwitchState) 120
             else DECIBEL_THRESHOLD
 
         // 소리 크기가 임계값 이상 -> 핸드폰 진동
@@ -87,7 +87,7 @@ object SoundCheckHelper{
             try {
                 if(AudioClassificationHelper.label == null) return // 아직 분류가 안됨
                 Log.d(TAG, "label: ${AudioClassificationHelper.label}")
-                if(SettingFragment.autoSwitchState){
+                if(SubSettingFragment.autoSwitchState){
                     if(!WarningCustomFragment.warningSounds.containsValue(AudioClassificationHelper.label)) // 위험 소리가 아닌 경우
                         return
                 }
@@ -105,7 +105,7 @@ object SoundCheckHelper{
 
     /** 진동 함수 **/
     private fun vibrate(context: Context){
-        if(!SettingFragment.vibrateSwitchState) return // 진동알림 off
+        if(!SubSettingFragment.vibrateSwitchState) return // 진동알림 off
 
         val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java) as Vibrator
         if (vibrator.hasVibrator()) {
@@ -129,7 +129,7 @@ object SoundCheckHelper{
 
         val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
 
-        if(SettingFragment.autoSwitchState){
+        if(SubSettingFragment.autoSwitchState){
             warningLabel = AudioClassificationHelper.label!! + " 주의하세요!"
             warningLock = (AudioClassificationHelper.label?.substring(0, AudioClassificationHelper.label.length - 5) ?: "") + " 발생!!"
         }
@@ -193,7 +193,7 @@ object SoundCheckHelper{
         SoundCheckHelper.sendSavedSMS(context)
 
 
-        if (SettingFragment.flashSwitchState){
+        if (SubSettingFragment.flashSwitchState){
             // 플래시 효과발생 = 5회 100ms 간격
             flashRepeatedly(context, times = 5, interval = 100)
 

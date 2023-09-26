@@ -17,6 +17,7 @@ import com.soda.soda.MainActivity
 import com.soda.soda.R
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.SettingFragment
+import com.soda.soda.fragments.SubSettingFragment
 import com.soda.soda.helper.AudioClassificationHelper
 
 private const val TAG = "ForegroundService"
@@ -90,7 +91,7 @@ class ForegroundService : Service() {
         openAppIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         var label = AudioClassificationHelper.label
-        if(!SettingFragment.autoSwitchState) label = "현재 자동분류가 꺼져있는 상태입니다."
+        if(!SubSettingFragment.autoSwitchState) label = "현재 자동분류가 꺼져있는 상태입니다."
         // 알림을 클릭시 openAppIntent를 실행
 
         val pendingIntent = PendingIntent.getActivity(
