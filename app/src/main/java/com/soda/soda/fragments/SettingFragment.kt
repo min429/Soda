@@ -98,10 +98,16 @@ class SettingFragment : Fragment(){
             transaction.commit()
         }
 
+
         /** 메시지 전송 설정 **/
         binding.messagegoCard.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, MessageSettingFragment())
+
+        /** 주변환경 설정 **/
+        binding.surroundCard.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, SurroundCustomFragment())
             transaction.addToBackStack(null)
             transaction.commit()
         }
