@@ -47,7 +47,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
-import com.soda.soda.fragments.SettingFragment.Companion.isMyServiceRunning
+import com.soda.soda.fragments.SubSettingFragment.Companion.isMyServiceRunning
 import kotlin.properties.Delegates
 
 private const val requestCode = 123
@@ -103,8 +103,7 @@ class AudioFragment : Fragment() {
         if (selectedCategory != null) {
             AudioClassificationHelper.label = selectedCategory.label
         } else {
-            // 모든 카테고리가 excludedLabel에 포함되어 있는 경우의 처리, 필요에 따라 수정
-            Log.d(TAG, "모든 카테고리가 제외 목록에 포함되어 있습니다.")
+
         }
     }
 
@@ -154,7 +153,7 @@ class AudioFragment : Fragment() {
         val recordButton = view.findViewById<Button>(R.id.record_button)
         val RECORDING_TIMEOUT = 5000 //인식된 소리가 없을 때 녹음 지속 시간 (5초)
         var isEndOfSpeech  = false   //인식된 소리가 없을 때 처리 플래그 변수
-        val autoSwitchStateValue = SettingFragment.autoSwitchState
+        val autoSwitchStateValue = SubSettingFragment.autoSwitchState
 
 
         /** STT 녹음 버튼 클릭 이벤트 **/
@@ -294,7 +293,7 @@ class AudioFragment : Fragment() {
 
         val isRunning = isMyServiceRunning(requireContext(), ForegroundService::class.java)
         var serviceIntent = Intent(requireActivity(), ForegroundService::class.java)
-        if(SettingFragment.backgroundSwitchState && !isRunning){
+        if(SubSettingFragment.backgroundSwitchState && !isRunning){
             ContextCompat.startForegroundService(requireActivity(), serviceIntent)
         }
     }

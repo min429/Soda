@@ -1,11 +1,16 @@
 package com.soda.soda.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.soda.soda.R
 import com.soda.soda.databinding.ItemDecibelCustomBinding
 import com.soda.soda.fragments.DecibelItem
 import com.soda.soda.fragments.OnDecibelItemClickListener
+import com.soda.soda.helper.DECIBEL_THRESHOLD
+import java.security.AccessController.getContext
 
 class DecibelCustomAdapter(
     private val decibelItems: List<DecibelItem>,
@@ -30,7 +35,14 @@ class DecibelCustomAdapter(
         holder.binding.infoText.text = item.infoText
         holder.itemView.setOnClickListener {
             clickListener.onDecibelItemClick(item.threshold)
+            notifyDataSetChanged()
+            Log.d("decibel", "${item.threshold}")
+            Log.d("decibel", "${DECIBEL_THRESHOLD}")
         }
+        if(item.threshold == DECIBEL_THRESHOLD)
+            holder.binding.dBLayout.setBackgroundResource(R.drawable.decibel_box_selected)
+        else
+            holder.binding.dBLayout.setBackgroundResource(R.drawable.decibel_box)
     }
     
     override fun getItemCount(): Int {

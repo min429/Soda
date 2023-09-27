@@ -25,6 +25,7 @@ import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
+import com.soda.soda.fragments.SubSettingFragment
 import com.soda.soda.fragments.WarningCustomFragment
 import com.soda.soda.fragments.WarningFragment
 import com.soda.soda.helper.SoundCheckHelper
@@ -225,7 +226,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져옴.
         //sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환
-        SettingFragment.backgroundSwitchState = sharedPref.getBoolean("saved_switch_state_key", false)
+        SubSettingFragment.backgroundSwitchState = sharedPref.getBoolean("saved_switch_state_key", false)
     }
 
 }

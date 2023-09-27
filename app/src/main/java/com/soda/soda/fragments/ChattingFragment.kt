@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.soda.soda.R
 import com.soda.soda.databinding.FragmentChattingBinding
 import android.content.Intent
@@ -19,12 +17,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.soda.soda.fragments.AudioFragment
-import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.SttFragment
 import com.soda.soda.service.ForegroundService
-import com.soda.soda.databinding.FragmentAudioBinding
-
-
+import com.soda.soda.fragments.SubSettingFragment
 
 /** stt 용 **/
 private const val TAG = "ChattingFragment"
@@ -86,7 +81,7 @@ class ChattingFragment : Fragment() {
         val recordButton = view.findViewById<Button>(R.id.record_button)
         val RECORDING_TIMEOUT = 5000 //인식된 소리가 없을 때 녹음 지속 시간 (5초)
         var isEndOfSpeech  = false   //인식된 소리가 없을 때 처리 플래그 변수
-        val autoSwitchStateValue = SettingFragment.autoSwitchState
+        val autoSwitchStateValue = SubSettingFragment.autoSwitchState
 
 
         if(autoSwitchStateValue){
@@ -205,9 +200,9 @@ class ChattingFragment : Fragment() {
         })
 
         val isRunning =
-            SettingFragment.isMyServiceRunning(requireContext(), ForegroundService::class.java)
+            SubSettingFragment.isMyServiceRunning(requireContext(), ForegroundService::class.java)
         var serviceIntent = Intent(requireActivity(), ForegroundService::class.java)
-        if(SettingFragment.backgroundSwitchState && !isRunning){
+        if(SubSettingFragment.backgroundSwitchState && !isRunning){
             ContextCompat.startForegroundService(requireActivity(), serviceIntent)
         }
 

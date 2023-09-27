@@ -6,9 +6,8 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/radio_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,30 +15,46 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
-            android:id="@+id/crowded_button"
-            android:layout_width="300dp"
-            android:layout_height="150dp"
-            android:background="@drawable/selector_radio_button"
+            android:id="@+id/default_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_daily"
             android:button="@null"
             android:checked="true"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="사람이 많은 곳"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="평상시"
             android:textAlignment="center"
-            android:textColor="@drawable/selector_radio_text"
+            android:textColor="@drawable/radio_button_text"
             android:textSize="30sp" />
 
         <RadioButton
-            android:id="@+id/not_crowded_button"
-            android:layout_width="300dp"
-            android:layout_height="150dp"
-            android:background="@drawable/selector_radio_button"
+            android:id="@+id/crowded_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_crowded"
             android:button="@null"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="사람이 적은 곳"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="사람이 많은 곳\n(말소리 무시)"
             android:textAlignment="center"
-            android:textColor="@drawable/selector_radio_text"
+            android:textColor="@drawable/radio_button_text"
+            android:textSize="30sp" />
+
+        <RadioButton
+            android:id="@+id/music_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_music"
+            android:button="@null"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="음악이 시끄러운 곳\n(음악소리 무시)"
+            android:textAlignment="center"
+            android:textColor="@drawable/radio_button_text"
             android:textSize="30sp" />
 
     </RadioGroup>

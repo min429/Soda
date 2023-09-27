@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="50dp"/> <!-- 원하는 라운드 크기로 변경 가능 -->
-    <stroke android:width="2dp" android:color="@color/black" />
-</shape>

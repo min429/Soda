@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:background="@drawable/decibel_box"
     android:padding="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:id="@+id/dB_layout">
 
     <TextView
         android:id="@+id/dB_text"
