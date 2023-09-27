@@ -67,7 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="번호를 설정하세요."
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:fontFamily="@font/jua_regular"
+            android:textSize="24sp"/>
 
         <!-- 메시지 내용 입력 EditText -->
         <EditText
@@ -76,14 +78,18 @@
             android:layout_height="wrap_content"
             android:hint="메시지 내용을 설정하세요."
             android:inputType="textMultiLine"
-            android:minLines="3" />
+            android:minLines="3"
+            android:fontFamily="@font/jua_regular"
+            android:textSize="24sp"/>
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="104dp"
-            android:layout_height="66dp"
+            android:layout_width="136dp"
+            android:layout_height="88dp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/jua_regular"
             android:text="저장"
-            android:layout_gravity="center" />
+            android:textSize="24sp"/>
     </LinearLayout>
 
     <!-- 저장 버튼 추가 -->
