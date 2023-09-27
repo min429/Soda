@@ -67,6 +67,8 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
                 binding.decibelValueText.text = progress.toString()
                 // 앱 메모리에 저장
                 setDecibelSaved(requireContext(), progress)
+                // UI 반영
+                adapter.notifyDataSetChanged()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
