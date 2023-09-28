@@ -47,6 +47,7 @@ object SoundCheckHelper{
     private var isNotifying = false
     private var savedPhoneNumber: String? = null
     private var savedMessage: String? = null
+    val smsManager = SmsManager.getDefault()
 
     // 디폴트 번호와 메시지 설정
     val phoneNumber = "01050980318" // 대상 전화번호
@@ -81,7 +82,6 @@ object SoundCheckHelper{
         DECIBEL_THRESHOLD =
             if(!SubSettingFragment.autoSwitchState) 120
             else DECIBEL_THRESHOLD
-
         // 소리 크기가 임계값 이상 -> 핸드폰 진동
         if (soundDecibel >= DECIBEL_THRESHOLD) {
             try {
@@ -313,9 +313,10 @@ object SoundCheckHelper{
                 val message = savedMessage
 
                 if (phoneNumber != null && message != null) {
-                    val smsManager = SmsManager.getDefault()
+
                     smsManager.sendTextMessage(phoneNumber, null, message, null, null)
                     Log.e(TAG, "SMS sent successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    // 로그로 현재 설정된 번호와 메시지 출력
                 } else {
                     Log.e(TAG, "Phone number or message is null. SMS not sent.")
                 }
