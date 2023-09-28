@@ -1,5 +1,6 @@
 package com.soda.soda
 
+import MessageSettingFragment
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -62,7 +63,19 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         WarningCustomFragment.loadData(this)
 
         // 백그라운드 스위치 상태 설정
-        setBackgroundSwitchState(this)
+        SubSettingFragment.backgroundSwitchState = SubSettingFragment.setSwitchState(this, "background_shared_pref", "background_switch_state", false)
+
+        // 자동분류 스위치 상태 설정
+        SubSettingFragment.autoSwitchState = SubSettingFragment.setSwitchState(this, "auto_shared_pref", "auto_switch_state", true)
+
+        // 진동알림 스위치 상태 설정
+        SubSettingFragment.vibrateSwitchState = SubSettingFragment.setSwitchState(this, "vibrate_shared_pref", "vibrate_switch_state", true)
+
+        // 플래시 알림 스위치 상태 설정
+        SubSettingFragment.flashSwitchState = SubSettingFragment.setSwitchState(this, "flash_shared_pref", "flash_switch_state", false)
+
+        // 메세지 전송 스위치 상태 설정
+        MessageSettingFragment.messageSwitchState = SubSettingFragment.setSwitchState(this, "message_shared_pref", "message_switch_state", false)
 
         // 인터페이스 설정
         SoundCheckHelper.setInterface(this)
@@ -223,15 +236,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         }
 
         dialog.show()
-    }
-
-    /** 백그라운드 스위치 상태 설정 **/
-    private fun setBackgroundSwitchState(activity: MainActivity){
-        //SharedPreferences에서 스위치 상태 가져옴
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        //getString(R.string.saved_switch_state_key)를 통해 strings.xml 파일에 정의된 키 값을 가져옴.
-        //sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 false를 반환
-        SubSettingFragment.backgroundSwitchState = sharedPref.getBoolean("saved_switch_state_key", false)
     }
 
 }

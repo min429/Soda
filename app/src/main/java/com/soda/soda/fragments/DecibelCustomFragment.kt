@@ -29,6 +29,7 @@ interface OnDecibelItemClickListener {
 class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDecibelItemClickListener {
     private var _binding: FragmentDecibelCustomBinding? = null
     private val binding get() = _binding!!
+    private lateinit var adapter: DecibelCustomAdapter
     private val decibelItems = listOf(
         DecibelItem("20dB", "시계 초침, 나뭇잎 부딪치는 소리", 20),
         DecibelItem("30dB", "심야의 교외, 속삭이는 소리", 30),
@@ -52,7 +53,7 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
         super.onViewCreated(view, savedInstanceState)
 
         // RecyclerView 초기화
-        val adapter = DecibelCustomAdapter(decibelItems, this)
+        adapter = DecibelCustomAdapter(decibelItems, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
@@ -93,6 +94,8 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
         DECIBEL_THRESHOLD = threshold
         binding.decibelValueText.text = "${threshold}dB"
         saveDecibel(requireContext(), threshold)
+        binding.decibelSeekbar.progress = threshold
+        adapter.notifyDataSetChanged()
     }
 
     companion object{

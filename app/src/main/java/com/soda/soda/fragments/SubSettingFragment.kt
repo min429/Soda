@@ -45,9 +45,9 @@ class SubSettingFragment : Fragment(){
         /** 백그라운드 스위치 **/
         binding.backgroundSwitch.isChecked = backgroundSwitchState
         binding.backgroundSwitch.setOnCheckedChangeListener { _, isChecked ->
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
+            val sharedPref = context?.getSharedPreferences("background_shared_pref", Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
             with (sharedPref.edit()) {
-                putBoolean("saved_switch_state_key", isChecked) //"saved_switch_state_key"라는 키 값으로 isChecked라는 값을 SharedPreferences에 저장
+                putBoolean("background_switch_state", isChecked) //"saved_switch_state_key"라는 키 값으로 isChecked라는 값을 SharedPreferences에 저장
                 apply()
                 backgroundSwitchState = isChecked
             }
@@ -61,23 +61,38 @@ class SubSettingFragment : Fragment(){
         /** 자동분류 스위치 **/
         binding.autoClassificationSwitch.isChecked = autoSwitchState
         binding.autoClassificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val sharedPref = context?.getSharedPreferences("auto_shared_pref", Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
+            with (sharedPref.edit()) {
+                putBoolean("auto_switch_state", isChecked)
+                apply()
+                autoSwitchState = isChecked
+            }
             if(isMyServiceRunning(requireContext(), ForegroundService::class.java)){
                 if(isChecked) AudioFragment.startRecording()
                 else AudioFragment.stopRecording()
             }
-            autoSwitchState = isChecked
         }
 
         /** 진동알림 스위치 **/
         binding.vibrateSwitch.isChecked = vibrateSwitchState
         binding.vibrateSwitch.setOnCheckedChangeListener { _, isChecked ->
-            vibrateSwitchState = isChecked
+            val sharedPref = context?.getSharedPreferences("vibrate_shared_pref", Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
+            with (sharedPref.edit()) {
+                putBoolean("vibrate_switch_state", isChecked)
+                apply()
+                vibrateSwitchState = isChecked
+            }
         }
 
         /** 플래시 알림 스위치 **/
         binding.flashSwitch.isChecked = flashSwitchState
         binding.flashSwitch.setOnCheckedChangeListener { _, isChecked ->
-            flashSwitchState = isChecked
+            val sharedPref = context?.getSharedPreferences("flash_shared_pref", Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
+            with (sharedPref.edit()) {
+                putBoolean("flash_switch_state", isChecked)
+                apply()
+                flashSwitchState = isChecked
+            }
         }
     }
 
@@ -101,6 +116,15 @@ class SubSettingFragment : Fragment(){
             }
             return false
         }
+
+        /** 스위치 상태 설정 **/
+        fun setSwitchState(context: Context, sharedPref: String, key: String, defValue: Boolean): Boolean{
+            //SharedPreferences에서 스위치 상태 가져옴
+            val sharedPref = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE)
+            //sharedPref.getBoolean은 이 키 값에 해당하는 값이 SharedPreferences에 저장되어 있으면 그 값을 반환하고 없으면 defValue를 반환
+            return sharedPref.getBoolean(key, defValue)
+        }
+
     }
 
 }

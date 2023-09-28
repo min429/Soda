@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.soda.soda.helper.SoundCheckHelper
-import com.soda.soda.R
-import com.soda.soda.fragments.SettingFragment
-import kotlinx.android.synthetic.main.fragment_message_setting.*
 import com.soda.soda.databinding.FragmentMessageSettingBinding
+import com.soda.soda.fragments.SubSettingFragment
 
 
 class MessageSettingFragment : Fragment() {
@@ -34,20 +32,25 @@ class MessageSettingFragment : Fragment() {
 
         // 사용자가 입력한 텍스트를 불러와 설정
         val (phoneNumber, message) = loadTextFromSharedPreferences()
-        phone_number_edittext.setText(phoneNumber)
-        message_content_edittext.setText(message)
+        binding.phoneNumberEdittext.setText(phoneNumber)
+        binding.messageContentEdittext.setText(message)
 
-        /** 진동알림 스위치 **/
-        binding.messageSwitch.isChecked = MessageSettingFragment.messageSwitchState
+        /** 메세지 전송 스위치 **/
+        binding.messageSwitch.isChecked = messageSwitchState
         binding.messageSwitch.setOnCheckedChangeListener { _, isChecked ->
-            MessageSettingFragment.messageSwitchState = isChecked
+            val sharedPref = context?.getSharedPreferences("message_shared_pref", Context.MODE_PRIVATE) ?: return@setOnCheckedChangeListener
+            with (sharedPref.edit()) {
+                putBoolean("message_switch_state", isChecked)
+                apply()
+                messageSwitchState = isChecked
+            }
         }
 
         // 저장 버튼 클릭 이벤트 처리
-        save_button.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             // 입력된 번호와 메시지 가져오기
-            val phoneNumber = phone_number_edittext.text.toString()
-            val message = message_content_edittext.text.toString()
+            val phoneNumber = binding.phoneNumberEdittext.text.toString()
+            val message = binding.messageContentEdittext.text.toString()
 
             // 설정한 번호와 메시지를 SoundCheckHelper에 전달
             SoundCheckHelper.setPhoneNumberAndMessage(phoneNumber, message)
@@ -67,7 +70,7 @@ class MessageSettingFragment : Fragment() {
 
     companion object {
         // SettingFragment.messageSwitchState 대신 여기에서 직접 설정
-        var messageSwitchState: Boolean = true
+        var messageSwitchState: Boolean = false
     }
 
     // 사용자가 입력한 텍스트를 SharedPreferences에 저장하는 함수

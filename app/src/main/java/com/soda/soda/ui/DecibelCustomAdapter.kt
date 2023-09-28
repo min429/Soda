@@ -35,7 +35,6 @@ class DecibelCustomAdapter(
         holder.binding.infoText.text = item.infoText
         holder.itemView.setOnClickListener {
             clickListener.onDecibelItemClick(item.threshold)
-            notifyDataSetChanged()
         }
         if(item.threshold == DECIBEL_THRESHOLD)
             holder.binding.dBLayout.setBackgroundResource(R.drawable.decibel_box_selected)
