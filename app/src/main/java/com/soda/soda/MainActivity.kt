@@ -23,11 +23,13 @@ import androidx.navigation.fragment.NavHostFragment
 import com.soda.soda.databinding.ActivityMainBinding
 import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
+import com.soda.soda.fragments.DecibelCustomFragment
 import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.SubSettingFragment
 import com.soda.soda.fragments.WarningCustomFragment
 import com.soda.soda.fragments.WarningFragment
+import com.soda.soda.helper.DECIBEL_THRESHOLD
 import com.soda.soda.helper.SoundCheckHelper
 import com.soda.soda.service.ForegroundService
 
@@ -53,6 +55,9 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
+        // 데시벨 설정
+        DecibelCustomFragment.loadDecibel(this)
+        
         // 위험 소리 설정
         WarningCustomFragment.loadData(this)
 

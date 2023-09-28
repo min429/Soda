@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.soda.soda.R
 import com.soda.soda.ui.DecibelCustomAdapter
 import com.soda.soda.databinding.FragmentDecibelCustomBinding
 import com.soda.soda.helper.DECIBEL_THRESHOLD
+import com.soda.soda.ui.Item
 
 data class DecibelItem(
     val dBText: String,
@@ -54,10 +57,8 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
         binding.recyclerView.adapter = adapter
 
         // 초기값 설정
-        val decibel = isDecibelSaved(requireContext())
-        DECIBEL_THRESHOLD = decibel
-        binding.decibelSeekbar.progress = decibel
-        binding.decibelValueText.text = decibel.toString() + "dB"
+        binding.decibelSeekbar.progress = DECIBEL_THRESHOLD
+        binding.decibelValueText.text = DECIBEL_THRESHOLD.toString() + "dB"
 
         binding.decibelSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -66,7 +67,7 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
                 // SeekBar의 값이 변경될 때마다 TextView 업데이트
                 binding.decibelValueText.text = progress.toString()
                 // 앱 메모리에 저장
-                setDecibelSaved(requireContext(), progress)
+                saveDecibel(requireContext(), progress)
                 // UI 반영
                 adapter.notifyDataSetChanged()
             }
@@ -81,12 +82,7 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
         _binding = null
     }
 
-    private fun isDecibelSaved(context: Context): Int {
-        val sharedPref = context.getSharedPreferences("decibel_saved_pref", Context.MODE_PRIVATE)
-        return sharedPref.getInt("decibel", 100)
-    }
-
-    private fun setDecibelSaved(context: Context, value: Int){
+    private fun saveDecibel(context: Context, value: Int){
         val sharedPref = context.getSharedPreferences("decibel_saved_pref", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         editor.putInt("decibel", value)
@@ -96,6 +92,14 @@ class DecibelCustomFragment : Fragment(R.layout.fragment_decibel_custom), OnDeci
     override fun onDecibelItemClick(threshold: Int) {
         DECIBEL_THRESHOLD = threshold
         binding.decibelValueText.text = "${threshold}dB"
-        setDecibelSaved(requireContext(), threshold)
+        saveDecibel(requireContext(), threshold)
     }
+
+    companion object{
+        fun loadDecibel(context: Context) {
+            val sharedPref = context.getSharedPreferences("decibel_saved_pref", Context.MODE_PRIVATE)
+            DECIBEL_THRESHOLD = sharedPref.getInt("decibel", DECIBEL_THRESHOLD)
+        }
+    }
+
 }

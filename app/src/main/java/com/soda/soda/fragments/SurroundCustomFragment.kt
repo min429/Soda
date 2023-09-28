@@ -31,7 +31,7 @@ class SurroundCustomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val surroundState = isSurroundSaved(requireContext())
+        val surroundState = loadSurround(requireContext())
         if(surroundState != null){
             if(surroundState == "default"){
                 binding.defaultButton.isChecked = true
@@ -365,7 +365,7 @@ class SurroundCustomFragment : Fragment() {
         _binding = null // 메모리 누수 방지를 위해 null로 설정
     }
 
-    private fun isSurroundSaved(context: Context): String? {
+    private fun loadSurround(context: Context): String? {
         val sharedPref = context.getSharedPreferences("surround_saved_pref", Context.MODE_PRIVATE)
         return sharedPref.getString("surround", null)
     }

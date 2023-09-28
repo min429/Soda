@@ -101,7 +101,7 @@ class AudioFragment : Fragment() {
         val selectedCategory = results.firstOrNull { it.label !in AudioClassificationHelper.excludedLabel }
 
         if (selectedCategory != null) {
-            AudioClassificationHelper.label = selectedCategory.label
+            AudioClassificationHelper.label = TextMatchingHelper.textMatch(selectedCategory)
         } else {
 
         }
