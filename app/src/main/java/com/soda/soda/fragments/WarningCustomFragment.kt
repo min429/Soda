@@ -48,7 +48,7 @@ class WarningCustomFragment : Fragment(R.layout.fragment_warning_custom), OnItem
 
     override fun onItemClicked(item: Item){
         saveData(requireContext(), item)
-        adapter.updateList(WarningCustomFragment.warningSoundsList)
+        adapter.updateList(warningSoundsList)
     }
 
     companion object {
@@ -78,12 +78,10 @@ class WarningCustomFragment : Fragment(R.layout.fragment_warning_custom), OnItem
         )
         var warningSounds: HashMap<String, String> = HashMap()
 
-
         private fun isListSaved(context: Context): Boolean{
             val sharedPref = context.getSharedPreferences("list_saved_pref", Context.MODE_PRIVATE)
             return sharedPref.getBoolean("list_saved", false)
         }
-
 
         private fun setListSaved(context: Context){
             val sharedPref = context.getSharedPreferences("list_saved_pref", Context.MODE_PRIVATE)

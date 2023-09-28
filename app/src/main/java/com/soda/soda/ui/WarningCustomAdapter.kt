@@ -1,5 +1,6 @@
 package com.soda.soda.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -37,9 +38,9 @@ class WarningCustomAdapter(
             binding.warningText.text = item.label
             binding.warningCheckbox.isChecked = item.isChecked
 
-            // Update item isChecked property when checkbox is clicked
-            binding.warningCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                item.isChecked = isChecked
+            binding.decibelLayout.setOnClickListener {
+                item.isChecked = !item.isChecked
+                binding.warningCheckbox.isChecked = item.isChecked
                 listener.onItemClicked(item)
             }
         }
