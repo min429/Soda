@@ -16,7 +16,7 @@
 
 package com.soda.soda.fragments
 
-import ChattingFragment
+
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -47,6 +47,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
+import com.soda.soda.MainActivity
 import com.soda.soda.fragments.SubSettingFragment.Companion.isMyServiceRunning
 import kotlin.properties.Delegates
 
@@ -59,10 +60,18 @@ interface AudioClassificationListener {
     fun onResult(results: List<Category>)
 }
 
+
 class AudioFragment : Fragment() {
     private var _fragmentBinding: FragmentAudioBinding? = null
     private val fragmentAudioBinding get() = _fragmentBinding!!
     private var recordingDotCount = 0
+    private lateinit var mainActivity: MainActivity
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            mainActivity = context
+        }
+    }
     private val recordingHandler = Handler(Looper.getMainLooper())
     private val recordingRunnable = object : Runnable {
         override fun run() {
@@ -133,6 +142,7 @@ class AudioFragment : Fragment() {
             // 이동할 프래그먼트인 ChattingFragment를 생성합니다.
             val destinationFragment = ChattingFragment()
 
+
             // ChattingFragment로 이동합니다.
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
@@ -146,6 +156,11 @@ class AudioFragment : Fragment() {
                 .replace(R.id.fragment_container, destinationFragment)
                 .addToBackStack(null) // 백스택에 추가하여 이전 프래그먼트로 돌아갈 수 있도록 합니다.
                 .commit()
+
+            mainActivity?.let { activity ->
+                activity.toolbarLayoutBinding.toolbarTitle.text = "STT 채팅"
+                activity.toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
+            }
         }
     }
 

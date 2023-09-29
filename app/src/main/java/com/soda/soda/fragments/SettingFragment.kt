@@ -39,6 +39,7 @@ class SettingFragment : Fragment(){
             transaction.replace(R.id.fragment_container, SubSettingFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+            mainActivity.toolbarLayoutBinding.toolbarTitle.text ="세부 설정"
         }
 
         /** 위험 소리 설정 **/
@@ -47,6 +48,7 @@ class SettingFragment : Fragment(){
             transaction.replace(R.id.fragment_container, WarningCustomFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+            mainActivity.toolbarLayoutBinding.toolbarTitle.text = "위험 소리 설정"
         }
 
         /** 데시벨 설정 **/
@@ -55,6 +57,7 @@ class SettingFragment : Fragment(){
             transaction.replace(R.id.fragment_container, DecibelCustomFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+            mainActivity.toolbarLayoutBinding.toolbarTitle.text = "데시벨 설정"
         }
 
         /** 메시지 전송 설정 **/
@@ -63,6 +66,7 @@ class SettingFragment : Fragment(){
             transaction.replace(R.id.fragment_container, MessageSettingFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+            mainActivity.toolbarLayoutBinding.toolbarTitle.text = "메시지 전송 설정"
         }
 
         /** 주변환경 설정 **/
@@ -71,6 +75,7 @@ class SettingFragment : Fragment(){
             transaction.replace(R.id.fragment_container, SurroundCustomFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+            mainActivity.toolbarLayoutBinding.toolbarTitle.text = "주변 환경 설정"
         }
 
         /** 사용설명서 **/
