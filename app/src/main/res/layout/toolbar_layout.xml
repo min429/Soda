@@ -8,7 +8,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/deep_blue"
+        android:background="@color/blue"
         app:contentInsetStart="0dp">
 
         <RelativeLayout
@@ -33,7 +33,7 @@
                 android:layout_centerInParent="true"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="40sp"
+                android:textSize="30sp"
                 android:fontFamily="@font/jua_regular"
                 android:paddingTop="5dp"
                 android:visibility="gone"/>
