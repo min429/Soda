@@ -24,10 +24,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.soda.soda.databinding.ActivityMainBinding
 import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
+import com.soda.soda.fragments.ChattingFragment
 import com.soda.soda.fragments.DecibelCustomFragment
 import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.SubSettingFragment
+import com.soda.soda.fragments.SurroundCustomFragment
 import com.soda.soda.fragments.WarningCustomFragment
 import com.soda.soda.fragments.WarningFragment
 import com.soda.soda.helper.DECIBEL_THRESHOLD
@@ -43,7 +45,7 @@ interface DialogInterface{
 
 class MainActivity : AppCompatActivity(), DialogInterface{
     private lateinit var activityMainBinding: ActivityMainBinding
-    private lateinit var toolbarLayoutBinding: ToolbarLayoutBinding
+    lateinit var toolbarLayoutBinding: ToolbarLayoutBinding
     private var currentDialog: DialogFragment? = null
     private var isPaused = false
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -163,6 +165,27 @@ class MainActivity : AppCompatActivity(), DialogInterface{
             toolbarLayoutBinding.toolbarTitle.visibility = View.GONE
         }
 
+        // 현재 프래그먼트가 ChattingFragment이면 툴바 타이틀 가시성을 GONE으로 변경
+        if (currentFragment is NavHostFragment) {
+            toolbarLayoutBinding.buttonSetting.visibility = View.VISIBLE
+            toolbarLayoutBinding.toolbarTitle.visibility = View.GONE
+        }
+
+
+
+        if (currentFragment is SubSettingFragment
+            ||currentFragment is SurroundCustomFragment
+            ||currentFragment is WarningCustomFragment
+            ||currentFragment is MessageSettingFragment
+            ||currentFragment is DecibelCustomFragment
+        ) {
+            // 둘 중 하나라도 만족하는 경우, 툴바의 내용을 "설정"으로 변경
+            toolbarLayoutBinding.toolbarTitle.text = "설정"
+        }
+
+
+
+
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
             finishAfterTransition()
         } else {
@@ -174,6 +197,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
     /** 프래그먼트 교체함수 **/
     private fun navigateToFragment(fragment: SettingFragment) {
         toolbarLayoutBinding.buttonSetting.visibility = View.GONE
+        toolbarLayoutBinding.toolbarTitle.text = "설정" // 원하는 텍스트로 변경
         toolbarLayoutBinding.toolbarTitle.visibility = View.VISIBLE
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)

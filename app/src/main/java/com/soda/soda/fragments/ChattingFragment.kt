@@ -1,3 +1,6 @@
+package com.soda.soda.fragments
+
+import ChatHelper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -55,6 +58,8 @@ class ChattingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         chatAdapter = ChatHelper(chatMessageList)
+
+
 
         val recyclerView = binding.chatMessageList // 바인딩으로 RecyclerView 참조
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
