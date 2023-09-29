@@ -92,7 +92,7 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/jua_regular"
             android:text="저장"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
     </LinearLayout>
 
     <!-- 저장 버튼 추가 -->

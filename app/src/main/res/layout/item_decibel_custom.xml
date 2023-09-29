@@ -5,8 +5,12 @@
     android:orientation="horizontal"
     android:background="@drawable/decibel_box"
     android:padding="10dp"
-    android:layout_marginTop="10dp"
-    android:id="@+id/dB_layout">
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="7dp"
+    android:id="@+id/dB_layout"
+    android:elevation="4dp">
 
     <TextView
         android:id="@+id/dB_text"
@@ -23,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="전투기 이착륙 소음"
-        android:textSize="15sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/jua_regular"
+        android:textSize="18sp"
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"/>
 

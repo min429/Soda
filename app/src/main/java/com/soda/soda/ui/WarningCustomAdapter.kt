@@ -1,10 +1,13 @@
 package com.soda.soda.ui
 
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.soda.soda.R
 import com.soda.soda.databinding.ItemWarningCustomBinding
 import com.soda.soda.fragments.OnItemClickedListener
 
@@ -36,11 +39,18 @@ class WarningCustomAdapter(
 
         fun bind(item: Item) {
             binding.warningText.text = item.label
-            binding.warningCheckbox.isChecked = item.isChecked
-
+//            binding.warningCheckbox.isChecked = item.isChecked
+            if(item.isChecked)
+                binding.checkImage.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.check_black))
+            else
+                binding.checkImage.setImageDrawable(ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white)))
             binding.decibelLayout.setOnClickListener {
                 item.isChecked = !item.isChecked
-                binding.warningCheckbox.isChecked = item.isChecked
+//                binding.warningCheckbox.isChecked = item.isChecked
+                if(item.isChecked)
+                    binding.checkImage.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.check_black))
+                else
+                    binding.checkImage.setImageDrawable(ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white)))
                 listener.onItemClicked(item)
             }
         }
