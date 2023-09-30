@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.NavHostFragment
 import com.soda.soda.databinding.ActivityMainBinding
@@ -26,6 +27,7 @@ import com.soda.soda.databinding.ToolbarLayoutBinding
 import com.soda.soda.fragments.AudioFragment
 import com.soda.soda.fragments.ChattingFragment
 import com.soda.soda.fragments.DecibelCustomFragment
+import com.soda.soda.fragments.ImageSliderFragment
 import com.soda.soda.fragments.PermissionsFragment
 import com.soda.soda.fragments.SettingFragment
 import com.soda.soda.fragments.SubSettingFragment
@@ -58,6 +60,11 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
+        if(!loadGuideState(this)){
+            val imageSliderFragment = ImageSliderFragment()
+            imageSliderFragment.show(supportFragmentManager, "userguide_dialog")
+        }
+
         // 데시벨 설정
         DecibelCustomFragment.loadDecibel(this)
         
@@ -81,6 +88,10 @@ class MainActivity : AppCompatActivity(), DialogInterface{
 
         // 인터페이스 설정
         SoundCheckHelper.setInterface(this)
+        
+        // 포그라운드 서비스 설정
+        if(SubSettingFragment.backgroundSwitchState)
+            ContextCompat.startForegroundService(this, Intent(this, ForegroundService::class.java))
 
         // 툴바 레이아웃 뷰 가져오기
         val toolbarLayoutView = activityMainBinding.root.findViewById<View>(R.id.toolbar_layout)
@@ -260,6 +271,11 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         }
 
         dialog.show()
+    }
+
+    private fun loadGuideState(context: Context): Boolean {
+        val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("guide", false)
     }
 
 }

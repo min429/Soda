@@ -80,8 +80,8 @@ class SettingFragment : Fragment(){
 
         /** 사용설명서 **/
         binding.instructionCard.setOnClickListener {
-            val userguideFragment = UserguideFragment()
-            userguideFragment.show(parentFragmentManager, "userguide_dialog")
+            val imageSliderFragment = ImageSliderFragment()
+            imageSliderFragment.show(parentFragmentManager, "userguide_dialog")
         }
     }
 
