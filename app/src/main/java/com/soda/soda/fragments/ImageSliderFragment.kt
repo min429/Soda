@@ -15,17 +15,19 @@ class ImageSliderFragment : DialogFragment(R.layout.fragment_image_slider) {
     private var _binding: FragmentImageSliderBinding? = null
     private val binding get() = _binding!!
     private val images = listOf(
-        R.drawable.screenshot1,
-        R.drawable.screenshot2,
-        R.drawable.screenshot3,
-        R.drawable.screenshot4,
-        R.drawable.screenshot5,
-        R.drawable.screenshot6,
-        R.drawable.screenshot7,
-        R.drawable.screenshot8,
-        R.drawable.screenshot9,
-        R.drawable.screenshot10,
-        R.drawable.screenshot11,
+        R.drawable.group1,
+        R.drawable.group2,
+        R.drawable.group3,
+        R.drawable.group4,
+        R.drawable.group5,
+        R.drawable.group6,
+        R.drawable.group7,
+        R.drawable.group8,
+        R.drawable.group9,
+        R.drawable.group10,
+        R.drawable.group11,
+        R.drawable.group12,
+        R.drawable.group13,
     )
 
     override fun onStart() {

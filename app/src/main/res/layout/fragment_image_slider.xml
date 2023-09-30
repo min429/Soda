@@ -10,22 +10,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="30dp"/>
 
     <TextView
         android:id="@+id/text_view_page_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1/11"
+        android:text="1/13"
         android:textColor="#E7E7E7"
         android:textSize="20sp"
         android:textStyle="bold"
         android:fontFamily="@font/jua_regular"
-        app:layout_constraintTop_toBottomOf="@id/btn_close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/btn_close"
@@ -39,8 +38,7 @@
         android:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginRight="25dp" />
 
     <Button
         android:id="@+id/btn_do_not_show_again"
@@ -53,7 +51,6 @@
         android:fontFamily="@font/jua_regular"
         android:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btn_close"
-        android:layout_marginBottom="20dp"/>
+        app:layout_constraintRight_toLeftOf="@id/btn_close" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

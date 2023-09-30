@@ -3,16 +3,3 @@
     <item android:state_checked="true" android:drawable="@drawable/daily" />
     <item android:state_checked="false" android:drawable="@drawable/daily_dark" />
 </selector>
-
-<!--
-<item android:state_checked="true">
-    <shape android:shape="rectangle">
-        <solid android:color="@color/theme_color" />
-    </shape>
-</item>
-<item android:state_checked="false">
-    <shape android:shape="rectangle">
-        <solid android:color="#E6E6E6" />
-    </shape>
-</item>
--->
