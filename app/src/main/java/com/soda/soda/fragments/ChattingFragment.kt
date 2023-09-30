@@ -20,6 +20,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.soda.soda.fragments.AudioFragment
+import com.soda.soda.fragments.AudioFragment.Companion.setListening
 import com.soda.soda.fragments.SttFragment
 import com.soda.soda.service.ForegroundService
 import com.soda.soda.fragments.SubSettingFragment
@@ -217,6 +218,7 @@ class ChattingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        setListening(false)
         speechRecognizer.destroy()
     }
 

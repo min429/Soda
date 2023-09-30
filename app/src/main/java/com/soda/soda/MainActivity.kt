@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
                 navigateToFragment(SettingFragment())
             }
             else{
-                Toast.makeText(this, "먼저 녹음을 완료해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "먼저 stt인식을 완료해주세요", Toast.LENGTH_SHORT).show()
             }
         }
 
