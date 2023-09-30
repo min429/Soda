@@ -7,10 +7,6 @@ import com.soda.soda.databinding.ItemImageBinding
 
 class ImageSliderAdapter(private val images: List<Int>) : RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder>() {
 
-    interface OnButtonClickListener {
-        fun onButtonClicked()
-    }
-
     inner class ImageViewHolder(val binding: ItemImageBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {

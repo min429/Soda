@@ -77,11 +77,18 @@ class ImageSliderFragment : DialogFragment(R.layout.fragment_image_slider) {
         _binding = null
     }
 
-    private fun saveGuideState(context: Context, value: Boolean){
-        val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putBoolean("guide", value)
-        editor.apply()
+    companion object {
+        private fun saveGuideState(context: Context, value: Boolean){
+            val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putBoolean("guide", value)
+            editor.apply()
+        }
+
+        fun loadGuideState(context: Context): Boolean {
+            val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
+            return sharedPref.getBoolean("guide", false)
+        }
     }
 
 }

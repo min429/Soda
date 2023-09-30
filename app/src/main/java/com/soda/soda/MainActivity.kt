@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-        if(!loadGuideState(this)){
+        if(!ImageSliderFragment.loadGuideState(this)){
             val imageSliderFragment = ImageSliderFragment()
             imageSliderFragment.show(supportFragmentManager, "userguide_dialog")
         }
@@ -182,8 +182,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
             toolbarLayoutBinding.toolbarTitle.visibility = View.GONE
         }
 
-
-
         if (currentFragment is SubSettingFragment
             ||currentFragment is SurroundCustomFragment
             ||currentFragment is WarningCustomFragment
@@ -193,9 +191,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
             // 둘 중 하나라도 만족하는 경우, 툴바의 내용을 "설정"으로 변경
             toolbarLayoutBinding.toolbarTitle.text = "설정"
         }
-
-
-
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
             finishAfterTransition()
@@ -271,11 +266,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         }
 
         dialog.show()
-    }
-
-    private fun loadGuideState(context: Context): Boolean {
-        val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
-        return sharedPref.getBoolean("guide", false)
     }
 
 }
