@@ -52,6 +52,9 @@ class ImageSliderFragment : DialogFragment(R.layout.fragment_image_slider) {
         val adapter = ImageSliderAdapter(images)
         binding.viewPager.adapter = adapter
 
+        val dontShowAgainVisible = loadGuideState(requireContext())
+        binding.btnDoNotShowAgain.visibility = if (!dontShowAgainVisible) View.VISIBLE else View.GONE
+
         // 페이지 번호를 업데이트하는 콜백 등록
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
