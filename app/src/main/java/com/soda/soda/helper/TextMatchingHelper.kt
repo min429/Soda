@@ -66,7 +66,7 @@ object TextMatchingHelper {
             "Burping, eructation" -> "트림 소리 같습니다."
             "Hiccup" -> "딸꾹질 소리 같습니다."
             "Fart" -> "방귀 소리 같습니다."
-            "Hands" -> "손뼉치는 같습니다."
+            "Hands" -> "손뼉치는 소리 같습니다."
             "Finger snapping" -> "손가락 스냅 소리 같습니다."
             "Clapping" -> "박수 소리 같습니다."
             "Heart sounds, heartbeat" -> "심장 박동 소리 같습니다."
