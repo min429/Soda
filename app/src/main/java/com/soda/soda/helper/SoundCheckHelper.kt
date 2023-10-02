@@ -285,15 +285,6 @@ object SoundCheckHelper{
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         openLockScreenIntent.putExtra("notification_text", notificationText)
         context.startActivity(openLockScreenIntent)
-
-//        // 2초 후에 LockScreenActivity를 닫음
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            val closeLockScreenIntent = Intent(context, LockScreenActivity::class.java)
-//            closeLockScreenIntent.flags =
-//                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            closeLockScreenIntent.putExtra("close_lock_screen", true)
-//            context.startActivity(closeLockScreenIntent)
-//        }, 2000)
     }
 
 

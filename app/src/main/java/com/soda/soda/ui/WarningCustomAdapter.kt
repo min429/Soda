@@ -39,14 +39,12 @@ class WarningCustomAdapter(
 
         fun bind(item: Item) {
             binding.warningText.text = item.label
-//            binding.warningCheckbox.isChecked = item.isChecked
             if(item.isChecked)
                 binding.checkImage.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.check_black))
             else
                 binding.checkImage.setImageDrawable(ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white)))
             binding.decibelLayout.setOnClickListener {
                 item.isChecked = !item.isChecked
-//                binding.warningCheckbox.isChecked = item.isChecked
                 if(item.isChecked)
                     binding.checkImage.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.check_black))
                 else

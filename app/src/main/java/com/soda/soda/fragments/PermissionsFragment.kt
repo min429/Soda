@@ -77,11 +77,6 @@ class PermissionsFragment : Fragment() {
             top_of_otherDialog(requireContext(), "위험 알림")
         }
 
-//        // 메시지 전송 권한을 요청하는 함수 호출
-//        if (!hasSMSPermission(requireContext())) {
-//            requestSMSPermission(requireContext())
-//        }
-
         // 최종확인 파트
         checkPermissionAndRequest()
     }
@@ -109,7 +104,6 @@ class PermissionsFragment : Fragment() {
     /** 다른 앱 위에 표시 권한 체크 **/
     private fun hasOverlayPermission(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            // 마시멜로우 이전 버전에서는 항상 허용되어 있다고 간주
             return true
         }
         return Settings.canDrawOverlays(context)
@@ -146,7 +140,6 @@ class PermissionsFragment : Fragment() {
 
         dialog.findViewById<Button>(R.id.no_button)?.setOnClickListener {
             dialog.dismiss()
-            // 다이얼로그를 닫을 때 추가적인 작업을 수행하고 싶다면 여기에 추가합니다.
         }
 
         dialog.show()

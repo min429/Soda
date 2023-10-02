@@ -69,11 +69,9 @@ class MessageSettingFragment : Fragment() {
     }
 
     companion object {
-        // SettingFragment.messageSwitchState 대신 여기에서 직접 설정
         var messageSwitchState: Boolean = false
     }
 
-    // 사용자가 입력한 텍스트를 SharedPreferences에 저장하는 함수
     private fun saveTextToSharedPreferences(phoneNumber: String, message: String) {
         val sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -82,7 +80,6 @@ class MessageSettingFragment : Fragment() {
         editor.apply()
     }
 
-    // SharedPreferences에서 저장된 텍스트를 불러오는 함수
     private fun loadTextFromSharedPreferences(): Pair<String, String> {
         val sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val phoneNumber = sharedPreferences.getString(PREF_PHONE_NUMBER, "") ?: ""

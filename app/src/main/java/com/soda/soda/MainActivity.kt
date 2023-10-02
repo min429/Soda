@@ -158,7 +158,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         if(currentFragment is NavHostFragment){ // AudioFragment, PermissionsFragment = NavHostFragment
             val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
             val currentNavHostFragment = navHostFragment.childFragmentManager.fragments[0]
-            // currentNavHostFragment = AudioFragment or PermissionsFragment
             if (currentNavHostFragment is PermissionsFragment) {
                 // PermissionsFragment에서 뒤로 가기를 눌렀을 때 앱을 종료함
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

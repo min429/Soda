@@ -125,9 +125,6 @@ class ChattingFragment : Fragment() {
 
                     AudioFragment.setListening(false)
 
-
-
-
                     if(autoSwitchStateValue){
                         AudioFragment.startRecording()
                         Log.d(TAG, "스위치 on 일때 자동녹음 레코딩 시작")
@@ -211,9 +208,6 @@ class ChattingFragment : Fragment() {
         if(SubSettingFragment.backgroundSwitchState && !isRunning){
             ContextCompat.startForegroundService(requireActivity(), serviceIntent)
         }
-
-
-    //on view created
     }
 
     override fun onDestroyView() {

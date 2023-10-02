@@ -139,22 +139,19 @@ class AudioFragment : Fragment() {
 
         val leftButton = view.findViewById<Button>(R.id.left_button)
         leftButton.setOnClickListener {
-            // 이동할 프래그먼트인 ChattingFragment를 생성합니다.
             val destinationFragment = ChattingFragment()
 
-
-            // ChattingFragment로 이동합니다.
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
 
-                    R.anim.slide_in_left,  // 역방향 애니메이션 (뒤로 가기 시)
+                    R.anim.slide_in_left, // 역방향 애니메이션 (뒤로 가기 시)
                     R.anim.slide_out_right, // 역방향 애니메이션 (뒤로 가기 시)
                     R.anim.slide_in_right, // 들어올 때 애니메이션
                     R.anim.slide_out_left // 나갈 때 애니메이션
 
                 )
                 .replace(R.id.fragment_container, destinationFragment)
-                .addToBackStack(null) // 백스택에 추가하여 이전 프래그먼트로 돌아갈 수 있도록 합니다.
+                .addToBackStack(null)
                 .commit()
 
             mainActivity?.let { activity ->
@@ -167,18 +164,7 @@ class AudioFragment : Fragment() {
     override fun onDestroyView() {
         _fragmentBinding = null
         super.onDestroyView()
-//        speechRecognizer.destroy()
     }
-
-    private fun startRecordingAnimation() {
-        recordingHandler.post(recordingRunnable)
-    }
-
-    private fun stopRecordingAnimation() {
-        recordingHandler.removeCallbacks(recordingRunnable)
-    }
-
-
 
     /** 메시지 전송 권한을 가지고 있는지 확인하는 함수 **/
     private fun hasSMSPermission(context: Context): Boolean {
@@ -197,7 +183,6 @@ class AudioFragment : Fragment() {
             requestPermissions(arrayOf(permission), requestCode)
         }
     }
-
 
     override fun onResume() {
         super.onResume()
