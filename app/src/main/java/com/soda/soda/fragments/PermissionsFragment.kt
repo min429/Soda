@@ -72,7 +72,7 @@ class PermissionsFragment : Fragment() {
         mainActivity = requireActivity() as MainActivity
 
 
-        // 다른앱 위애 표기 부분 권한 허용 함수 코드 작성
+        // 다른앱 위에 표기 부분 권한 요청
         if (!hasOverlayPermission(requireContext())) {
             top_of_otherDialog(requireContext(), "위험 알림")
         }

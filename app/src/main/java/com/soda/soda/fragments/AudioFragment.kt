@@ -121,6 +121,11 @@ class AudioFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(!ImageSliderFragment.loadGuideState(requireContext())){
+            val imageSliderFragment = ImageSliderFragment()
+            imageSliderFragment.show(parentFragmentManager, "userguide_dialog")
+        }
+
         // 메시지 전송 권한을 요청하는 함수 호출
         if (!hasSMSPermission(requireContext())) {
             requestSMSPermission(requireContext())

@@ -60,11 +60,6 @@ class MainActivity : AppCompatActivity(), DialogInterface{
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-        if(!ImageSliderFragment.loadGuideState(this)){
-            val imageSliderFragment = ImageSliderFragment()
-            imageSliderFragment.show(supportFragmentManager, "userguide_dialog")
-        }
-
         // 데시벨 설정
         DecibelCustomFragment.loadDecibel(this)
         
