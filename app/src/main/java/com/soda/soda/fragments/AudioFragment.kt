@@ -121,7 +121,7 @@ class AudioFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(!ImageSliderFragment.loadGuideState(requireContext())){
+        if(!ImageSliderFragment.loadGuideState(requireContext()) && ImageSliderFragment.isFirstOpen){
             val imageSliderFragment = ImageSliderFragment()
             imageSliderFragment.show(parentFragmentManager, "userguide_dialog")
         }

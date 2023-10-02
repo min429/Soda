@@ -66,6 +66,7 @@ class ImageSliderFragment : DialogFragment(R.layout.fragment_image_slider) {
 
         // 닫기 버튼 클릭 리스너 설정
         binding.btnClose.setOnClickListener {
+            isFirstOpen = false
             dismiss() // 다이얼로그 종료
         }
 
@@ -83,6 +84,8 @@ class ImageSliderFragment : DialogFragment(R.layout.fragment_image_slider) {
     }
 
     companion object {
+        var isFirstOpen = true
+
         private fun saveGuideState(context: Context, value: Boolean){
             val sharedPref = context.getSharedPreferences("guide_saved_pref", Context.MODE_PRIVATE)
             val editor = sharedPref.edit()

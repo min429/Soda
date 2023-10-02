@@ -99,8 +99,6 @@ class PermissionsFragment : Fragment() {
         }
     }
 
-
-
     /** 다른 앱 위에 표시 권한 체크 **/
     private fun hasOverlayPermission(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -108,8 +106,7 @@ class PermissionsFragment : Fragment() {
         }
         return Settings.canDrawOverlays(context)
     }
-
-
+    
     /** 권한 대화상자 **/
     fun top_of_otherDialog(context: Context, feature: String) {
         val dialog = Dialog(context)
